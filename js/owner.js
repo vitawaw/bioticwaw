@@ -180,7 +180,7 @@ async function editBrand(){
   if(!ISOWNER()){toast(T('o_onlyowner'));return}
   const b={...DEFAULT_CFG.brand,...(CFG.brand||{})};let err=null,url=b.url;
   while(true){
-    const r=await dialog({err,title:T('br_t'),info:T('br_i'),fields:[{label:T('br_l1'),type:'image',value:b.l1,empty:`<svg viewBox="4 10 56 52" aria-hidden="true">${MARKSVG}</svg>`},
+    const r=await dialog({err,title:T('br_t'),info:T('br_i'),fields:[{label:T('br_l1'),type:'image',value:b.l1,empty:`<svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg>`},
       {label:T('br_l2'),type:'image',value:b.l2,empty:'—'},{label:T('br_url'),type:'url',value:url,ph:'https://'}],
       buttons:[{label:T('o_cancel'),action:'cancel'},{label:T('o_ok'),action:'ok',pri:1}]});
     if(r.action!=='ok')return;

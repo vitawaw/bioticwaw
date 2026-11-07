@@ -123,7 +123,7 @@ function openCard(){
   const d=new Date().toLocaleDateString(LANG==='ar'?'ar-IQ-u-nu-latn':'en-GB',{year:'numeric',month:'long',day:'numeric'});
   const urgent=(r.notes||[]).filter(n=>n.u);
   $('pcard').setAttribute('dir',LANG==='ar'?'rtl':'ltr');
-  $('pcard').innerHTML=`<div class="pc-h"><div class="pc-logo"><svg viewBox="4 10 56 52" aria-hidden="true">${MARKSVG}</svg><span>BIOTIC<em>WAW</em></span></div><div class="pc-date">${d}</div></div>
+  $('pcard').innerHTML=`<div class="pc-h"><div class="pc-logo"><svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg><span>BIOTIC<em>WAW</em></span></div><div class="pc-date">${d}</div></div>
    <div class="pc-b"><div class="pc-k" id="pc-title">${name} · ${strip(r.badge)}</div><p class="pc-main">${strip(r.pt||r.title)}</p>
    ${urgent.map(n=>`<div class="pc-alert">${strip(n.t)}</div>`).join('')}
    ${(r.plan&&r.plan.length)?`<div class="pc-k">${T('pc_plan')}</div><ol class="pc-plan">${r.plan.map(x=>`<li><b>${strip(x.h)}</b>${x.d?' — '+strip(x.d):''}</li>`).join('')}</ol>`:''}</div>

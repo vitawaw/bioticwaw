@@ -375,7 +375,7 @@ function menuHTML(r){
   const acc=(key,ico,title,body)=>body?`<details class="macc" name="macc-${r}" data-acc="${key}"${MOPEN===key?' open':''}><summary class="mi"><span class="di">${ico}</span><span class="mt">${esc(title)}</span>${CHEV}</summary><div class="macb">${body}</div></details>`:'';
   const pg=id=>visiblePages().find(p=>p.id===id),pgItem=p=>({label:tx2(p.t)+(p.hidden?' · '+T('pg_hidden'):''),ico:ICO.info,f:()=>openPage(p.id)});
   let h='';
-  if(!page)h+=`<div class="slogo"><span class="mk"><svg viewBox="4 10 56 52" aria-hidden="true">${MARKSVG}</svg></span><span class="wm">BIOTIC<em>WAW</em></span></div>`;
+  if(!page)h+=`<div class="slogo"><span class="mk"><svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg></span><span class="wm">BIOTIC<em>WAW</em></span></div>`;
   // account card at the top (Facebook: your profile); publishing is in the bar at the top of every page
   h+=own
     ?`<div class="mcard solo"><span class="av">${MI2.shield}</span><div class="mt"><b>${esc(whoLabel())}</b><small>${esc(T('mn_team'))}</small></div></div>`

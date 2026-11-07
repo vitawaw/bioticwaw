@@ -146,7 +146,7 @@ function renderBrand(){
   const el=$('flogos');if(!el)return;const b=CFG.brand||{};
   const pic=(src,alt,fallback)=>src?`<img src="${esc(src)}" alt="${esc(alt)}">`:fallback;
   const circ=(x,cls)=>b.url?`<a class="fl ${cls}" href="${esc(b.url)}" target="_blank" rel="noopener" title="${esc(b.url)}">${x}</a>`:`<span class="fl ${cls}">${x}</span>`;
-  el.innerHTML=circ(pic(b.l1,'BIOTICWAW',`<svg viewBox="4 10 56 52" aria-hidden="true">${MARKSVG}</svg>`),'c1')+(b.l2?circ(pic(b.l2,T('br_l2'),''),'c2'):'');
+  el.innerHTML=circ(pic(b.l1,'BIOTICWAW',`<svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg>`),'c1')+(b.l2?circ(pic(b.l2,T('br_l2'),''),'c2'):'');
 }
 function renderContact(){
   renderBrand();
