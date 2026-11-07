@@ -1,0 +1,12 @@
+.git
+.github
+supabase
+wrangler.jsonc
+.assetsignore
+README.md
+CHANGELOG.md
+tests
+src
+tools
+SECURITY.md
+CLAUDE.md
