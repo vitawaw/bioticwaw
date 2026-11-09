@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.20.0';
+const APP_VERSION='1.20.1';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -39,14 +39,9 @@ const DEFAULT_CFG={
   ],
   roadmap:[
    {"st": "now", "go": "meds", "ic": "pill", "t": {"ar": "أدوية المريض مرتبة أبجدياً", "en": "Patient medicines, sorted A–Z"}, "d": {"ar": "أضف أدوية المريض فتظهر التداخلات التي تخصها فقط. الأدوية مرتبة بالعربية أو الإنجليزية مع عنوان لكل حرف.", "en": "Add the patient's medicines to see only the interactions that concern them. Sorted in Arabic or English with a heading for each letter."}},
-   {"st": "now", "go": "preg", "ic": "baby", "t": {"ar": "حاسبات خاصة والزنك لإسهال الأطفال", "en": "Special calculators and zinc for childhood diarrhoea"}, "d": {"ar": "الحمل والرضاعة، الرضيع، فيتامين A للأطفال، بعد عمليات السمنة، نقص B1، وجديد: الزنك لإسهال الأطفال حسب WHO (10 أو 20 ملغ لمدة 10 – 14 يوماً).", "en": "Pregnancy and breastfeeding, infants, vitamin A for children, after weight-loss surgery, B1 deficiency, and new: zinc for childhood diarrhoea per WHO (10 or 20 mg for 10–14 days)."}},
    {"st": "now", "go": "sources", "ic": "chart", "t": {"ar": "مصدر رسمي لكل رقم", "en": "An official source for every number"}, "d": {"ar": "كل جرعة وتداخل يحمل رقم مصدره من إرشادات ونشرات رسمية، وروابط المصادر تُفحص بانتظام.", "en": "Every dose and interaction carries the number of its source from official guidelines and labels, and the source links are checked regularly."}},
    {"st": "now", "go": "report", "ic": "share", "t": {"ar": "تقرير للطبيب وبطاقة للمريض", "en": "Doctor report and patient card"}, "d": {"ar": "ملف مفصّل بالنتيجة والخطة والمصادر للطبيب، وبطاقة مبسطة يسلّمها الصيدلي للمريض.", "en": "A detailed file with the result, plan and sources for the doctor, and a simple card the pharmacist hands to the patient."}},
    {"st": "now", "go": "calc", "ic": "plus", "t": {"ar": "واجهة أوضح", "en": "A clearer layout"}, "d": {"ar": "أربعة مربعات في كل سطر بالرمز والاسم، وبطاقات بارزة بحافة ملونة حسب الخطورة أو الحالة، على الهاتف والآيباد والكمبيوتر.", "en": "Four tiles per line with symbol and name, and cards that stand out with a coloured edge by severity or status, on phone, iPad and computer."}},
-   {"st": "dev", "ic": "plus", "t": {"ar": "تداخلات جديدة من نشرات الأدوية", "en": "New interactions from drug labels"}, "d": {"ar": "Raltegravir وCefdinir وMycophenolate وEntacapone وPenicillamine وIsotretinoin مع الفيتامينات والمعادن، من النشرات الرسمية، ويراجعها الصيدلي قبل نشرها.", "en": "Raltegravir, cefdinir, mycophenolate, entacapone, penicillamine and isotretinoin with vitamins and minerals, from the official labels, reviewed by the pharmacist before publishing."}},
-   {"st": "plan", "ic": "pill", "t": {"ar": "حاسبة الحديد الوريدي Monofer", "en": "IV iron calculator: Monofer"}, "d": {"ar": "جرعة Ferric derisomaltose حسب الوزن والهيموغلوبين من نشرة الدواء، بجانب Ferinject.", "en": "Ferric derisomaltose dose by weight and haemoglobin from the product label, next to Ferinject."}},
-   {"st": "plan", "ic": "baby", "t": {"ar": "B12 وحمض الفوليك للأطفال", "en": "B12 and folic acid for children"}, "d": {"ar": "جرعات علاج النقص للأطفال حسب العمر من BNF for Children.", "en": "Deficiency treatment doses for children by age from the BNF for Children."}},
-   {"st": "plan", "ic": "bell", "t": {"ar": "تنبيه مجموع المكملات", "en": "Combined supplement alert"}, "d": {"ar": "عند أخذ أكثر من مكمل فيه العنصر نفسه، يجمع التطبيق الكميات وينبّه إذا تجاوز المجموع الحد الأعلى الآمن.", "en": "When several supplements contain the same nutrient, the app adds them up and warns if the total passes the safe upper limit."}},
    {"st": "idea", "ic": "cam", "t": {"ar": "قراءة العبوة بالكاميرا", "en": "Scan the pack with the camera"}, "d": {"ar": "صوّر علبة المكمل فيتعرّف التطبيق على التركيز ويحسب عدد الحبات مباشرة.", "en": "Photograph the supplement box and the app reads the strength and counts the tablets."}}
   ]
 };
