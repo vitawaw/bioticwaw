@@ -14,6 +14,9 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 - He rejected 1.5.0 completely because the layout felt messy ("خربطه"). Change the look **in small, reviewable steps**
   and keep the existing design and colours unless he asks otherwise.
 
+## Approved design (frozen)
+- The visual identity is approved and frozen: see `docs/DESIGN.md`. Do not change colours, fonts, shapes, the logo or the components without the owner's written approval.
+
 ## Release workflow (always)
 1. Work on a branch `release/X.Y.Z` from `main`. Every push builds a Cloudflare **preview**:
    `https://release-X-Y-Z-<الاسم>.<الحساب>.workers.dev` (dots → dashes). Production is untouched.
