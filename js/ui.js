@@ -3,7 +3,7 @@
    language switch (setLang), event wiring, colors and refreshAll().
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== navigation ===================== */
-const PAGES=['calc','tools','interactions','sources','roadmap','notif','team','menu','meds','links','stats','abx'];
+const PAGES=['calc','interactions','sources','notif','team','menu','abx']; // 1.2.0: calculator, interactions, medicines (abx), sources; the rest was removed
 let cur='calc',CALCV=false,TOOLV=''; // CALCV: the chosen vitamin's page (patient data + result) instead of the list of vitamins
 /** 1.17.1 after a reload the saved session is restored a moment after the first page is drawn: a team-only page asked for in
     the address (pharmacists, visit dashboard, link check, a section hidden from visitors) waits for it instead of jumping away */
@@ -14,36 +14,28 @@ function show(p,view){
   if(typeof SECTOOL!=='undefined'&&SECTOOL[p]){view=SECTOOL[p];p='tools'} // the schedule and lab results sections are tool pages
   if(p==='tools'&&view&&typeof toolHidden==='function'&&toolHidden(view))view=''; // 1.17.2 a hidden tool's address opens the tools list
   const asked=p,askedView=view;
-  if(p==='links'&&!(typeof CAN==='function'&&CAN('refs')))p='calc'; // the link check is for the team
-  if(!PAGES.includes(p)||(p==='menu'&&WIDE())||((p==='team'||p==='stats')&&!ISOWNER())||(navHidden(p)&&!SHOWALL()))p='calc'; // a section the owner hid is not shown // wide screens show the menu at the side
+  if(!PAGES.includes(p)||(p==='menu'&&WIDE())||(p==='team'&&!ISOWNER())||(navHidden(p)&&!SHOWALL()))p='calc'; // a section the owner hid is not shown // wide screens show the menu at the side
   if(asked!==p&&asked!=='notif'&&asked!=='menu'&&typeof OWN!=='undefined'&&!OWN.on&&HASSESSION())WANT=[asked,askedView];
   else if(asked===p)WANT=null;
-  cur=p;CALCV=p==='calc'&&view==='v';$('calc').classList.toggle('cv',CALCV);TOOLV=p==='tools'&&/^tool-/.test(view||'')?view:'';$('tools').classList.toggle('tv',!!TOOLV);if(TOOLV)$('tback').querySelector('span').textContent=typeof TOOLFROM!=='undefined'&&TOOLFROM&&TOOLFROM!=='#tools'?L('رجوع','Back'):T('tab_tools');document.querySelectorAll('#tools>section[id^="tool-"]').forEach(x=>x.classList.toggle('on',x.id===TOOLV));if(CALCV)$('cvname').textContent=kname(K);if(typeof rememberRecent==='function')rememberRecent('p:'+p);
+  cur=p;CALCV=p==='calc'&&view==='v';$('calc').classList.toggle('cv',CALCV);TOOLV='';if(TOOLV)$('tback').querySelector('span').textContent=typeof TOOLFROM!=='undefined'&&TOOLFROM&&TOOLFROM!=='#tools'?L('رجوع','Back'):T('tab_tools');document.querySelectorAll('#tools>section[id^="tool-"]').forEach(x=>x.classList.toggle('on',x.id===TOOLV));if(CALCV)$('cvname').textContent=kname(K);if(typeof rememberRecent==='function')rememberRecent('p:'+p);
   PAGES.forEach(x=>{$(x).hidden=x!==p;const t=$('t-'+x);if(t){t.setAttribute('aria-selected',x===p);t.tabIndex=x===p?0:-1}});
   // a section that is a tool's page (schedule, lab results) is the selected tab while its tool is open
-  ['t-sch','t-labs','t-ul'].forEach(id=>$(id).setAttribute('aria-selected',false));
-  if(TOOLV==='tool-sch'||TOOLV==='tool-labs'||TOOLV==='tool-ul'){const own=$({'tool-sch':'t-sch','tool-labs':'t-labs','tool-ul':'t-ul'}[TOOLV]);
-    if(!own.classList.contains('offbar')){$('t-tools').setAttribute('aria-selected',false);own.setAttribute('aria-selected',true)}}
   if(p==='team'&&typeof openTeamPage==='function')openTeamPage();
   if(p==='abx'&&typeof renderAbx==='function')renderAbx();
-  if(p==='stats'&&typeof openStats==='function')openStats();
-  if(typeof statHit==='function'){if(TOOLV)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team'&&p!=='stats')statHit('section',p)}
+  if(typeof statHit==='function'){if(false)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team')statHit('section',p)}
   sharedParts(p);
   if(typeof rememberRecent==='function')rememberRecent(TOOLV?'t:'+TOOLKIND[TOOLV]:'p:'+p);
   if(p!=='sources'){$('back').hidden=true;document.querySelectorAll('ol.refs li.hl').forEach(l=>l.classList.remove('hl'))}
   if(p!=='menu'&&p!=='notif')try{localStorage.setItem('vw-p',p)}catch(e){}
   if(p==='notif'&&typeof renderNotif==='function')renderNotif(true);
   if(p==='sources'&&typeof linksAuto==='function'&&typeof OWN!=='undefined'&&OWN.on&&CAN('refs'))linksAuto(); // the link check runs by itself once a week
-  if(p==='roadmap'){$('rmnew').hidden=true;try{localStorage.setItem('vw-rm','3')}catch(e){}}
   updateBar();if(typeof renderNav==='function')renderNav();
 }
 /** «my medicines» and the link check have their own pages (1.13.0) and still appear where they were:
    the same elements move to the page that is open, so there is one list and one check */
 function sharedParts(p){
   const put=(id,box)=>{const el=$(id);if(el&&el.parentNode!==box)box.append(el)},home=id=>{const el=$(id),a=$(id+'-home');if(el&&a&&el.previousElementSibling!==a)a.after(el)};
-  if(p==='meds'){put('ilist',$('medsb'));if(typeof renderInter==='function')renderInter();if(typeof renderMedCat==='function')renderMedCat()}
-  else if(p==='interactions'&&$('ilist').parentNode.id==='medsb'){home('ilist');if(typeof renderInter==='function')renderInter()}
-  if(p==='links'){put('reflist',$('linksb'));if(typeof renderRefs==='function')renderRefs();if(typeof linksAuto==='function'&&OWN.on)linksAuto()}
+  if(false){put('reflist',$('linksb'));if(typeof renderRefs==='function')renderRefs();if(typeof linksAuto==='function'&&OWN.on)linksAuto()}
   else if(p==='sources'&&$('reflist').parentNode.id==='linksb'){home('reflist');if(typeof renderRefs==='function')renderRefs()}
 }
 function go(p){if(typeof SECTOOL!=='undefined'&&SECTOOL[p])p=SECTOOL[p];if(location.hash!=='#'+p)location.hash=p;else if(/^tool-/.test(p))show('tools',p);else show(p);window.scrollTo(0,0)}
@@ -173,7 +165,7 @@ function setLang(l){
   NUMS.forEach(id=>{const er=$('e-'+id);if(er&&!er.hidden)val(id)});
   try{localStorage.setItem('vw-lang',l)}catch(e){}
   $('pc-wa').textContent=T('pc_wa');$('pc-copy').textContent=T('pc_cp');$('pc-close').textContent=T('pc_x');themeIcon();
-  renderInter();renderRefs();renderRoadmap();renderContact();renderNav();
+  renderInter();renderRefs();renderContact();renderNav();
   if(typeof OWN!=='undefined'&&OWN.on){decorate();ownerBar()}if(typeof installBar==='function')installBar();F[K]();
 }
 
@@ -213,16 +205,11 @@ function apply(){
 $('nsearch').addEventListener('input',filterNuts);
 $('isearch').addEventListener('input',renderInter);
 $('ssearch').addEventListener('input',renderRefs);
-$('tsearch').addEventListener('input',()=>toolSearch()); // toolSearch lives in nav.js, loaded after this file
 // «أدويتي»: only medicines the site knows can be added (picked from the suggestions; Enter takes the first one)
-$('medform').addEventListener('submit',e=>{e.preventDefault();const s=medSuggest($('medin').value);if(s.length)addMed(s[0].en);else renderSug()});
-$('medin').addEventListener('input',renderSug);
-$('medsug').addEventListener('click',e=>{const b=e.target.closest('[data-addmed]');if(b)addMed(b.dataset.addmed)});
 /** open a vitamin: its page with the patient data and the result (‹ back to the list) */
 function openNut(k){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply();if(location.hash!=='#v-'+k)location.hash='v-'+k;else show('calc','v');window.scrollTo(0,0)}
 $('picker').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;openNut(b.dataset.k)});
 $('cbackb').addEventListener('click',()=>go('calc'));
-$('tback').addEventListener('click',()=>toolBack());
 const FORMIDS=['age','sex'];
 FORMIDS
   .filter(i=>$(i)).forEach(i=>{$(i).addEventListener('input',()=>{if(i==='age')syncSex();F[K]()});$(i).addEventListener('change',()=>{if(i==='age')syncSex();F[K]()})});
@@ -251,7 +238,6 @@ function wantVit(){
   const k=WANTV;WANTV='';if(k!==K){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply()}show('calc','v');
 }
 
-$('mcq').addEventListener('input',()=>{MCQ=$('mcq').value;renderMedCat()});
 
 /* 1.16.2 «ثبّت التطبيق الآن» at the very top. Hidden when the site already runs as an installed app (standalone),
    after it is installed (appinstalled), inside the owner's three-size preview, and for this visit after ×. */

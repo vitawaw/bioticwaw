@@ -141,6 +141,7 @@ function renderBrand(){
 }
 function renderContact(){
   renderBrand();
+  if(!$('mail1'))return; // 1.2.0: the suggestion block lived on the removed «upcoming» page
   const E=CFG.contact.email,P=(CFG.contact.phone||'').trim();
   const subj='BIOTICWAW – '+L('اقتراح','Suggestion');
   $('mail1').textContent=E;$('mailrow').hidden=!E;$('mailh').hidden=!E;
@@ -164,16 +165,6 @@ let RMF='all'; // roadmap filter: all | now | dev | plan | idea
    sorted by status (available now → in development → planned → idea) as interactions are by severity; the owner's
    order counts inside each status. */
 const RMORD={now:0,dev:1,plan:2,idea:3};
-function renderRoadmap(){
-  const st=k=>`<span class="st st-${esc(k)}">${esc(T('st_'+k))}</span>`,tx=o=>LANG==='ar'?o.ar:(o.en||o.ar);
-  const vis=CFG.roadmap.map((x,i)=>[x,i]).filter(([x])=>!x.hidden||SHOWALL());
-  $('rmlegend').innerHTML=['all','now','dev','plan','idea'].map(k=>`<button type="button" data-rmf="${k}" aria-pressed="${k===RMF}">${esc(T(k==='all'?'all':'st_'+k))}<bdi class="fc">${vis.filter(([x])=>k==='all'||x.st===k).length}</bdi></button>`).join('');
-  const list=vis.filter(([x])=>RMF==='all'||x.st===RMF).sort((a,b)=>(RMORD[a[0].st]??9)-(RMORD[b[0].st]??9)||a[1]-b[1]);
-  $('rmgrid').innerHTML=list.map(([x,i])=>`<div class="rm rmst-${esc(x.st)}${x.hidden?' hid':''}" data-sid="${i}"><div class="rmh">${st(x.st)}<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${IC[x.ic]||IC.plus}</svg></div><h3>${esc(tx(x.t))}</h3></div><p>${esc(tx(x.d))}</p>${x.st==='now'&&GO[x.go]?`<div class="rmf"><button class="btn pri rmgo" type="button" data-rmgo="${esc(x.go)}">${T('rm_try')}</button></div>`:''}<div class="rmact">${actBtns('m',i,{hidden:!!x.hidden,drag:true})}</div></div>`).join('')||`<p class="inone">${T('i_none')}</p>`;
-  $('rmaddw').innerHTML=`<button class="oadd otop" type="button" id="rmadd">${PLUS}${T('o_add')}</button>`;
-  sortable($('rmgrid'),'.rm',ids=>{if(!ISOWNER())return;const keep=CFG.roadmap.filter((_,n)=>!ids.includes(String(n)));CFG.roadmap=[...ids.map(n=>CFG.roadmap[+n]),...keep];changed()});
-}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-rmf]');if(!b)return;RMF=b.dataset.rmf;renderRoadmap()});
 /* Source type from the organisation name, used to order the list (strongest first) and label it. */
 const REFTYPES=[[/Society|NICE|Academy of Pediatrics|WHO|World Health/i,'g'],[/NIH|National Institutes|BNF|National Formulary|Specialist Pharmacy/i,'o'],
   [/SmPC|label|Medsafe|data sheet|Food and Drug|FDA/i,'d'],[/Cochrane|Lancet|BMJ|Journal|J Clin/i,'s'],[/Medscape|StatPearls|MSD|Manual/i,'c']];

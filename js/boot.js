@@ -14,7 +14,6 @@ try{
 }catch(e){}
 if(PAGES.includes(location.hash.slice(1)))startPage=location.hash.slice(1);
 $('welcome').hidden=welcomeSeen;
-try{$('rmnew').hidden=localStorage.getItem('vw-rm')==='3'}catch(e){}
 showFor();
 document.querySelectorAll('#picker button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===K));
 applyColors();
@@ -22,7 +21,6 @@ setLang(startLang);
 show(startPage);
 // 1.16.3: «جرّب مثالاً» and the example numbers exist only on the test site
 document.body.classList.toggle('demo',typeof IS_PREVIEW!=='undefined'&&IS_PREVIEW);
-statHit('open',''); // 1.17.0 anonymous visit count (sent when the tab is hidden; never for the team, see stats.js)
 
 if(FRAME){$('welcome').hidden=true;loadPublished().finally(frameDraft)}
 else{loadPublished();const h0=location.hash;routeSpecial();if(!/^#(owner|join)|type=recovery|error_code=otp_expired/.test(h0))resumeSession()} // 1.17.1 also on #tool-… / #v-… / #info-… (it was skipped there)
