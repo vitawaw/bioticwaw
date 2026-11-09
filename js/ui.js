@@ -50,8 +50,6 @@ window.addEventListener('hashchange',()=>{if(routeSpecial())return;show(location
 /* links that open something instead of a tab: #owner (sign in), #join=<email> (invited pharmacist), #info-<page> (info page) */
 function routeSpecial(){
   let h=location.hash.slice(1);try{h=decodeURIComponent(h)}catch(e){}
-  if(/^tool-(pill|d|ca|gz|ml|sch|labs|ul|u)$/.test(h)){show('tools',h);window.scrollTo(0,0);return true} // one tool of the tools page
-  if(typeof SECTOOL!=='undefined'&&SECTOOL[h]){show('tools',SECTOOL[h]);window.scrollTo(0,0);return true} // 1.17.1 the schedule / lab results / upper limit sections are tools
   if(/(^|&)(type=recovery|error_code=otp_expired)(&|$)/.test(h)){recoverPassword();return true} // the link from the «forgot password» e-mail
   if(h.startsWith('v-')){const k=h.slice(2);if(!KEYS.includes(k)&&/^[a-z0-9_]{1,30}$/.test(k))WANTV=k;if(KEYS.includes(k)&&k!=='all'&&k!==K){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply()}show('calc','v');window.scrollTo(0,0);return true} // one vitamin's page
   if(h==='owner'){openOwner();return true}
@@ -70,17 +68,11 @@ document.querySelectorAll('.tab[data-p]').forEach(t=>{
 });
 document.addEventListener('click',e=>{
   const ex=e.target.closest('[data-ex]');if(ex){e.preventDefault();fillExample();return}
-  const tl=e.target.closest('[data-tool]');if(tl){e.preventDefault();openTool(tl.dataset.tool);return}
-  // interactions ↔ calculator ↔ daily schedule
-  const gc=e.target.closest('[data-gocalc]');if(gc){e.preventDefault();openNut(gc.dataset.gocalc);return}
-  const gs=e.target.closest('[data-gosch]');if(gs){e.preventDefault();SCI.forEach(x=>{const c=$('sc-'+x[0]);if(c)c.checked=false});SCHSET=gs.dataset.gosch.split(',');openTool('sch');return}
   const gi=e.target.closest('[data-goint]');if(gi){e.preventDefault();IF=gi.dataset.goint;renderInter();go('interactions');return}
   const sr=e.target.closest('[data-isrc]');if(sr){e.preventDefault();ISRC=+sr.dataset.isrc;IF='all';renderInter();go('interactions');return}
   if(e.target.closest('[data-clrsrc]')){e.preventDefault();ISRC=null;renderInter();return}
   if(e.target.closest('[data-share]')){e.preventDefault();shareResult();return}
   if(e.target.closest('[data-report]')){e.preventDefault();openReport();return}
-  if(e.target.closest('[data-lab]')){e.preventDefault();if(LAST&&LAST.lab){LAST.lab.forEach(([k,v])=>labAdd(k,v));toast(T('lb_saved'))}return}
-  if(e.target.closest('[data-cal]')){e.preventDefault();if(LAST&&LAST.cal)icsDownload([LAST.cal]);return}
   const rg=e.target.closest('[data-rmgo]');if(rg){e.preventDefault();const f=GO[rg.dataset.rmgo];if(f)f();return}
   const dm=e.target.closest('[data-delmed]');if(dm){e.preventDefault();MEDS.splice(+dm.dataset.delmed,1);saveMeds();renderInter();return}
   const a=e.target.closest('[data-ref]');if(!a)return;e.preventDefault();
@@ -258,7 +250,6 @@ function wantVit(){
 }
 
 $('mcq').addEventListener('input',()=>{MCQ=$('mcq').value;renderMedCat()});
-if($('ulper'))$('ulper').addEventListener('change',()=>ul()); // 1.16.2 upper limit: amounts per day or per week
 
 /* 1.16.2 «ثبّت التطبيق الآن» at the very top. Hidden when the site already runs as an installed app (standalone),
    after it is installed (appinstalled), inside the owner's three-size preview, and for this visit after ×. */

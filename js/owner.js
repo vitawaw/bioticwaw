@@ -316,7 +316,7 @@ async function editInter(i){
       {label:T('o_ia'),value:v[2],ph:T('o_ia_ph')},{label:T('o_ia_en'),value:v[3],ltr:1},{label:T('o_ib'),value:v[4]},{label:T('o_ib_en'),value:v[5],ltr:1},
       {label:T('o_id'),type:'textarea',value:v[6]},{label:T('o_id_en'),type:'textarea',value:v[7],ltr:1},{label:T('o_isrc'),type:'checks',options:refOpts(),value:v[8]},
       // timing for the daily supplement schedule (optional): which item it concerns and the minimum gaps in hours
-      {label:T('o_ig'),type:'select',options:[['',T('o_ig_none')],...SCI.map(x=>[x[0],L(x[1],x[2])])],value:v[9]},{label:T('o_igb'),type:'number',value:v[10],ltr:1},{label:T('o_iga'),type:'number',value:v[11],ltr:1}],
+      {label:T('o_ig'),type:'select',options:[['',T('o_ig_none')]],value:v[9]},{label:T('o_igb'),type:'number',value:v[10],ltr:1},{label:T('o_iga'),type:'number',value:v[11],ltr:1}],
       buttons:EDB({isNew,hidden:!!(o&&o.hidden)})});
     if(r.action==='hide')return hideInter(i);if(r.action==='del')return delInter(i);
     if(r.action!=='ok')return;
@@ -362,12 +362,9 @@ async function loadNotes(){
 const notifCount=()=>!(typeof OWN!=='undefined'&&OWN.on)?pubNew().length:ISOWNER()?pendingCount():NOTE.mine.filter(n=>!n.read).length;
 /* ----- notifications for everyone (kept on this device only): new features and lab results that are 3 months old ----- */
 let SEEN=[];try{SEEN=JSON.parse(localStorage.getItem('vw-seen')||'[]').filter(x=>typeof x==='string').slice(-200)}catch(e){}
-const LABDUE=90; // days after the last saved result before the reminder (a reminder to ask, not a medical rule)
 function pubItems(){
   const out=[];
   (CFG.roadmap||[]).map((x,i)=>[x,i]).filter(([x])=>x.st==='now'&&!x.hidden).slice(-3).forEach(([x,i])=>out.push({key:'rm:'+String((x.t&&(x.t.en||x.t.ar))||i).slice(0,40),kind:'feat',x})); // 1.14.0: the 3 newest only
-  LABT.forEach(t=>{const pts=LABS.filter(x=>x.k===t[0]),last=pts[pts.length-1];
-    if(last&&(Date.now()-Date.parse(last.d))/864e5>=LABDUE)out.push({key:'lab:'+t[0]+':'+last.d,kind:'lab',t,last})});
   return out;
 }
 const pubNew=()=>pubItems().filter(n=>!SEEN.includes(n.key));
@@ -377,7 +374,7 @@ function pubNotifHTML(){
   let h=`<h3 class="nsec">${T('nn_rem')}</h3>`;
   h+=labs.length?labs.map(n=>`<div class="ncard${isNew(n)?' unread':''}">${nico('edit')}<div class="nb"><div class="nh"><b>${esc(L(n.t[1],n.t[2]))}</b> · <span class="nby">${esc(T('nn_last'))} <bdi>${esc(n.last.d)}</bdi></span></div>
     <div class="nl">${esc(T('nn_lab'))}</div>${toolHidden('labs')?'':`<div class="filters"><button type="button" class="btn" data-tool="labs">${esc(T('lb_t'))}</button></div>`}</div></div>`).join('')
-    :`<p class="inone">${T(LABS.length?'nn_labok':'nn_nolab')}</p>`;
+    :`<p class="inone">${T('nn_nolab')}</p>`;
   if(feats.length)h+=`<h3 class="nsec">${T('nn_new')}</h3>`+feats.map(n=>`<div class="ncard${isNew(n)?' unread':''}">${nico('new')}<div class="nb"><div class="nh"><b>${esc(tx2(n.x.t))}</b></div><div class="nl">${esc(tx2(n.x.d))}</div>
     ${GO[n.x.go]?`<div class="filters"><button type="button" class="btn pri" data-rmgo="${esc(n.x.go)}">${T('rm_try')}</button></div>`:''}</div></div>`).join('');
   return h;

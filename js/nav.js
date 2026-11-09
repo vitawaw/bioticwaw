@@ -69,9 +69,9 @@ document.addEventListener('click',e=>{
 // (account card, shortcuts, settings, log out). Wide screens (≥1024px): the same menu is a fixed side menu.
 const WIDE=()=>matchMedia('(min-width:1024px)').matches;
 const pickNut=k=>openNut(k);
-const SECTIONS=['calc','tools','interactions','sources','roadmap','meds','sch','labs','ul']; // 1.14.1: meds/sch/labs are sections too (owner: bar, order, names)
+const SECTIONS=['calc','tools','interactions','sources','roadmap','meds']; // 1.14.1: meds/sch/labs are sections too (owner: bar, order, names)
 const SECTOOL={}; // sections that are a tool's own page (none left)
-const SECKEY0={calc:'tab_calc',tools:'tab_tools',interactions:'tab_int',sources:'tab_src',roadmap:'tab_rm',notif:'nt_t',meds:'mm_t',links:'lk_t',sch:'tl_sch',labs:'tl_labs',ul:'tl_ul'};
+const SECKEY0={calc:'tab_calc',tools:'tab_tools',interactions:'tab_int',sources:'tab_src',roadmap:'tab_rm',notif:'nt_t',meds:'mm_t',links:'lk_t',};
 const SECKEY=SECKEY0;
 /* ===================== main sections (owner, 1.12.0): order everywhere, the bar (≤4), hidden ones, names, colors =====================
    CFG.menus = {order, bar, hide}. The calculator cannot be hidden; 🔔 and ☰ are always there. */
@@ -447,7 +447,6 @@ function renderMenu(){
 matchMedia('(min-width:1024px)').addEventListener('change',()=>{if(WIDE()&&cur==='menu')show('calc');renderNav()});
 
 /* ===================== one search for everything ===================== */
-const TOOLKIND={'tool-pill':'pills','tool-d':'drops','tool-ca':'ca','tool-gz':'ganz','tool-ml':'ml','tool-sch':'sch','tool-labs':'labs','tool-ul':'ul','tool-u':'units'};
 function gsResults(q){
   const n=normAr(q);if(n.length<2)return '';
   const terms=iTerms(n),hit=t=>{const h=normAr(t);return terms.some(x=>h.includes(x))};
@@ -573,7 +572,7 @@ async function clearMyData(){
   const q=await dialog({title:T('cd_t'),info:T('cd_i'),buttons:[{label:T('o_cancel'),action:'cancel'},{label:T('cd_go'),action:'ok',pri:1,danger:1}]});
   if(q.action!=='ok')return;
   ['vw-labs','vw-meds','vw-sch','vw-recent','vw-seen','vw-k','vw-p'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
-  LABS.length=0;MEDS.length=0;RECENT.length=0;SEEN.length=0;
+  MEDS.length=0;RECENT.length=0;SEEN.length=0;
   document.querySelectorAll('#s-data input[type="number"]').forEach(i=>{i.value=''});
   if(typeof labs==='function')labs();if(typeof renderInter==='function')renderInter();F[K]();renderNav();toast(T('cd_done'));
 }

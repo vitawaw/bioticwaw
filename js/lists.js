@@ -36,27 +36,12 @@ function renderInter(){
     slots.forEach((s,n)=>{CFG.inter[s]=old[idx[n]]});changed()});
 }
 /** buttons on an interaction card: open the supplement's calculator; arrange both in the daily schedule when the schedule knows them */
-function icActs(x){
-  const calc=!!document.querySelector(`#picker button[data-k="${CSS.escape(x[0])}"]:not([hidden])`);
-  const sch=typeof toolHidden==='function'&&toolHidden('tool-sch')?null:schPair(x);
-  return calc||sch?`<div class="iact">${calc?`<button class="btn" type="button" data-gocalc="${esc(x[0])}">${T('ic_calc')}</button>`:''}${sch?`<button class="btn" type="button" data-gosch="${esc(sch.join(','))}">${T('ic_sch')}</button>`:''}</div>`:'';
-}
-/** the two schedule items of an interaction: its timing (x[9].d), or the medicine recognised in its text */
-function schPair(x){
-  const ids=SCI.map(s=>s[0]);if(!ids.includes(x[0]))return null;
-  const d=x[9]&&ids.includes(x[9].d)?x[9].d:medSch(x[2][0]+' '+x[2][1]);
-  return d&&d!==x[0]?[x[0],d]:null;
-}
+function icActs(x){return ''}
 /* ===================== my medicines (interactions page) =====================
    The visitor lists the medicines they take; the page then shows only the interactions that concern them, and can send
    them to the daily schedule. The list stays on this device only (localStorage), like the other preferences. */
 let MEDS=[];try{MEDS=JSON.parse(localStorage.getItem('vw-meds')||'[]').filter(x=>typeof x==='string').slice(0,20)}catch(e){}
-const MEDSCH={levo:['levothyroxine','ليفوثيروكسين','ثيروكسين','يوثيروكس','التروكسين','euthyrox','eltroxin','synthroid'],bis:['alendronate','risedronate','bisphosphonate','اليندرونات','ريسيدرونات','فوساماكس','بايفوسفونيت'],
- abx:['ciprofloxacin','levofloxacin','moxifloxacin','doxycycline','tetracycline','quinolone','سيبرو','ليفوفلوكساسين','موكسيفلوكساسين','دوكسي','تتراسيكلين','تتراسايكلين','كينولون'],dtg:['dolutegravir','tivicay','دولوتغرافير','دولوتجرافير','دولوتيغرافير'],
- bik:['bictegravir','biktarvy','بكتيغرافير','بيكتيغرافير','بكتارفي','بيكتارفي'],elt:['eltrombopag','promacta','revolade','التروموباج','ايلتروموباج','بروماكتا','ريفوليد'],gaba:['gabapentin','neurontin','جابابنتين','غابابنتين','نيورونتين'],
- cef:['cefdinir','omnicef','سيفدينير','اومنيسيف'],mmf:['mycophenolate','cellcept','mycophenolic','مايكوفينولات','ميكوفينولات','سيلسبت'],pen:['penicillamine','cuprimine','depen','بنسيلامين','بنيسيلامين']};
 /** the schedule item of a medicine name (Arabic or English), or null */
-const medSch=t=>{const h=normAr(t);for(const [id,words] of Object.entries(MEDSCH))if(words.some(w=>h.includes(normAr(w))))return id;return null};
 const medMatch=x=>{const h=normAr([x[2][0],x[2][1],x[3][0],x[3][1]].join(' '));return MEDS.some(m=>iTerms(normAr(m)).some(q=>h.includes(q)))};
 /** the medicines the site knows (Arabic and English names of every drug in DRUG_AR that appears in a published interaction):
     the visitor picks from these suggestions instead of having to spell the name exactly */
@@ -133,10 +118,10 @@ function saveMeds(){try{localStorage.setItem('vw-meds',JSON.stringify(MEDS))}cat
 function renderMeds(){
   const el=$('medchips');if(!el)return;
   const hits=MEDS.length?INTER.filter(x=>x[7]&&!x[8]&&medMatch(x)):[];
-  const ids=[...new Set([...MEDS.map(medSch).filter(Boolean),...hits.map(x=>x[0]).filter(k=>SCI.some(s=>s[0]===k))])];
+
   const cat=Object.fromEntries(medCatalog().map(m=>[m.en,m]));
   el.innerHTML=MEDS.map((m,i)=>`<span class="mchip">${esc(cat[m]?medLabel(cat[m]):m)}<button type="button" data-delmed="${i}" aria-label="${esc(T('o_del'))}">×</button></span>`).join('')+
-    (MEDS.length?`<span class="mmsum">${hits.length?T('mm_n').replace('{n}',hits.length):T('mm_none')}</span>`+(ids.length>1&&!toolHidden('tool-sch')?`<button class="btn" type="button" data-gosch="${esc(ids.join(','))}">${T('ic_sch')}</button>`:''):'');
+    (MEDS.length?`<span class="mmsum">${hits.length?T('mm_n').replace('{n}',hits.length):T('mm_none')}</span>`:'');
 }
 const IC={
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
@@ -171,9 +156,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-copyphone]
   const done=()=>{b.textContent=T('cpd');setTimeout(()=>b.textContent=T('cpp'),1600)};
   try{navigator.clipboard.writeText(P).then(done).catch(()=>fallback(P,done))}catch(err){fallback(P,done)}});
 /** «جرّبه» on a feature that is available now: where each feature lives */
-const GO={sch:()=>openTool('sch'),meds:()=>{go('meds');setTimeout(()=>$('medin')&&$('medin').focus(),80)},preg:()=>openNut('preg'),bar:()=>openNut('bar'),thi:()=>openNut('thi'),
-  labs:()=>openTool('labs'),report:()=>go('calc'),sources:()=>go('sources'),search:()=>openSearch(),calc:()=>go('calc'),tools:()=>go('tools')};
-const GOLIST=()=>[['',T('rm_go_none')],['sch',T('tl_sch')],['meds',T('mm_t')],['labs',T('lb_t')],['report',T('rp_t')],['search',T('gs_t')],['calc',T('tab_calc')],['tools',T('tab_tools')],['sources',T('tab_src')]];
+const GO={meds:()=>{go('meds');setTimeout(()=>$('medin')&&$('medin').focus(),80)},preg:()=>openNut('preg'),bar:()=>openNut('bar'),thi:()=>openNut('thi'),
+report:()=>go('calc'),sources:()=>go('sources'),search:()=>openSearch(),calc:()=>go('calc'),tools:()=>go('tools')};
+const GOLIST=()=>[['',T('rm_go_none')],['meds',T('mm_t')],['report',T('rp_t')],['search',T('gs_t')],['calc',T('tab_calc')],['tools',T('tab_tools')],['sources',T('tab_src')]];
 let RMF='all'; // roadmap filter: all | now | dev | plan | idea
 /* 1.16.0: «coming next» laid out like the interactions: status chips with counts at the top, then one card per line,
    sorted by status (available now → in development → planned → idea) as interactions are by severity; the owner's
