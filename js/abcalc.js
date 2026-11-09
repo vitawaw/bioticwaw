@@ -78,7 +78,10 @@ const ABC_CALC = {
 let ABC_SEL=null;
 function abcInit(){
   const pk=document.getElementById('picker'); if(!pk)return;
-  pk.innerHTML=Object.keys(ABC_CALC).map(k=>`<button type="button" class="abcpick" data-abc="${k}">${esc(L(ABC_CALC[k].name.ar,ABC_CALC[k].name.en))}</button>`).join('');
+  // shown only for antibiotics that are approved and published (CFG.ab); the owner also sees the unpublished ones, marked
+  const pub=new Set((CFG.ab||[]).map(x=>x.id)), own=typeof OWN!=='undefined'&&OWN.on;
+  const keys=Object.keys(ABC_CALC).filter(k=>pub.has(k)||own);
+  pk.innerHTML=keys.map(k=>`<button type="button" class="abcpick" data-abc="${k}">${esc(L(ABC_CALC[k].name.ar,ABC_CALC[k].name.en))}${pub.has(k)?'':' ·'+esc(L('غير منشور','not published'))}</button>`).join('')||`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;
   pk.onclick=e=>{const b=e.target.closest('[data-abc]');if(!b)return;ABC_SEL=b.dataset.abc;abcOpen();};
 }
 function abcOpen(){

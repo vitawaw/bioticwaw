@@ -229,7 +229,7 @@ function applyColors(){
   Object.entries(CFG.colors).forEach(([p,c])=>{const el=$(p),t=$('t-'+p);if(t)t.style.setProperty('--ti',c[1]);if(!el)return;el.style.setProperty('--pc',c[0]);el.style.setProperty('--pc2',c[1])});
   [['meds','meds'],['links','sources'],['stats','tools']].forEach(([p,q])=>{const c=CFG.colors[q]||CFG.colors.interactions,el=$(p);if(c&&el){el.style.setProperty('--pc',c[0]);el.style.setProperty('--pc2',c[1])}}); // own pages take the colours of their section
 }
-function refreshAll(){applyColors();setLang(LANG);decorate();wantVit()}
+function refreshAll(){if(typeof abcInit==='function')abcInit();applyColors();setLang(LANG);decorate();wantVit()}
 /** 1.17.1 #v-<id> of a vitamin that is not loaded yet (published content still on its way, or a team member's new vitamin
     before the session is back): opened as soon as it exists, instead of staying on another vitamin */
 let WANTV='',WANTPG='';
