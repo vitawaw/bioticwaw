@@ -17,9 +17,29 @@ function abBlock(onMeds){
   if(!A.length||onMeds||ISRC||IF!=='all')return '';
   return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3><p><button type="button" class="btn" data-goabx="1">${esc(T('abx_go'))}</button></p>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
 }
+/* 1.4.4 (test): the interactions page shows the approved and published antibiotics. Choose one to see its interactions;
+   the search box filters the antibiotic names. Data: CFG.ab (published). */
+let ABSEL=null;
+function abPicker(){
+  const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
+  const A=(CFG.ab||[]).filter(a=>a&&a.n&&(a.inter||[]).length);
+  $('filters').innerHTML='';
+  const q=normAr($('isearch')?$('isearch').value:'');
+  const list=A.filter(a=>!q||normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));
+  if(ABSEL&&!A.some(a=>a.id===ABSEL))ABSEL=null;
+  if(!A.length){$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
+  const pick=`<div class="abpick">${list.map(a=>`<button type="button" class="abpk" data-abpick="${esc(a.id)}" aria-pressed="${a.id===ABSEL}">${esc(tx(a.n))}</button>`).join('')}</div>`;
+  const cur=A.find(a=>a.id===ABSEL);
+  const body=cur?`<div class="abcard"><p><b>${esc(tx(cur.n))}</b></p>`+cur.inter.map(x=>`<p class="abi"><strong>${esc(tx(x.b))}</strong>: ${esc(tx(x.d))}</p>`).join('')+'</div>'
+    :`<p class="inone">${esc(T('ab_pick_hint'))}</p>`;
+  $('ilist').innerHTML=(list.length?'':`<p class="inone">${esc(T('i_none'))}</p>`)+pick+body;
+}
+const ilEl=document.getElementById('ilist');
+if(ilEl)ilEl.addEventListener('click',e=>{const b=e.target.closest('[data-abpick]');if(!b)return;ABSEL=b.dataset.abpick;renderInter()});
 function renderInter(){
   $('filters').innerHTML=(ISRC&&REFS[ISRC]?`<button type="button" class="srcf" data-clrsrc="1" aria-pressed="true">${T('su_src').replace('{n}',ISRC)} ×</button>`:'')+KEYS.filter(k=>k==='all'||INTER.some(x=>x[0]===k)).map(k=>`<button data-f="${esc(k)}" aria-pressed="${!ISRC&&k===IF}">${esc(kname(k))}<bdi class="fc">${INTER.filter(x=>k==='all'||x[0]===k).length}</bdi></button>`).join('');
   if(IF!=='all'&&!INTER.some(x=>x[0]===IF))IF='all';
+  if(typeof cur==='undefined'||cur!=='meds'){if(!INTER.length){abPicker();return}} // 1.4.4: no supplement list left: the antibiotic picker
   const onMeds=typeof cur!=='undefined'&&cur==='meds'; // «my medicines» page: only the medicines decide (no supplement chip, search or source filter)
   const iq=onMeds?[]:iTerms(normAr($('isearch')&&$('isearch').value)),mine=onMeds&&MEDS.length?medMatch:null,im=x=>{if(onMeds)return !!mine&&mine(x);if(ISRC&&!x[4].includes(ISRC))return false;if(!ISRC&&!(IF==='all'||x[0]===IF))return false;if(mine&&!mine(x))return false;if(!iq.length)return true;const h=normAr([x[1][0],x[1][1],x[2][0],x[2][1],x[3][0],x[3][1]].join(' '));return iq.some(q=>h.includes(q))};
   renderMeds();
