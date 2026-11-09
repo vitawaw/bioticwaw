@@ -10,3 +10,6 @@ src
 tools
 SECURITY.md
 CLAUDE.md
+docs
+.gitignore
+node_modules

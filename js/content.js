@@ -90,8 +90,6 @@ function renderNutAdmin(){
   // drag the ⋮⋮ handle to change the vitamins' order (saved with the page settings, then published)
   if(ed)sortable(pk,'.pkw',ids=>{if(!ISOWNER())return;CFG.nutOrder=ids;changed()});
 }
-/* custom nutrient calculator: dose table by age and sex */
-const SEXES=()=>[['all',T('o_sx_all')],['m',T('sx_m')],['f',T('sx_f')],['p',T('sx_p')],['l',T('sx_l')]];
 function pickRow(rows,age,sx){
   const inAge=rows.filter(r=>age>=r.a0&&age<=r.a1);
   const order=sx==='p'||sx==='l'?[sx,'f','all']:[sx,'all'];

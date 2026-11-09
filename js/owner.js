@@ -123,7 +123,6 @@ async function editText(k){
 }
 /** every interface text: search what you see, tap to reword it (Arabic and English) */
 let TXQ='';
-function openTexts(){if(!ISOWNER())return;openSheet(T('tx_all'),'',{key:'texts'});drawTexts()}
 function drawTexts(){
   if(!SHEET||SHEET.key!=='texts')return;
   const q=normAr(TXQ),keys=Object.keys(I18N).filter(k=>TXOK(k)||EDITABLE.includes(k)),hit=k=>{const t=CFG.text[k]||{};return normAr([I18N[k][0],I18N[k][1],t.ar||'',t.en||''].join(' ')).includes(q)};
@@ -194,38 +193,6 @@ async function editBrand(){
     b.url=url;CFG.brand=b;changed();toast(T('br_done'));return;
   }
 }
-/** owner: earlier published versions (config_history) with «restore»; the restore itself is checked in the database */
-async function openVersions(){
-  if(!ISOWNER()){toast(T('o_onlyowner'));return}
-  if(OWN.local||!OWN.client){toast(T('vh_local'));return}
-  const {data,error}=await OWN.client.from('config_history').select('id,published_at,note').order('id',{ascending:false}).limit(30);
-  if(error||!data){toast(T('o_neterr'));return}
-  const fmtD=d=>{try{return new Date(d).toLocaleString(LANG==='ar'?'ar-IQ-u-nu-latn':'en-GB',{dateStyle:'medium',timeStyle:'short'})}catch(e){return d}};
-  ACT.v=[];const S=c=>chipH('v',c);
-  openSheet(T('vh_t'),`<p class="hint">${T('vh_i')}</p>`+data.map((v,i)=>`<div class="ncard"><div class="nb"><div class="nh"><b>${i===0?esc(T('vh_now')):'#'+v.id}</b> · <bdi>${esc(fmtD(v.published_at))}</bdi></div>${v.note?`<div class="nw">${esc(clean(v.note))}</div>`:''}
-    ${i===0?'':`<div class="filters">${S({label:T('vh_restore'),f:()=>restoreVersion(v.id,fmtD(v.published_at))})}</div>`}</div></div>`).join(''),{key:'versions'});
-}
-async function restoreVersion(id,when){
-  const q=await dialog({title:T('vh_restore'),info:T('vh_q').replace('{d}',when),buttons:[{label:T('o_cancel'),action:'cancel'},{label:T('vh_restore'),action:'ok',pri:1,danger:1}]});
-  if(q.action!=='ok')return;
-  const {error}=await OWN.client.rpc('restore_version',{p_id:id});
-  if(error){toast(T('o_neterr'));return}
-  closeSheet(false);toast(T('vh_done'));loadPublished();
-}
-/** owner: the medical review stamp under every result («تمت المراجعة الطبية بواسطة …» and the date) */
-/** owner: everything in one file kept on his device — the published site, the draft settings and all content (pending and hidden too).
-   The file says what it is: backup name, file name, program name and version. */
-function downloadBackup(){
-  if(!ISOWNER())return;
-  const now=new Date(),day=now.toISOString().slice(0,10),hm=now.toISOString().slice(11,16).replace(':','');
-  const fileName=`BIOTICWAW-v${APP_VERSION}-backup-${day}-${hm}.json`;
-  const data={program:'BIOTICWAW',programVersion:APP_VERSION,backupName:`BIOTICWAW backup ${day} ${now.toISOString().slice(11,16)} UTC`,fileName,
-    createdAt:now.toISOString(),site:location.origin,createdBy:OWN.name||whoLabel(),
-    published:PUBLISHED||null,draft:JSON.parse(cfgJSON()),content:{refs:CFG.refs||[],inter:CFG.inter||[],nut:CFG.nut||{}}};
-  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:'application/json'})),a=document.createElement('a');
-  a.href=url;a.download=fileName;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
-  toast(T('bk_done'));
-}
 /** the medical review stamp: Dr. Saifaldeen or one of the invited pharmacists (or another name typed by the owner) */
 async function editReview(){
   if(!ISOWNER()){toast(T('o_onlyowner'));return}
@@ -277,10 +244,7 @@ document.addEventListener('click',e=>{
 },true);
 
 
-/* ----- sources, interactions, nutrients (owner) ----- */
-const refOpts=()=>Object.entries(REFS).sort((a,b)=>a[0]-b[0]).map(([n,x])=>[+n,`${n}. ${x[0]} — ${x[1]}`]);
 const ensureRefs=()=>{if(!Array.isArray(CFG.refs))CFG.refs=defRefList()};
-const ensureInter=()=>{if(!Array.isArray(CFG.inter))CFG.inter=defInterList()};
 async function confirmDel(info){const q=await dialog({title:T('o_delq2'),info:info||'',buttons:[{label:T('o_back'),action:'cancel'},{label:T('o_yesdel'),action:'ok',pri:1,danger:1}]});return q.action==='ok'}
 const RTYPES=()=>[['',T('o_rt_auto')],...['g','o','d','s','c','x'].map(k=>[k,T('rt_'+k)])];
 async function editRef(id){
@@ -308,39 +272,11 @@ async function delRef(id){
 /** hide/show: the owner's choice is final; a pharmacist's waits for the owner's review */
 function toggleHidden(o){if(!o)return;o.hidden=!o.hidden;if(!CANAPPROVE())o.rv=false;changed()}
 const hideRef=id=>{ensureRefs();toggleHidden(CFG.refs.find(x=>x.id===id))};
-async function editInter(i){
-  ensureInter();const isNew=i==null,o=isNew?null:CFG.inter[i];
-  const nuts=KEYS.slice(1).map(k=>[k,kname(k)]);if(!nuts.length)return;
-  const g0=(o&&o.g)||{};
-  let v=o?[o.k,o.sev||'moderate',o.a.ar,o.a.en||'',o.b.ar,o.b.en||'',o.d.ar,o.d.en||'',(o.r||[]).slice(),g0.d||'',g0.d?String(g0.b):'',g0.d?String(g0.a):'']:[nuts[0][0],'moderate','','','','','','',[],'','',''],err=null;
-  while(true){
-    const r=await dialog({err,title:T(isNew?'o_iadd':'o_iedit'),fields:[{label:T('o_inut'),type:'select',options:nuts,value:v[0]},{label:T('o_isev'),type:'select',options:[['major',T('sev_major')],['moderate',T('sev_moderate')],['minor',T('sev_minor')]],value:v[1]},
-      {label:T('o_ia'),value:v[2],ph:T('o_ia_ph')},{label:T('o_ia_en'),value:v[3],ltr:1},{label:T('o_ib'),value:v[4]},{label:T('o_ib_en'),value:v[5],ltr:1},
-      {label:T('o_id'),type:'textarea',value:v[6]},{label:T('o_id_en'),type:'textarea',value:v[7],ltr:1},{label:T('o_isrc'),type:'checks',options:refOpts(),value:v[8]},
-      // timing for the daily supplement schedule (optional): which item it concerns and the minimum gaps in hours
-      {label:T('o_ig'),type:'select',options:[['',T('o_ig_none')]],value:v[9]},{label:T('o_igb'),type:'number',value:v[10],ltr:1},{label:T('o_iga'),type:'number',value:v[11],ltr:1}],
-      buttons:EDB({isNew,hidden:!!(o&&o.hidden)})});
-    if(r.action==='hide')return hideInter(i);if(r.action==='del')return delInter(i);
-    if(r.action!=='ok')return;
-    v=[...r.values.slice(0,8).map(x=>x.trim()),r.values[8],...r.values.slice(9).map(x=>x.trim())];
-    if(!v[2])v[2]=kname(v[0]);
-    if(!v[4]||!v[6]){err={i:v[4]?6:4,msg:T('o_ineed')};continue}
-    if(!v[8].length){err={i:8,msg:T('o_srcneed')};continue}
-    const hb=parseFloat(v[10]),ha=parseFloat(v[11]),okH=n=>!isNaN(n)&&n>=0&&n<=24;
-    if(v[9]&&!okH(hb)){err={i:10,msg:T('o_igbad')};continue}
-    if(v[9]&&!okH(ha)){err={i:11,msg:T('o_igbad')};continue}
-    const item={hidden:!!(o&&o.hidden),k:v[0],sev:v[1],a:{ar:v[2],en:v[3]},b:{ar:v[4],en:v[5]},d:{ar:v[6],en:v[7]},r:v[8],rv:CANAPPROVE(),g:v[9]?{d:v[9],b:hb,a:ha}:{}};if(o&&o.id!=null)item.id=o.id;
-    if(isNew)CFG.inter.push(item);else CFG.inter[i]=item;changed();return;
-  }
-}
-async function delInter(i){ensureInter();if(!CFG.inter[i])return;if(await confirmDel(tx2(CFG.inter[i].a)+' + '+tx2(CFG.inter[i].b))){CFG.inter.splice(i,1);changed()}}
-const hideInter=i=>{ensureInter();toggleHidden(CFG.inter[i])};
 /* ===================== notifications (🔔, team only) =====================
    Owner: every waiting change (new item, edit of an approved item, deletion request) as a card with
    Approve / Reject / View — the decision is saved at once (review_change); visitors see it after «Publish».
    Pharmacist: the owner's decisions on their work (table notifications) and what still waits for the owner. */
 const DELS=()=>(typeof OWN!=='undefined'&&OWN.del)||{refs:[],inter:[],nut:[]};
-const delCount=()=>{const d=DELS();return (d.refs||[]).length+(d.inter||[]).length+(d.nut||[]).length};
 const NLBL={r:x=>`${x.id}. ${x.org} — ${x.title}`,i:x=>`${tx2(x.a)} + ${tx2(x.b)}`,n:x=>tx2(x.n)};
 /** every waiting change: {t: r|i|n, id (database id), idx (interactions: list index), kind: new|edit|del, label, was, by} */
 function notifList(){
@@ -353,7 +289,6 @@ function notifList(){
   return out;
 }
 const pendingCount=()=>notifList().length;
-const changeList=()=>notifList().filter(n=>n.kind!=='new');
 const NOTE={mine:[],loaded:false}; // pharmacist: the owner's decisions
 async function loadNotes(){
   if(OWN.local||ISOWNER()||!OWN.client)return;
@@ -546,49 +481,7 @@ async function editBuiltin(k){
   keys.forEach((x,i)=>{const d=I18N[x],ar=r.values[2*i].trim()||d[0],en=r.values[2*i+1].trim()||d[1];if(ar===d[0]&&en===d[1])delete CFG.text[x];else CFG.text[x]={ar,en}});changed();
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-nedit]');if(!b||!OWN.on)return;e.preventDefault();e.stopPropagation();editBuiltin(b.dataset.nedit)},true);
-const fmtRows=rows=>(rows||[]).map(r=>`${r.a0}-${r.a1>=110?'+':r.a1} | ${(SEXES().find(s=>s[0]===r.sx)||SEXES()[0])[1]} | ${r.rda} | ${r.ul||'-'}`).join('\n');
-function parseRows(txt){
-  const sxMap={};SEXES().forEach(([k,l])=>{sxMap[l.trim()]=k;sxMap[k]=k});Object.assign(sxMap,{'الكل':'all','ذكر':'m','أنثى':'f','انثى':'f','حامل':'p','مرضع':'l','all':'all','male':'m','female':'f','pregnant':'p','lactating':'l'});
-  const rows=[];const lines=txt.split('\n').map(x=>x.trim()).filter(Boolean);
-  for(const [i,line] of lines.entries()){
-    const p=line.split(/[|،]/).map(x=>x.trim());if(p.length<3)return {err:i+1};
-    const m=p[0].replace(/\s/g,'').match(/^(\d+(?:\.\d+)?)(?:-(\d+(?:\.\d+)?|\+))?$|^(\d+(?:\.\d+)?)\+$/);if(!m)return {err:i+1};
-    let a0,a1;if(m[3]!=null){a0=+m[3];a1=110}else{a0=+m[1];a1=m[2]==null?a0:m[2]==='+'?110:+m[2]}
-    const sx=sxMap[(p[1]||'').toLowerCase()]||sxMap[p[1]];if(!sx||a1<a0)return {err:i+1};
-    const rda=p[2];const ul=p[3]&&p[3]!=='-'?p[3]:'';if(!rda)return {err:i+1};
-    rows.push({a0,a1,sx,rda,ul});
-  }
-  return rows.length?{rows}:{err:1};
-}
-const UNITS=()=>[['mg',T('o_u_mg')],['mcg',T('o_u_mcg')],['g',T('o_u_g')],['iu',T('o_u_iu')]];
 const UNITTXT={mg:{ar:'ملغ',en:'mg'},mcg:{ar:'ميكروغرام',en:'mcg'},g:{ar:'غرام',en:'g'},iu:{ar:'وحدة دولية',en:'IU'}};
-async function editNut(id){
-  CFG.nut=CFG.nut||{hide:[],custom:[]};const isNew=id==null,o=isNew?null:CFG.nut.custom.find(c=>c.id===id);if(!isNew&&!o)return;
-  const g=(x,l)=>(x&&x[l])||'';
-  let v=o?[o.n.ar,g(o.n,'en'),g(o.h,'ar'),g(o.h,'en'),o.uk||'mg',fmtRows(o.rows),g(o.plan,'ar'),g(o.plan,'en'),g(o.note,'ar'),g(o.note,'en'),(o.r||[]).slice()]:['','','','','mg','','','','','',[]],err=null;
-  while(true){
-    const r=await dialog({err,title:T(isNew?'o_nadd':'o_nedit'),info:T('o_ninfo'),fields:[{label:T('o_nname'),value:v[0]},{label:T('o_nname_en'),value:v[1],ltr:1},{label:T('o_nh'),value:v[2]},{label:T('o_nh_en'),value:v[3],ltr:1},
-      {label:T('o_nunit'),type:'select',options:UNITS(),value:v[4]},{label:T('o_nrows'),type:'textarea',value:v[5],ph:T('o_nrows_ph')},
-      {label:T('o_nplan'),type:'textarea',value:v[6]},{label:T('o_nplan_en'),type:'textarea',value:v[7],ltr:1},{label:T('o_nnote'),type:'textarea',value:v[8]},{label:T('o_nnote_en'),type:'textarea',value:v[9],ltr:1},
-      {label:T('o_isrc'),type:'checks',options:refOpts(),value:v[10]}],buttons:EDB({isNew,hidden:!!(o&&o.hidden)})});
-    if(r.action==='hide')return hideNut(id);if(r.action==='del')return delNut(id);
-    if(r.action!=='ok')return;
-    v=[...r.values.slice(0,10).map((x,j)=>j===4||j===5?x:x.trim()),r.values[10]];
-    if(!v[0]){err={i:0,msg:T('o_nneedname')};continue}
-    const pr=parseRows(v[5]);if(pr.err){err={i:5,msg:T('o_nbadrow')+' '+pr.err};continue}
-    if(!v[10].length){err={i:10,msg:T('o_srcneed')};continue}
-    const nid=isNew?'c'+Date.now().toString(36).slice(-8):id;
-    const item={id:nid,n:{ar:v[0],en:v[1]},h:{ar:v[2],en:v[3]},uk:v[4],u:UNITTXT[v[4]],rows:pr.rows,plan:{ar:v[6],en:v[7]},note:{ar:v[8],en:v[9]},r:v[10],rv:CANAPPROVE(),hidden:!!(o&&o.hidden)};
-    if(isNew)CFG.nut.custom.push(item);else CFG.nut.custom[CFG.nut.custom.findIndex(c=>c.id===id)]=item;
-    if(isNew){K=nid}
-    changed();return;
-  }
-}
-async function delNut(id){
-  CFG.nut=CFG.nut||{hide:[],custom:[]};if(!(await confirmDel(T('o_ndelinfo'))))return;
-  CFG.nut.custom=CFG.nut.custom.filter(c=>c.id!==id);if(Array.isArray(CFG.inter))CFG.inter=CFG.inter.filter(x=>x.k!==id);changed();
-}
-const hideNut=id=>toggleHidden(NCUST().find(c=>c.id===id));
 /* the same buttons on every item (actBtns in content.js): approve, edit, hide/show, delete */
 document.addEventListener('click',e=>{if(OWN.on&&e.target.closest('[data-gonotif]')){e.preventDefault();e.stopPropagation();openNotif()}},true);
 document.addEventListener('click',e=>{
@@ -596,17 +489,15 @@ document.addEventListener('click',e=>{
   e.preventDefault();e.stopPropagation();
   const k=t.dataset.kind,id=t.dataset.id,a=t.dataset.act,need={r:'refs',i:'inter',n:'nut',m:'owner'}[k];
   if(need==='owner'?!ISOWNER():!CAN(need)){toast(T('tm_noperm'));return}
-  const F={r:{edit:()=>editRef(+id),hide:()=>hideRef(+id),del:()=>delRef(+id)},i:{edit:()=>editInter(+id),hide:()=>hideInter(+id),del:()=>delInter(+id)},
-    n:{edit:()=>editNut(id),hide:()=>hideNut(id),del:()=>delNut(id)},m:{edit:()=>editFeature(+id),hide:()=>hideFeature(+id),del:()=>delFeature(+id)}}[k];
+  const F={r:{edit:()=>editRef(+id),hide:()=>hideRef(+id),del:()=>delRef(+id)},m:{edit:()=>editFeature(+id),hide:()=>hideFeature(+id),del:()=>delFeature(+id)}}[k];
   if(F&&F[a])F[a]();
 },true);
 // «add» buttons and the built-in vitamins' hide/show (item buttons are handled above)
 document.addEventListener('click',e=>{
-  if(!OWN.on)return;const t=e.target.closest('#radd,#iadd,[data-nhide],#nadd');if(!t)return;
+  if(!OWN.on)return;const t=e.target.closest('#radd');if(!t)return; // add a source (1.5.0: the vitamin and supplement buttons are gone)
   e.preventDefault();e.stopPropagation();
-  const need=t.dataset.nhide?'owner':t.id==='radd'?'refs':t.id==='iadd'?'inter':'nut';
-  if(need==='owner'?!ISOWNER():!CAN(need)){toast(T(need==='owner'?'o_onlyowner':'tm_noperm'));return}
-  if(t.id==='radd')editRef(null);else if(t.id==='iadd')editInter(null);else if(t.dataset.nhide)toggleBuiltin(t.dataset.nhide);else editNut(null);
+  if(!CAN('refs')){toast(T('tm_noperm'));return}
+  editRef(null);
 },true);
 
 /* ----- login / session ----- */
@@ -811,6 +702,7 @@ async function publish(){
     const {error}=await OWN.client.rpc('publish_site',{note});if(error){console.error(error);toast(T('o_neterr'));return}
     const {data:pub}=await OWN.client.from('site_config').select('data').eq('id','published').maybeSingle();
     if(pub&&pub.data){PUBLISHED=pub.data;try{localStorage.setItem('vw-cfg',JSON.stringify(PUBLISHED))}catch(e){}}
+    if(PUBLISHED&&Array.isArray(PUBLISHED.ab)){CFG.ab=PUBLISHED.ab;refreshAll()} // the newly published antibiotics show at once
     OWN.saved=false;ownerBar();toast(T('o_pubdone'));return;
   }
   PUBLISHED=data;OWN.saved=false;ownerBar();toast(T('o_pubdone'));

@@ -68,7 +68,29 @@ function abcRun(){
   const x={}; c.inputs.forEach(fl=>{const e=g('ab_'+fl.id); x[fl.id]=fl.type==='check'?!!(e&&e.checked):(e?e.value:'')});
   const r=abEval(c,x,cg.crcl);
   const rowsH=r.rows.map(rw=>`<div class="abcrow${rw.strong?' strong':''}${rw.warn?' warn':''}"><b>${esc(L(rw.k.ar,rw.k.en))}:</b> ${esc(L(rw.v.ar,rw.v.en))}</div>`).join('');
-  out.innerHTML=`<div class="abcres"><p class="hint">${esc(L('تصفية الكرياتينين (Cockcroft-Gault): ','Creatinine clearance (Cockcroft-Gault): '))}<b>${cg.crcl.toFixed(0)} ${esc(L('مل/دقيقة','mL/min'))}</b></p>${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)} · ${esc(ABC_SRC.cg)}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`;
+  out.innerHTML=`<div class="abcres"><p class="hint">${esc(L('تصفية الكرياتينين (Cockcroft-Gault): ','Creatinine clearance (Cockcroft-Gault): '))}<b>${cg.crcl.toFixed(0)} ${esc(L('مل/دقيقة','mL/min'))}</b></p>${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)} · ${esc(ABC_SRC.cg)}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`+
+    `<div class="ract abcact"><button class="btn" type="button" id="abccopy">${esc(T('ab_copy'))}</button><button class="btn" type="button" id="abcprint">${esc(T('ab_print'))}</button></div>`;
+  $('abccopy').onclick=abcCopy;$('abcprint').onclick=abcPrint;
+}
+/* 1.5.0: copy the result (for the patient file) or print only the result card. The heading carries the drug and the date. */
+function abcHead(){const c=ABC_RULES[ABC_SEL];return (c?L(c.name.ar,c.name.en):'')+' · '+new Date().toISOString().slice(0,10)+' · BIOTICWAW'}
+async function abcCopy(){
+  const box=document.querySelector('#res .abcres');if(!box)return;
+  const text=abcHead()+'\n\n'+box.innerText.trim();
+  try{await navigator.clipboard.writeText(text)}catch(e){
+    // older browsers or a page without HTTPS: copy through a hidden text box
+    const t=document.createElement('textarea');t.value=text;t.setAttribute('readonly','');t.style.position='fixed';t.style.opacity='0';
+    document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(e2){}t.remove();
+  }
+  toast(T('ab_copied'));
+}
+function abcPrint(){
+  const box=document.querySelector('#res .abcres');if(!box)return;
+  const p=document.createElement('div');p.id='abprint';
+  p.innerHTML=`<h2>${esc(abcHead())}</h2>`+box.outerHTML;
+  document.body.appendChild(p);document.body.classList.add('printab');
+  const done=()=>{document.body.classList.remove('printab');p.remove();removeEventListener('afterprint',done)};
+  addEventListener('afterprint',done);window.print();setTimeout(()=>{if(document.getElementById('abprint'))done()},1500);
 }
 document.addEventListener('DOMContentLoaded',()=>{try{abcInit()}catch(e){}});
 if(document.readyState!=='loading'){try{abcInit()}catch(e){}}

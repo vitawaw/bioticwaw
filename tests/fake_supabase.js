@@ -51,7 +51,13 @@ window.__calls=[];
       const vc=st.nut.custom.filter(c=>c.rv!==false&&!c.hidden);const ks=new Set(['d','b12','fol','fe','ca','mg','c','zn'].filter(k=>!st.nut.hide.includes(k)).concat(vc.map(c=>c.id)));
       const inter=st.inter.map(x=>x.rv===false&&x.pv?x.pv:x).filter(x=>x.rv!==false&&!x.hidden&&ks.has(x.k)).map(({id,rv,pv,hidden,...r})=>r);
       const refs=st.refs.map(x=>x.rv===false&&x.pv?x.pv:x).filter(x=>x.rv!==false&&!x.hidden).map(({rv,pv,hidden,...r})=>r); // approved, not hidden (like the database)
-      st.cfg=st.cfg||{};const dr={...(st.cfg.draft||{})};delete dr.team;delete dr.team_done;st.cfg.published={...dr,refs,inter,nut:{hide:st.nut.hide,custom:vc.map(({rv,hidden,...r})=>r)}};save();window.__PUB=st.cfg.published;return{data:{},error:null}}
+      st.cfg=st.cfg||{};const dr={...(st.cfg.draft||{})};delete dr.team;delete dr.team_done;st.cfg.published={...dr,refs,inter,nut:{hide:st.nut.hide,custom:vc.map(({rv,hidden,...r})=>r)},ab:(st.ab||[]).filter(x=>x.reviewed&&!x.hidden&&!x.deleted).map(({reviewed,hidden,deleted,...r})=>({...r,inter:(r.inter||[]).filter(i=>!i.deleted)}))};save();window.__PUB=st.cfg.published;return{data:{},error:null}}
+    // 1.5.0 antibiotics (owner only, like the database functions)
+    if(n.startsWith('antibiotic')){if((window.__ROLE||'owner')!=='owner')return{data:null,error:{message:'only the owner'}};st.ab=st.ab||[];
+      if(n==='antibiotics_all')return{data:JSON.parse(JSON.stringify(st.ab)),error:null};
+      if(n==='antibiotic_save'){const p=a.p,o=st.ab.find(x=>x.id===p.id);const row={...(o||{inter:[]}),...p,reviewed:true,deleted:false};if(o)Object.assign(o,row);else st.ab.push(row);save();return{data:p.id,error:null}}
+      if(n==='antibiotic_set_flag'){const o=st.ab.find(x=>x.id===a.p_id);if(o){if(a.p_hidden!=null)o.hidden=a.p_hidden;if(a.p_deleted!=null)o.deleted=a.p_deleted}save();return{data:null,error:null}}
+      if(n==='antibiotic_approve'){const o=st.ab.find(x=>x.id===a.p_id);if(o)o.reviewed=true;save();return{data:null,error:null}}}
     // pharmacist accounts (owner only)
     st.team=st.team||{members:[{id:'u1',email:'owner@x.com',name:'',role:'owner',status:'active',perms:{}}],invites:[]};
     if(n.startsWith('team_')&&(window.__ROLE||'owner')!=='owner')return{error:{message:'only the owner'}};

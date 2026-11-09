@@ -181,11 +181,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-copyphone]
 const GO={meds:()=>{go('meds');setTimeout(()=>$('medin')&&$('medin').focus(),80)},preg:()=>openNut('preg'),bar:()=>openNut('bar'),thi:()=>openNut('thi'),
 report:()=>go('calc'),sources:()=>go('sources'),search:()=>openSearch(),calc:()=>go('calc'),tools:()=>go('tools')};
 const GOLIST=()=>[['',T('rm_go_none')],['meds',T('mm_t')],['report',T('rp_t')],['search',T('gs_t')],['calc',T('tab_calc')],['tools',T('tab_tools')],['sources',T('tab_src')]];
-let RMF='all'; // roadmap filter: all | now | dev | plan | idea
-/* 1.16.0: «coming next» laid out like the interactions: status chips with counts at the top, then one card per line,
-   sorted by status (available now → in development → planned → idea) as interactions are by severity; the owner's
-   order counts inside each status. */
-const RMORD={now:0,dev:1,plan:2,idea:3};
+ // roadmap filter: all | now | dev | plan | idea
 /* Source type from the organisation name, used to order the list (strongest first) and label it. */
 const REFTYPES=[[/Society|NICE|Academy of Pediatrics|WHO|World Health/i,'g'],[/NIH|National Institutes|BNF|National Formulary|Specialist Pharmacy/i,'o'],
   [/SmPC|label|Medsafe|data sheet|Food and Drug|FDA/i,'d'],[/Cochrane|Lancet|BMJ|Journal|J Clin/i,'s'],[/Medscape|StatPearls|MSD|Manual/i,'c']];

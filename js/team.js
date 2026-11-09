@@ -47,8 +47,6 @@ async function sendInvite(email,name,key){
     return;
   }
 }
-/** the pharmacists' page (owner): accounts, invitations, the medical review stamp */
-function openTeam(part){go('team');if(part==='inv')setTimeout(()=>{const el=$('tm-inv');if(el)el.scrollIntoView({block:'start'})},300)}
 async function openTeamPage(){
   if(!ISOWNER())return;
   if(OWN.local||!OWN.client){TEAM.list=null;renderTeam();return}
@@ -101,9 +99,4 @@ async function teamRevoke(i){
   if(!(await confirmDel(i.email)))return;
   const {error}=await OWN.client.rpc('team_revoke_invite',{p_email:i.email});if(error){toast(T('o_neterr'));return}
   await teamLoad();renderTeam();renderNav();
-}
-/** Pharmacist: see which permissions the owner has given. */
-function showMyPerms(){
-  const p=OWN.perms||{};
-  openSheet(T('mr_myperms'),`<div class="filters">${PERMS.map(k=>`<span class="chip${p[k]?' on':' off'}">${esc(T('p_'+k))}: ${T(p[k]?'tm_perm_on':'tm_perm_off')}</span>`).join('')}</div><p class="hint">${T('tm_never')}</p>`);
 }

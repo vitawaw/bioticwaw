@@ -1,4 +1,4 @@
-# BIOTICWAW 1.16.0: run the fast tests on every push and pull request (no secrets, no deploy; Cloudflare still builds the site).
+# BIOTICWAW 1.5.0: run the tests on every push and pull request (no secrets, no deploy; Cloudflare still builds the site).
 name: tests
 on:
   push:
@@ -16,27 +16,20 @@ jobs:
           python-version: '3.12'
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - name: Install Playwright (Chromium)
-        run: |
-          pip install playwright==1.48.0
-          python -m playwright install --with-deps chromium
+          node-version: '22'
       - name: Asset hashes match (set_version.py)
         run: python3 tests/check_assets.py
       - name: Edge worker
         run: |
           node tests/worker_test.mjs
           node tests/worker_links_test.mjs
-      - name: Dose results
+      - name: Dose rules and texts
         run: |
-          python3 tests/medical_cases.py | tee mc.txt
-          test "$(grep -c '^ok' mc.txt)" -ge 66
-      - name: Owner, menus and tools
+          node tests/abrules_test.mjs
+          node tests/i18n_check.mjs
+      - name: Install Playwright (Chromium)
         run: |
-          python3 tests/owner_flow.py
-          python3 tests/menu_flow.py
-          python3 tests/owner_panel.py
-          python3 tests/stats_flow.py
-          python3 tests/reload_flow.py
-          python3 tests/tools_flow.py | tee tf.txt
-          ! grep -qiE '^fail|traceback' tf.txt
+          npm install --no-save playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Visitors and owner on phone, iPad and computer
+        run: node tests/e2e_flow.cjs

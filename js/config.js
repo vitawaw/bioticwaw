@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.4.6';
+const APP_VERSION='1.5.0';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -83,7 +83,9 @@ function mergeCfg(base,over){const out=clone(base);if(!over)return out;over=clea
     out.look={fb:F.includes(l.fb)?l.fb:'tajawal',fh:F.includes(l.fh)?l.fh:'cairo',sb:S(l.sb),sh:S(l.sh),st:S(l.st==null?1:l.st)}}
   if(Array.isArray(over.medcat))out.medcat=over.medcat.filter(m=>m&&typeof m.en==='string'&&/^[a-z0-9][a-z0-9 -]{1,40}$/.test(m.en.trim().toLowerCase())).map(m=>({en:m.en.trim().toLowerCase(),ar:(Array.isArray(m.ar)?m.ar:[]).filter(a=>typeof a==='string'&&a.trim()).map(a=>a.trim().slice(0,40)).slice(0,12),hide:!!m.hide})).slice(0,400);
   if(Array.isArray(over.pages))out.pages=over.pages;
-  out.ab=Array.isArray(over.ab)?over.ab:(out.ab||[]); // 1.18 (test): approved antibiotics with their interactions
+  // approved antibiotics with their interactions. A draft never carries them (they come from publish_site), so the owner's
+  // view falls back to the published list; before 1.5.0 the owner saw an empty interactions page after logging in.
+  out.ab=Array.isArray(over.ab)?over.ab:(PUBLISHED&&Array.isArray(PUBLISHED.ab)?PUBLISHED.ab:(out.ab||[]));
   if(Array.isArray(over.nutOrder))out.nutOrder=over.nutOrder;
   if(over.review&&over.review.n)out.review={n:{ar:over.review.n.ar||'',en:over.review.n.en||''},date:/^\d{4}-\d{2}-\d{2}$/.test(over.review.date||'')?over.review.date:''};
   if(over.menus&&typeof over.menus==='object')out.menus={order:Array.isArray(over.menus.order)?over.menus.order:out.menus.order,bar:Array.isArray(over.menus.bar)?over.menus.bar:out.menus.bar,hide:Array.isArray(over.menus.hide)?over.menus.hide:[]};

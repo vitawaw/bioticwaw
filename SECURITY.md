@@ -7,7 +7,7 @@ Last full review: 2026-10-28 (version 1.2.0).
 | Who | Can | Cannot |
 |---|---|---|
 | Visitor | Read the **published** snapshot (`site_config` row `published`). | Read drafts, unreviewed items, members or history; write anything. |
-| Pharmacist (invited by the owner) | Read the draft and unreviewed content; edit only the parts the owner switched on: vitamins (`nut`), interactions (`inter`), sources (`refs`), page texts and info pages (`text`). Every edit is marked *awaiting review*. | Approve, publish, delete permanently, manage accounts, change contact / colours / roadmap, hide built-in vitamins. A suspended or removed account has no access at all. |
+| Pharmacist (invited by the owner) | Read the draft and unreviewed content; edit only the parts the owner switched on: sources (`refs`) and the medicine list (`inter`). Every edit is marked *awaiting review*. Antibiotics and their interactions are edited by the owner only (each database function checks the owner role). | Approve, publish, delete permanently, manage accounts, edit antibiotics, change contact / colours / roadmap. A suspended or removed account has no access at all. |
 | Owner (pharmacist) | Everything an editor can, plus approve and publish. | Delete permanently (soft delete only; history is kept). |
 
 - **Sign-up is invite-only.** A database trigger rejects any e-mail that is not in `private.invites` (or whose invitation was cancelled).

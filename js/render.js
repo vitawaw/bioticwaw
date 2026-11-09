@@ -26,7 +26,7 @@ function interHTML(){
     <button class="btn" type="button" data-goint="${esc(ks.length>1?'all':K)}">${T('ri_all')}</button></div>`;
 }
 function render(r){
-  LAST=r;if(typeof statHit==='function')statHit('calc',K);$('calc').classList.remove('nores');
+  LAST=r;$('calc').classList.remove('nores');
   const urgent=(r.notes||[]).filter(n=>n.u),rest=(r.notes||[]).filter(n=>!n.u);
   const all=r.srcs=[...new Set([...(r.refs||[]),...(r.opts||[]).flatMap(o=>o.r||[]),...(r.notes||[]).flatMap(o=>o.r||[]),...(r.plan||[]).flatMap(o=>o.r||[])])].sort((a,b)=>a-b);
   r.srcNames=[...new Set(all.filter(n=>REFS[n]).map(n=>REFS[n][0]))];
@@ -67,7 +67,6 @@ function copyRes(){
   try{navigator.clipboard.writeText(text).then(done).catch(()=>fallback(text,done))}catch(e){fallback(text,done)}
 }
 function fallback(text,done){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()}
-const teen=a=>a>=14&&a<=18;
 
 /* ===================== report for the doctor (print / save as PDF) =====================
    A plain page with the patient's inputs, the result, the plan, the warnings, the interactions and the full sources.

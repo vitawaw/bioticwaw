@@ -24,7 +24,6 @@ function show(p,view){
   if(p==='abx'&&typeof renderAbx==='function')renderAbx();
   if(p==='abx'&&typeof renderAbAdmin==='function')renderAbAdmin();
   if(p==='roadmap'&&typeof renderRoadmap==='function')renderRoadmap();
-  if(typeof statHit==='function'){if(false)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team')statHit('section',p)}
   sharedParts(p);
   if(typeof rememberRecent==='function')rememberRecent(TOOLV?'t:'+TOOLKIND[TOOLV]:'p:'+p);
   if(p!=='sources'){$('back').hidden=true;document.querySelectorAll('ol.refs li.hl').forEach(l=>l.classList.remove('hl'))}
@@ -126,12 +125,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('ov').hidden){e.
 $('pc-copy').addEventListener('click',()=>{const t=cardText(),b=$('pc-copy'),done=()=>{b.textContent=T('copied');setTimeout(()=>b.textContent=T('pc_cp'),1600)};try{navigator.clipboard.writeText(t).then(done).catch(()=>fallback(t,done))}catch(e){fallback(t,done)}});
 document.addEventListener('click',e=>{if(e.target.closest('[data-card]')){e.preventDefault();openCard()}});
 
-/* ===================== theme ===================== */
-const SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
-const MOON='<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
-const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
 function themeIcon(){if(typeof renderMenu==='function')renderMenu()}
-function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('vw-theme',t)}catch(e){}themeIcon()}
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',themeIcon);
 
 /* ===================== examples / clear ===================== */

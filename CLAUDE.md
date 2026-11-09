@@ -18,13 +18,15 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 - The visual identity is approved and frozen: see `docs/DESIGN.md`. Do not change colours, fonts, shapes, the logo or the components without the owner's written approval.
 
 ## Release workflow (always)
-1. Work on a branch `release/X.Y.Z` from `main`. Every push builds a Cloudflare **preview**:
-   `https://release-X-Y-Z-<الاسم>.<الحساب>.workers.dev` (dots → dashes). Production is untouched.
+1. Work on the session's branch (now `ccr-c59940f6-mvyndg`) from `main`. Every push builds a Cloudflare **preview** that uses the
+   **test** Supabase project: `https://ccr-c59940f6-mvyndg-bioticwaw.bioticwaw26.workers.dev`. Production
+   (`https://bioticwaw.bioticwaw26.workers.dev`) is untouched. Check what the preview really serves before sending it:
+   `curl -s <preview>/js/config.js | grep -o "APP_VERSION='[^']*'"` (a build takes a few minutes).
 2. Before every push that changes `css/` or `js/`: `python3 tools/set_version.py X.Y.Z` (content-hashed asset URLs;
    without it browsers load stale scripts) and add a section to `CHANGELOG.md` (Arabic).
-3. Run the tests (below), send him the preview link.
-4. **Only when he says «جاهز» (or clearly approves publishing)**: merge into `main` and push → production
-   (رابط الإنتاج يُحدَّد بعد النشر على Cloudflare).
+3. Run the tests (below), send him **both links after every change** (he asked for this): preview + production.
+4. **Only when he says «جاهز» / «انشر» (or clearly approves publishing)**: apply the pending migrations and content files on LIVE
+   (see Database), merge into `main` and push → production; then he publishes from the owner interface.
 - Commit messages end with the attribution lines the session asks for.
 
 ## Rules that must never be broken
@@ -34,49 +36,71 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 - **Soft delete only** for content (the `deleted` / `hidden` flags; history in `config_history`).
 - New or edited medical content by a pharmacist is `reviewed = false` and **never reaches visitors** until the owner approves
   and publishes (`publish_site()` copies only reviewed rows).
-- Permissions are enforced **in the database** (RLS, `private.can_edit(kind)`, `save_content()` checks, `draft_guard` trigger),
+- Permissions are enforced **in the database** (RLS, definer functions that check `private.my_role()`, `draft_guard` trigger),
   not only in the page. Any new editable feature needs the matching database rule.
 - No `<` or `>` in stored text (CHECK constraints) and all external data goes through `clean()` then `esc()`.
 - CSP in `_headers`: scripts only from this site + pinned `supabase-js@2.45.4` on jsDelivr. Don't add other script hosts.
-- Medical numbers: every dose rule must cite a trusted source (`R([n])` in `js/calculators.js`); check
-  `tests/medical_cases.py` after any change.
+- Medical numbers: every dose rule in `js/abrules.js` comes from a named official label (FDA / DailyMed first, the newest
+  available); run `node tests/abrules_test.mjs` after any change. Open clinical points go to the owner, never guessed.
+- Do not revoke anon EXECUTE on `private.my_role()`: the policy that lets visitors read the published row calls it.
 
-## Database (Supabase project `pxvytusjqpvuwsbiraia` = bioticwaw, eu-central-1; test: `ehmucaelvxrftspkqrtq` = bioticwaw-test)
+## Database (Supabase project `pxvytusjqpvuwsbiraia` = bioticwaw = LIVE, eu-central-1; test: `ehmucaelvxrftspkqrtq` = bioticwaw-test)
 - Every change = a new file in `supabase/migrations/` named with the **version Supabase assigns** when applied
-  (check with list_migrations, rename the file to match).
-- Changes must stay **compatible with the version currently live** (production may be older than the branch).
-- The free project pauses after 7 idle days; the worker's daily cron (`src/worker.js`) keeps it awake.
-- Supabase security advisor warnings about `publish_site` / `team_*` being callable by signed-in users are expected:
-  each checks the owner role inside.
+  (check with list_migrations, rename the file to match). Apply on TEST first; LIVE only at release.
+- Changes must stay **compatible with the version currently live** (LIVE still runs the vitamin site 1.17.3 until release).
+- MCP write tools (apply_migration) ask him for approval; it often times out on his tablet. Then: do not retry in the same
+  turn; tell him, and either retry when he is watching or give him the raw GitHub link + the SQL editor link.
+- The free projects pause after 7 idle days; the worker's daily cron (`src/worker.js`) keeps both awake.
+- Advisor warnings about owner functions callable by signed-in users are expected: each checks the owner role inside.
+- **Pending for LIVE at release** (in order): the six `20261109*` antibiotic migrations, `antibiotics_cleanup_hardening.sql`
+  (rename to its version once applied on TEST), then content: `supabase/manual/sources_antibiotics_1_26.sql`,
+  `supabase/manual/batch1_load_test.sql`; then he approves in 🔔 and publishes.
 
 ## Where things are (no build step; plain scripts loaded in order by `index.html`)
-- Menus (1.6.3, like Facebook — he chose this): `js/nav.js`. Phones/tablets (<1024px): tab bar at the bottom (`nav.tabs`:
-  calc, tools, interactions, sources + ☰ `#t-menu`); ☰ opens the page `#menu` (PAGES includes 'menu'): account card,
-  management, shortcut tiles, settings, log out. Wide screens (≥1024px): the same menu as a fixed side menu `#side`
-  with the five sections on top; tab bar hidden. Both are drawn by `menuHTML(r)` ('m' page, 'd' side) via `renderMenu()`;
-  `adminGroups()` = management part. «More» and the ☰ drawer of 1.6.0 no longer exist. `openSheet()` = floating window;
-  info pages = `CFG.pages` (defaults in `js/config.js`).
-- Pharmacist accounts: `js/team.js` (owner only) + migration `*_pharmacist_accounts.sql`.
-- Owner/pharmacist editing, save, publish, login: `js/owner.js`. `CAN(kind)` / `ISOWNER()` in `nav.js`.
-- Texts: `js/i18n.js` (`key:['عربي','English']`). Every visible text must exist in **both** languages.
+- Sections: الحاسبة `#calc`, التداخلات `#interactions`, الأدوية `#abx`, المصادر `#sources`, القادم `#roadmap`, + menu `#menu`
+  (`menuHTML()` in `js/nav.js`: the five sections, «سجل الإجراءات» and logout for the owner, «دخول المالك» for visitors).
+- Calculator: `js/abrules.js` = `ABC_RULES` (per drug: inputs, ordered rows of `{when, text}` rules; the first matching rule wins;
+  `when` keys = input ids or `crcl:{gt,gte,lt,lte}`); `js/abcalc.js` = engine (`abCrCl` Cockcroft-Gault with ideal/adjusted
+  weight, `abMatch`, `abEval`), page (`abcInit` dropdown `#abcsel` of PUBLISHED drugs only; the owner also sees unpublished
+  ones), result + «نسخ النتيجة» / «طباعة» (`abcCopy`, `abcPrint`, body.printab).
+- Interactions page: `abPicker()` in `js/lists.js` = dropdown `#intsel` (step 1) + card in `#ilist` (step 2), data `CFG.ab[].inter`.
+- Antibiotics page + owner editor: `renderAbx()`, `renderAbAdmin()`, `abEdit()` (dialog with «حفظ»/«إلغاء»), approve in 🔔
+  (`abPendHTML`, `data-abok`). Database functions: `antibiotics_all`, `antibiotic_save`, `antibiotic_set_flag`,
+  `antibiotic_approve`, `publish_site` (adds `ab`). `mergeCfg` falls back to `PUBLISHED.ab` because a draft never has it.
+- Dialogs: `dialog()` in `js/owner.js` always has a × (`#dlg-x`) and at least «إلغاء». Floating window: `openSheet()`.
+- Owner/pharmacist editing, save, publish, login: `js/owner.js`. `CAN(kind)` / `ISOWNER()` in `nav.js`. Accounts: `js/team.js`.
+- Texts: `js/i18n.js` (`key:['عربي','English']`, two blocks: `I18N` and `Object.assign(I18N,…)`). Every text in **both** languages.
+- Still inside but inert (vitamin era, empty data): `buildData()`/`CUST`/`NCUST` in `content.js`, `render()` in `render.js`,
+  the medicine list (`MEDS`, `renderMedCat`) in `lists.js`. Remove only as a separate tested step.
 
-## Tests (run before every preview)
+## Tests (run before every preview; CI runs the same)
 ```
-python3 tests/owner_flow.py      # owner / visitor / pharmacist flows (fake Supabase: tests/fake_supabase.js)
-python3 tests/owner_panel.py     # 1.16.0 owner panel: edit mode, appearance, page editor, 3 sizes, undo, publish list, follow-up tools
-python3 tests/stats_flow.py      # 1.17.0 visit counting + owner dashboard, 3 sizes
-python3 tests/reload_flow.py     # 1.17.0 every page stays after a browser reload (3 roles × 3 sizes, ~8 min)
-python3 tests/menu_flow.py       # menus, floating windows, info pages, pharmacist accounts, 3 screen sizes → tests/shots/
-python3 tests/medical_cases.py   # dose results against expected values
-python3 tests/tools_flow.py      # tool formulas + calculator → tools links
-python3 tests/i18n_audit.py en   # and `ar`: nothing left in the other language (slow, ~5 min each)
 python3 tests/check_assets.py    # asset hashes match (forgot set_version.py?)
 node tests/worker_test.mjs       # edge worker
 node tests/worker_links_test.mjs # link check
+node tests/abrules_test.mjs      # dose rules: fallback per row, ar+en, known label values
+node tests/i18n_check.mjs        # every text in Arabic and English
+node tests/e2e_flow.cjs          # visitors 3 sizes ar+en + owner (login, approve, edit, publish), missing text keys → tests/shots/
 ```
+Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is installed globally here; Python Playwright is not).
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
-## Where we are (2026-11-03)
+## Where we are (2026-11-09)
+- The site is now an antibiotic reference (he decided: remove all vitamin content; build from FDA/DailyMed; 100 drugs in
+  batches of 10, pharmacist review before load and publish; test site first, main only after his approval).
+- Preview = 1.5.0 on the branch. LIVE = 1.17.3 (old vitamin site) until he says «انشر».
+- Test DB: 10 antibiotics (batch 1) + 39 interactions, all approved, 26 sources; **nothing published yet** on test
+  (he must press «نشر» there). The cleanup migration `antibiotics_cleanup_hardening.sql` is written but NOT applied (the
+  approval timed out on 2026-11-09); the code works with the database before and after it.
+- 1.5.0 (his «نفذ كل المقترحات»): antibiotic schema exported to migrations (bodies md5-checked against TEST), owner bug fixed
+  (owner saw no antibiotics after login), print/copy result, dead code removed with a JS parser (45 functions, ~290 text keys,
+  stats code/CSS, worker `/api/hit`), vitamin Python tests replaced by `tests/e2e_flow.cjs` + node checks, CI on Node 22.
+- Open for him: clinical points (nitrofurantoin kidney threshold, SMX-TMP renal table from the tablet label, amox-clav
+  duration, AWaRe for amox-clav / ceftriaxone / SMX-TMP), owner MFA, leaked-password protection (paid), batch 2.
+- Removed with the old menu (unreachable since 1.3.x): backup download, version restore, the all-texts editor. Offer to
+  bring them back into the owner menu if he wants them.
+
+## History (vitamin era, before the move to antibiotics)
 - 2026-11-03 final review: CLAUDE.md was served publicly (not in .assetsignore) → added (Live: 1.14.3, he said «جاهز» 2026-11-03). Live crawl 8 runs (3 sizes × pro/pt, ar+en on phone): 0 errors, 32 calculators all give results; links 60 ok + 12 blocked (403 publishers), 0 broken.
 - 2026-11-03 review + load test (report sent to him): live DB healthy (13 MB, RLS on all 7 public tables, anon = read published row only,
   no anon writes/RPC, definer functions all check owner + fixed search_path; advisor = expected definer warnings, leaked-password (paid),
