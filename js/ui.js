@@ -151,12 +151,12 @@ const NUMS=['age','wt','ht','dlab','b12v','ab12','hb','fer','cadiet','mgv','mon'
 const EX={d:{age:45,sex:'f',wt:68,ht:162,dlab:14},b12:{age:55,sex:'f',b12v:160},fol:{age:28,sex:'f',folg:'plan'},fe:{age:30,sex:'f',wt:60,feg:'ida'},ca:{age:60,sex:'f',cadiet:400},mg:{age:50,sex:'m',mgv:1.4},c:{age:30,sex:'m',czg:'rda'},zn:{age:30,sex:'m',czg:'rda'},preg:{age:28,tri:'t2',hb:10.2},inf:{mon:5,wt:7,feed:'bf'},vac:{mon:18,vag:'prev'},bar:{age:35,sex:'f',bsp:'sg'},thi:{age:45,sex:'m',thg:'alc'}};
 function fillExample(){
   const e=EX[K];
-  if($('dunit').value!=='ng')$('dunit').value='ng';if($('b12u').value!=='pg')$('b12u').value='pg';if($('mgu').value!=='mgdl')$('mgu').value='mgdl';
+  
   Object.entries(e).forEach(([k,v])=>{$(k).value=v});
   syncSex();F[K]();
 }
 $('example').addEventListener('click',fillExample);
-$('clear').addEventListener('click',()=>{$('fegw').hidden=false;NUMS.forEach(id=>{$(id).value='';$(id).classList.remove('bad');const er=$('e-'+id);if(er)er.hidden=true});['mal','med','ckd','neuro','mgsx','smk','infl','pre','ntd','lowca','veg'].forEach(id=>$(id).checked=false);syncSex();F[K]();($('age').offsetParent?$('age'):$('mon')).focus()});
+$('clear').addEventListener('click',()=>{NUMS.forEach(id=>{$(id).value='';$(id).classList.remove('bad');const er=$('e-'+id);if(er)er.hidden=true});['mal','med','ckd','neuro','mgsx','smk','infl','pre','ntd','lowca','veg'].forEach(id=>$(id).checked=false);syncSex();F[K]();($('age').offsetParent?$('age'):$('mon')).focus()});
 
 /* hide pregnancy options for young ages */
 function syncSex(){
@@ -229,9 +229,9 @@ function openNut(k){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply();if(
 $('picker').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;openNut(b.dataset.k)});
 $('cbackb').addEventListener('click',()=>go('calc'));
 $('tback').addEventListener('click',()=>toolBack());
-const FORMIDS=['age','sex','wt','ht','dlab','dunit','mal','med','ckd','b12v','b12u','b12c','neuro','ab12','folg','feg','hb','fer','infl','cadiet','mgv','mgu','mgsx','czg','smk','mon','feed','pre','vag','tri','ntd','lowca','veg','fetri','bsp','banem','thg'];
+const FORMIDS=['age','sex'];
 FORMIDS
-  .forEach(i=>{$(i).addEventListener('input',()=>{if(i==='age')syncSex();F[K]()});$(i).addEventListener('change',()=>{if(i==='age')syncSex();F[K]()})});
+  .filter(i=>$(i)).forEach(i=>{$(i).addEventListener('input',()=>{if(i==='age')syncSex();F[K]()});$(i).addEventListener('change',()=>{if(i==='age')syncSex();F[K]()})});
 
 /* ===================== colors ===================== */
 const LOOKF={tajawal:'Tajawal,Cairo,"Segoe UI",Tahoma,sans-serif',cairo:'Cairo,Tajawal,"Segoe UI",Tahoma,sans-serif',system:'system-ui,-apple-system,"Segoe UI","Noto Sans Arabic",Tahoma,sans-serif'};

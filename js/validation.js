@@ -4,9 +4,6 @@
 /* ===================== input validation ===================== */
 const RANGE={age:[0,110],wt:[2,250],ht:[40,230],b12v:[20,3000],cadiet:[0,4000],ab12:[5,300],hb:[3,25],fer:[1,5000]};
 function rangeOf(id){
-  if(id==='dlab')return $('dunit').value==='nmol'?[2,1000]:[1,400];
-  if(id==='mgv')return $('mgu').value==='mmol'?[0.1,3]:[0.2,6];
-  if(id==='b12v')return $('b12u').value==='pmol'?[15,2200]:[20,3000];
   if(id==='mon')return K==='vac'?[0,59]:[0,24];
   return RANGE[id];
 }

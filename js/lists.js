@@ -173,7 +173,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-copyphone]
 /** «جرّبه» on a feature that is available now: where each feature lives */
 const GO={sch:()=>openTool('sch'),meds:()=>{go('meds');setTimeout(()=>$('medin')&&$('medin').focus(),80)},preg:()=>openNut('preg'),bar:()=>openNut('bar'),thi:()=>openNut('thi'),
   labs:()=>openTool('labs'),report:()=>go('calc'),sources:()=>go('sources'),search:()=>openSearch(),calc:()=>go('calc'),tools:()=>go('tools')};
-const GOLIST=()=>[['',T('rm_go_none')],['sch',T('tl_sch')],['meds',T('mm_t')],['preg',T('n_preg')],['bar',T('n_bar')],['thi',T('n_thi')],['labs',T('lb_t')],['report',T('rp_t')],['search',T('gs_t')],['calc',T('tab_calc')],['tools',T('tab_tools')],['sources',T('tab_src')]];
+const GOLIST=()=>[['',T('rm_go_none')],['sch',T('tl_sch')],['meds',T('mm_t')],['labs',T('lb_t')],['report',T('rp_t')],['search',T('gs_t')],['calc',T('tab_calc')],['tools',T('tab_tools')],['sources',T('tab_src')]];
 let RMF='all'; // roadmap filter: all | now | dev | plan | idea
 /* 1.16.0: «coming next» laid out like the interactions: status chips with counts at the top, then one card per line,
    sorted by status (available now → in development → planned → idea) as interactions are by severity; the owner's

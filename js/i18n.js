@@ -59,16 +59,16 @@ w_t:['أهلاً بك في BIOTICWAW','Welcome to BIOTICWAW'],w_1:['اختر ا�
 
 s1:['اختر الفيتامين أو المعدن','Choose a vitamin or mineral'],s2:['بيانات المريض','Patient details'],s3:['النتيجة','Result'],
 n_d:['فيتامين D','Vitamin D'],h_d:['حسب تحليل \u206625(OH)D\u2069','By \u206625(OH)D\u2069 level'],
-n_b12:['فيتامين B12','Vitamin B12'],h_b12:['حسب مستوى المصل','By serum level'],
-n_fol:['حمض الفوليك','Folic acid'],h_fol:['الحمل وفقر الدم','Pregnancy and anemia'],
+
+
 n_fe:['الحديد','Iron'],h_fe:['الفموي والوريدي','Oral and IV'],
-n_ca:['الكالسيوم','Calcium'],h_ca:['حسب الغذاء اليومي','By dietary intake'],
-n_mg:['المغنيسيوم','Magnesium'],h_mg:['حسب مستوى المصل','By serum level'],
-n_c:['فيتامين C','Vitamin C'],h_c:['الاحتياج ونزلات البرد','Daily needs and the common cold'],
-n_zn:['الزنك','Zinc'],h_zn:['الاحتياج ونزلات البرد','Daily needs and the common cold'],
+
+
+
+
 n_preg:['الحمل والرضاعة','Pregnancy and breastfeeding'],h_preg:['المكملات اليومية','Daily supplements'],
-n_inf:['الرضيع','Infant'],h_inf:['فيتامين D وK والحديد حتى سنتين','Vitamin D, iron and K up to age 2'],
-n_vac:['فيتامين A للأطفال','Vitamin A for children'],n_bar:['بعد عمليات السمنة','After weight-loss surgery'],h_bar:['التكميم وتحويل المسار','Sleeve and gastric bypass'],n_thi:['نقص فيتامين B1 (الثيامين)','Vitamin B1 (thiamine) deficiency'],h_thi:['النقص والكحول وفيرنيكه','Deficiency, alcohol, Wernicke'],bsp:['نوع العملية','Type of surgery'],bs_sg:['تكميم المعدة (SG)','Sleeve gastrectomy (SG)'],bs_rygb:['تحويل المسار (RYGB)','Roux-en-Y gastric bypass (RYGB)'],bs_lagb:['ربط المعدة (LAGB)','Adjustable gastric band (LAGB)'],bs_bpd:['تحويل الاثني عشر (BPD/DS)','Duodenal switch (BPD/DS)'],banem:['سبقت الإصابة بفقر الدم','Previous anemia'],banem_s:['يرفع جرعة الحديد الوقائية','Raises the preventive iron dose'],th_mild:['نقص خفيف','Mild deficiency'],th_sev:['نقص شديد','Severe deficiency'],th_alc:['الاعتماد على الكحول (الوقاية بالفم)','Alcohol dependence (oral prevention)'],th_risk:['خطورة عالية لاعتلال فيرنيكه','High risk of Wernicke encephalopathy'],th_we:['اشتباه اعتلال فيرنيكه (طوارئ)','Suspected Wernicke encephalopathy (emergency)'],th_h:['اعتلال فيرنيكه: اضطراب حركة العين، أو عدم ثبات المشي، أو تشوش ذهني.','Wernicke encephalopathy: impaired eye movements, unsteady walking or confusion.'],h_vac:['WHO: 6 – 59 شهراً','WHO: 6–59 months'],
+
+n_thi:['نقص فيتامين B1 (الثيامين)','Vitamin B1 (thiamine) deficiency'],h_thi:['النقص والكحول وفيرنيكه','Deficiency, alcohol, Wernicke'],bsp:['نوع العملية','Type of surgery'],bs_sg:['تكميم المعدة (SG)','Sleeve gastrectomy (SG)'],bs_rygb:['تحويل المسار (RYGB)','Roux-en-Y gastric bypass (RYGB)'],bs_lagb:['ربط المعدة (LAGB)','Adjustable gastric band (LAGB)'],bs_bpd:['تحويل الاثني عشر (BPD/DS)','Duodenal switch (BPD/DS)'],banem:['سبقت الإصابة بفقر الدم','Previous anemia'],banem_s:['يرفع جرعة الحديد الوقائية','Raises the preventive iron dose'],th_mild:['نقص خفيف','Mild deficiency'],th_sev:['نقص شديد','Severe deficiency'],th_alc:['الاعتماد على الكحول (الوقاية بالفم)','Alcohol dependence (oral prevention)'],th_risk:['خطورة عالية لاعتلال فيرنيكه','High risk of Wernicke encephalopathy'],th_we:['اشتباه اعتلال فيرنيكه (طوارئ)','Suspected Wernicke encephalopathy (emergency)'],th_h:['اعتلال فيرنيكه: اضطراب حركة العين، أو عدم ثبات المشي، أو تشوش ذهني.','Wernicke encephalopathy: impaired eye movements, unsteady walking or confusion.'],
 mon:['العمر بالأشهر','Age in months'],ph_mon:['مثال: 5','e.g. 5'],
 ab12:['Active B12 (اختياري)','Active B12 (optional)'],ph_ab12:['مثال: 40','e.g. 40'],ab12_h:['Holotranscobalamin: أقل من 25 نقص، 25 – 70 غير حاسم، أكثر من 70 نقص غير مرجّح (NICE)','Holotranscobalamin: below 25 deficient, 25–70 indeterminate, above 70 deficiency unlikely (NICE)'],
 hb:['الهيموغلوبين (اختياري)','Hemoglobin (optional)'],ph_hb:['مثال: 10.5','e.g. 10.5'],
@@ -89,7 +89,7 @@ cal_add:['التقويم','Calendar'],cal_done:['نزل ملف المواعيد�
 cal_foot:['من BIOTICWAW. راجع الطبيب أو الصيدلي قبل تغيير أي جرعة.','From BIOTICWAW. Check with your doctor or pharmacist before changing any dose.'],
 lb_t:['سجل التحاليل','Lab results log'],tl_labs:['سجل التحاليل','Lab results log'],ts_labs:['احفظ نتائجك وتابع التحسن','Save your results and follow the change'],ts_u:['IU وmcg ووحدات التحاليل','IU, mcg and lab units'],ts_sch:['أوقات المكملات والأدوية بلا تداخل','Supplement and medicine times without clashes'],lb_l:['احفظ نتائج تحاليل المريض وشاهد التحسن بين تحليل وآخر.','Save the lab results and see the change from one test to the next.'],
 lb_test:['التحليل','Test'],lb_val:['النتيجة','Result'],lb_date:['التاريخ','Date'],lb_add:['احفظ','Save'],
-lb_h:['يُحفظ السجل على جهازك فقط ولا يُرسل لأي جهة. الخطوط المتقطعة هي الحدود التي تستعملها الحاسبة.','The record stays on your device only and is not sent anywhere. Dashed lines are the limits the calculator uses.'],
+
 lb_none:['لا توجد نتائج محفوظة بعد. احفظ نتيجة من هنا أو بزر «احفظ النتيجة» تحت نتيجة الحاسبة.','No saved results yet. Save one here or with «Save result» under a calculator result.'],
 lb_all:['كل النتائج','All results'],lb_clear:['احذف كل السجل','Delete the whole record'],lb_clearq:['حذف كل نتائج التحاليل المحفوظة على هذا الجهاز؟','Delete all lab results saved on this device?'],
 lb_saved:['حُفظت في سجل التحاليل','Saved to the lab results log'],lb_bad:['أدخل نتيجة صحيحة','Enter a valid result'],lb_save:['احفظ النتيجة','Save result'],
@@ -128,20 +128,20 @@ lf_org:['الجهة','organisation'],lf_title:['العنوان','title'],lf_url:
 mm_h:['تظهر عندها التداخلات التي تخص أدوية المريض فقط. القائمة تبقى على هذا الجهاز ولا تُرسل لأي جهة.','Only the interactions that concern the patient medicines are shown. The list stays on this device and is not sent anywhere.'],
 mm_n:['{n} تداخل مع أدوية المريض','{n} interaction(s) with the patient medicines'],mm_none:['لا توجد تداخلات مسجّلة مع أدوية المريض. هذا لا يعني عدم وجود تداخل؛ راجع المصادر.','No recorded interactions with the patient medicines. That does not mean there are none; check the sources.'],
 ampiu:['تركيز الأمبولة','Ampoule strength'],o_gtab:['Ferinject: الجدول المبسّط','Ferinject: simplified table'],
-tl_ml:['الشراب والقطرات','Syrup and drops'],tl_sch:['جدول المكملات','Supplement schedule'],tl_ul:['الحد الأعلى','Upper limit'],tl_u:['محوّل الوحدات','Unit converter'],
-ml_t:['كم مل من الشراب أو القطرات؟','How many mL of syrup or drops?'],ml_l:['يحسب الجرعة حسب الوزن ويحوّلها إلى مل أو قطرات حسب تركيز العبوة. يتعبأ من نتيجة الحديد للأطفال والرضيع.','Calculates the dose by weight and turns it into mL or drops for the strength on the pack. Filled from the child and infant iron results.'],
+tl_ul:['الحد الأعلى','Upper limit'],tl_u:['محوّل الوحدات','Unit converter'],
+ml_l:['يحسب الجرعة حسب الوزن ويحوّلها إلى مل أو قطرات حسب تركيز العبوة. يتعبأ من نتيجة الحديد للأطفال والرضيع.','Calculates the dose by weight and turns it into mL or drops for the strength on the pack. Filled from the child and infant iron results.'],
 mlmgkg:['الجرعة (ملغ/كغم في المرة)','Dose (mg/kg per dose)'],mlfreq:['عدد المرات يومياً','Times a day'],fq1:['مرة واحدة','Once'],fq2:['مرتين','Twice'],fq3:['3 مرات','3 times'],
 mlconc:['التركيز: كم ملغ…','Strength: how many mg…'],mlper:['…في كم مل','…in how many mL'],mldpm:['عدد القطرات في 1 مل (اختياري)','Drops in 1 mL (optional)'],
 o_mldose:['الجرعة في المرة','Dose each time'],o_mlvol:['الكمية من العبوة','Amount from the pack'],
-ml_h:['اقرأ التركيز من العبوة نفسها، فالعبوات تختلف (مثلاً 25 ملغ في 1 مل، أو 15 ملغ في 0.6 مل). استعمل المحقنة المدرجة التي مع الدواء. الحديد بالجرعة العنصرية.','Read the strength on the pack itself, as products differ (for example 25 mg in 1 mL, or 15 mg in 0.6 mL). Use the oral syringe that comes with the medicine. Iron doses are expressed as elemental iron.'],
-sc_t:['جدول المكملات اليومي','Daily supplement schedule'],sc_l:['اختر ما يأخذه المريض، فترتَّب الأوقات تلقائياً حسب الفواصل بين المكملات والأدوية.','Choose what the patient takes and the times are arranged automatically to keep the gaps between supplements and medicines.'],
+
+
 schw:['وقت الاستيقاظ','Wake-up time'],sc_none:['اختر مكملاً أو دواءً واحداً على الأقل.','Choose at least one supplement or medicine.'],
 sc_fail:['تعذّر ترتيب كل ما اخترته في يوم واحد مع احترام الفواصل. اسأل الصيدلي (قد يلزم يوم بديل لبعض المكملات).','Everything chosen cannot fit in one day with the required gaps. Ask the pharmacist (some supplements may need alternate days).'],
 sc_gaps:['الفواصل المطبّقة:','Gaps applied:'],
 sc_h:['الوجبات مفترضة بعد الاستيقاظ بساعة (الفطور) و6 ساعات (الغداء) و12 ساعة (العشاء). Alendronate أسبوعي: الجدول ليوم أخذه. اتبع وصفة الطبيب إن اختلفت.','Meals are assumed 1 hour (breakfast), 6 hours (lunch) and 12 hours (dinner) after waking. Alendronate is weekly: the schedule is for the day it is taken. Follow the prescription if it differs.'],
-tb_ml:['مل الشراب','Syrup mL'],tb_sch:['جدول المكملات','Supplement schedule'],tb_ca:['الكالسيوم المصحح','Corrected calcium'],tb_units:['تحويل الوحدات','Convert units'],tb_ul:['الحد الأعلى','Upper limit'],tu_l:['حوّل بين IU وmcg وmg للفيتامينات، وبين وحدات التحاليل.','Convert between IU, mcg and mg for vitamins, and between lab units.'],
+tb_ca:['الكالسيوم المصحح','Corrected calcium'],tb_units:['تحويل الوحدات','Convert units'],tb_ul:['الحد الأعلى','Upper limit'],tu_l:['حوّل بين IU وmcg وmg للفيتامينات، وبين وحدات التحاليل.','Convert between IU, mcg and mg for vitamins, and between lab units.'],
 ucv:['التحويل','Conversion'],uval:['القيمة','Value'],o_uout:['النتيجة','Result'],
-tu_h:['معاملات NIH. فيتامين D: <bdi>1 mcg = 40 IU</bdi>. فيتامين A: <bdi>1 IU retinol = 0.3 mcg RAE</bdi>. فيتامين E: <bdi>1 IU = 0.67 mg</bdi> للطبيعي و<bdi>0.45 mg</bdi> للصناعي.<a class="ref" href="#" data-ref="4">4</a><a class="ref" href="#" data-ref="30">30</a><a class="ref" href="#" data-ref="31">31</a>','NIH factors: vitamin D 1 mcg = 40 IU; vitamin A 1 IU retinol = 0.3 mcg RAE; vitamin E 1 IU natural = 0.67 mg, synthetic = 0.45 mg.<a class="ref" href="#" data-ref="4">4</a><a class="ref" href="#" data-ref="30">30</a><a class="ref" href="#" data-ref="31">31</a>'],
+
 age:['العمر (سنة، 0 للرضيع)','Age (years, 0 = infant)'],sex:['الجنس والحالة','Sex and pregnancy status'],
 sx_m:['ذكر','Male'],sx_f:['أنثى','Female'],sx_p:['حامل','Pregnant'],sx_l:['مرضع','Breastfeeding'],
 wt:['الوزن (كغم)','Weight (kg)'],ht:['الطول (سم)','Height (cm)'],
@@ -160,21 +160,21 @@ mgv:['مستوى المغنيسيوم في المصل','Serum magnesium'],mgsx:[
 goal:['الهدف','Purpose'],g_rda:['الاحتياج اليومي','Daily requirement'],g_cold:['نزلات البرد','Common cold'],g_dia:['إسهال الأطفال (WHO)','Childhood diarrhoea (WHO)'],
 smk:['مدخّن','Smoker'],smk_s:['يحتاج 35 ملغ إضافية من فيتامين C يومياً','Needs 35 mg more vitamin C per day'],
 ex:['جرّب مثالاً','Try an example'],clr:['مسح البيانات','Clear'],
-tt_t:['كم حبة يأخذ المريض؟','How many tablets?'],tt_l:['يحوّل الجرعة إلى عدد حبات حسب نوع الحبة المتوفرة. يتعبأ تلقائياً من نتيجة الحديد والكالسيوم والمغنيسيوم وحمض الفوليك.','Turns a dose into a number of tablets for the tablet you have. Filled automatically from the iron, calcium, magnesium and folic acid results.'],
+
 salt:['نوع الحبة','Tablet type'],salt_direct:['أعرف الكمية العنصرية من العبوة','I know the elemental amount from the pack'],
-salt_fs:['Ferrous sulfate (حديد 20%)','Ferrous sulfate (20% iron)'],salt_ff:['Ferrous fumarate (حديد 33%)','Ferrous fumarate (33% iron)'],salt_fg:['Ferrous gluconate (حديد 12%)','Ferrous gluconate (12% iron)'],
-salt_cc:['Calcium carbonate (كالسيوم 40%)','Calcium carbonate (40% calcium)'],salt_ci:['Calcium citrate (كالسيوم 21%)','Calcium citrate (21% calcium)'],
+salt_ff:['Ferrous fumarate (حديد 33%)','Ferrous fumarate (33% iron)'],salt_fg:['Ferrous gluconate (حديد 12%)','Ferrous gluconate (12% iron)'],
+salt_ci:['Calcium citrate (كالسيوم 21%)','Calcium citrate (21% calcium)'],
 tab_el:['الكمية العنصرية في الحبة (ملغ)','Elemental amount per tablet (mg)'],tab_salt:['وزن الملح في الحبة (ملغ)','Salt weight per tablet (mg)'],needmg:['الجرعة المطلوبة (ملغ عنصري)','Dose needed (elemental mg)'],
 o_el:['العنصري في الحبة الواحدة','Elemental per tablet'],o_tabs:['عدد الحبات للجرعة','Tablets per dose'],
-tt_h:['نسب الحديد والكالسيوم والزنك من NIH ODS (وZinc acetate من American Family Physician)، والمغنيسيوم من الوزن الجزيئي للملح (1 mmol مغنيسيوم = 24.3 ملغ). الحبة المجففة من Ferrous sulfate نسبتها أعلى، فراجع العبوة دائماً<a class="ref" href="#" data-ref="15">15</a><a class="ref" href="#" data-ref="18">18</a>','Iron, calcium and zinc percentages from NIH ODS; magnesium from the salt formula weight (1 mmol magnesium = 24.3 mg). Dried ferrous sulfate contains more iron, so always check the pack<a class="ref" href="#" data-ref="15">15</a><a class="ref" href="#" data-ref="18">18</a>'],
-td_t:['محوّل جرعة فيتامين D3','Vitamin D3 dose converter'],td_l:['يتعبأ تلقائياً بالجرعة اليومية من نتيجة الحاسبة، ويمكنك تغييره.','Filled automatically with the daily dose from the calculator; you can change it.'],
+
+
 iu:['الجرعة اليومية (IU)','Daily dose (IU)'],cc:['تركيز القطرات في العبوة','Drop strength on the pack'],
 cc100:['100 IU لكل قطرة','100 IU per drop'],cc200:['200 IU لكل قطرة','200 IU per drop'],cc400:['400 IU لكل قطرة','400 IU per drop'],cc1000:['1,000 IU لكل قطرة','1,000 IU per drop'],ccml:['400 IU لكل 1 مل','400 IU per 1 mL'],
 o_dr:['القطرات','Drops'],o_cp1:['كبسولات 1,000 IU','1,000 IU capsules'],o_cp1s:['إن توفرت بهذا التركيز','If available in this strength'],o_cp50:['كبسولة 50,000 IU','50,000 IU capsule'],o_wk:['الإجمالي الأسبوعي','Weekly total'],o_amp:['أمبولة 100,000 IU','100,000 IU ampoule'],o_amps:['تعادل هذه المدة من الجرعة اليومية','Covers this many days of the daily dose'],
 td_h:['كل 1 mcg يساوي 40 IU. لمن عمرهم 50 سنة فأكثر تفضّل إرشادات 2024 الجرعة اليومية على الجرعات الكبيرة المتباعدة<a class="ref" href="#" data-ref="3">3</a>','1 mcg = 40 IU. For adults 50 and older, the 2024 guideline prefers daily dosing over large intermittent doses<a class="ref" href="#" data-ref="3">3</a>'],
-tp_t:['الكالسيوم المصحح حسب الألبومين (Payne)','Albumin-corrected calcium (Payne)'],tca:['الكالسيوم الكلي (mg/dL)','Total calcium (mg/dL)'],alb:['الألبومين (g/dL)','Albumin (g/dL)'],o_cca:['الكالسيوم المصحح','Corrected calcium'],
-tp_h:['المعادلة: الكالسيوم + 0.8 × (4 − الألبومين)، بوحدة mg/dL وg/dL<a class="ref" href="#" data-ref="19">19</a>. التصحيح تقريبي: عند المرضى الحرجين أو مرضى الكلى أو اضطراب الألبومين الشديد يُفضَّل قياس الكالسيوم المتأين.','Formula: calcium + 0.8 × (4 − albumin), in mg/dL and g/dL<a class="ref" href="#" data-ref="19">19</a>. The correction is approximate: in critically ill or kidney patients, or with very abnormal albumin, measure ionized calcium.'],
-tg_t:['عجز الحديد للحديد الوريدي (Ganzoni)','Iron deficit for IV iron (Ganzoni)'],tg_l:['يأخذ الوزن من بيانات المريض في الحاسبة.','Uses the weight from the calculator.'],
+tca:['الكالسيوم الكلي (mg/dL)','Total calcium (mg/dL)'],alb:['الألبومين (g/dL)','Albumin (g/dL)'],o_cca:['الكالسيوم المصحح','Corrected calcium'],
+
+tg_l:['يأخذ الوزن من بيانات المريض في الحاسبة.','Uses the weight from the calculator.'],
 gha:['Hb الحالي (g/dL)','Current Hb (g/dL)'],ght:['Hb المستهدف (g/dL)','Target Hb (g/dL)'],o_gmg:['إجمالي العجز','Total iron deficit'],o_gvens:['لا تتجاوز 200 ملغ في الحقنة الواحدة','No more than 200 mg per injection'],
 tg_h:['المستهدف الافتراضي 15 g/dL لوزن 35 كغم فأكثر و13 g/dL لأقل منه، والمخزون 500 ملغ أو 15 ملغ/كغم<a class="ref" href="#" data-ref="16">16</a><a class="ref" href="#" data-ref="17">17</a>. الجدول المبسّط من النشرة الأوروبية/البريطانية لـ Ferinject<a class="ref" href="#" data-ref="59">59</a>','Default target is 15 g/dL at 35 kg or more and 13 g/dL below; stores are 500 mg or 15 mg/kg<a class="ref" href="#" data-ref="16">16</a><a class="ref" href="#" data-ref="17">17</a>. Simplified table from the EU/UK Ferinject SmPC<a class="ref" href="#" data-ref="59">59</a>'],
 ti_t:['التداخلات وفواصل الأخذ','Interactions and dose spacing'],ti_l:['اختر المكمّل لعرض تداخلاته فقط.','Pick a supplement to see only its interactions.'],
@@ -214,7 +214,7 @@ o_ruse_en:['ماذا يُستخدم منه (English)','What it is used for (Engl
 o_nname_en:['اسم الفيتامين أو المعدن (English)','Nutrient name (English)'],o_nh_en:['وصف قصير (English)','Short description (English)'],o_nplan_en:['التوجيه العلاجي (English)','Treatment guidance (English)'],o_nnote_en:['تحذيرات وملاحظات (English)','Warnings and notes (English)'],
 o_ftitle_en:['العنوان (English)','Title (English)'],o_fdesc_en:['الوصف (English)','Description (English)'],mn_short:['الأقسام','Sections'],pk_spec:['حاسبات خاصة','Special calculators'],tg_follow:['أدوات المتابعة','Follow-up tools'],mn_team:['فريق BIOTICWAW','BIOTICWAW team'],mn_guest:['للمالك والصيادلة المدعوين فقط','Owner and invited pharmacists only'],
 nv_info:['معلومات','Information'],nv_admin:['الإدارة','Management'],
-tl_pill:['عدد الحبات','Tablet count'],tl_d:['محوّل فيتامين D','Vitamin D converter'],tl_ca:['الكالسيوم المصحح','Corrected calcium'],tl_gz:['عجز الحديد (Ganzoni)','Iron deficit (Ganzoni)'],
+tl_ca:['الكالسيوم المصحح','Corrected calcium'],tl_gz:['عجز الحديد (Ganzoni)','Iron deficit (Ganzoni)'],
 mr_lang:['اللغة','Language'],mr_theme:['المظهر','Appearance'],mr_light:['فاتح','Light'],mr_dark:['داكن','Dark'],
 mr_app:['التطبيق','App'],mr_share:['مشاركة التطبيق','Share the app'],mr_install:['تثبيت على الهاتف','Install on phone'],mr_install_v:['كتطبيق','as an app'],
 mr_wa:['واتساب','WhatsApp'],mr_mail:['البريد','Email'],mr_call:['اتصال','Call'],
