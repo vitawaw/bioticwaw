@@ -760,7 +760,7 @@ body.owner:not(.textedit) .edp[data-edbrand],body.not-owner .edp[data-edbrand]{d
 .orow .di svg{width:18px;height:18px}
 .side .mtiles{grid-template-columns:repeat(2,minmax(0,1fr))}
 /* calculator: the list of vitamins first; a vitamin opens its page (patient data + result) with «‹ Vitamins» */
-#calc:not(.cv) #s-data,#calc:not(.cv) #resbox,#calc:not(.cv) .cback{display:none}
+#calc:not(.cv) .cback{display:none} /* 1.4.0: the patient data and the result stay on the calculator page */
 #calc.cv #s-pick,#calc.cv>.hero,#calc.cv>#welcome{display:none}
 #calc:not(.cv) .calc{grid-template-columns:1fr}
 .cback{display:flex;align-items:center;gap:12px}
@@ -1160,3 +1160,12 @@ body:not(.demo) #example,body:not(.demo) [data-ex],body:not(.demo) .tex,body:not
 .abxcard h3{margin:0 0 6px;font-size:18px}
 .abxcard ul{margin:6px 0;padding-inline-start:20px}
 .abxcard p{margin:4px 0}
+
+/* 1.4.0: dose calculators for the antibiotics */
+.abcpick{display:block;width:100%;text-align:start;margin:6px 0;padding:12px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--deep);font:inherit;cursor:pointer}
+.abcfields{margin-top:12px;display:grid;gap:10px}
+.abch{margin:0 0 6px;font-size:18px;color:var(--deep)}
+.abcres{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:8px}
+.abcrow{padding:8px 10px;border-radius:10px;background:var(--soft)}
+.abcrow.strong{background:var(--ok-bg)}
+.abcrow.warn{background:var(--bad-bg);color:var(--bad)}
