@@ -169,7 +169,7 @@ function setLang(l){
   $('backarrow').setAttribute('d',l==='ar'?'M9 6l6 6-6 6':'M15 6l-6 6 6 6');
   document.querySelectorAll('[aria-label="unit"],[aria-label="الوحدة"]').forEach(el=>el.setAttribute('aria-label',l==='ar'?'الوحدة':'unit'));
   document.querySelectorAll('.x,[aria-label="close"],[aria-label="إغلاق"]').forEach(el=>{if(el.getAttribute('aria-label'))el.setAttribute('aria-label',l==='ar'?'إغلاق':'Close')});
-  {const md=document.querySelector('meta[name=description]');if(md)md.content=l==='ar'?'حاسبة جرعات الفيتامينات والمعادن المبنية على مصادر طبية، مع التداخلات الدوائية':'Vitamin and mineral dose calculator based on medical sources, with drug interactions'}
+  {const md=document.querySelector('meta[name=description]');if(md)md.content=l==='ar'?'معلومات المضادات الحيوية: الجرعات والتداخلات والمصادر الطبية':'Antibiotic information: doses, interactions and medical sources'}
   NUMS.forEach(id=>{const er=$('e-'+id);if(er&&!er.hidden)val(id)});
   try{localStorage.setItem('vw-lang',l)}catch(e){}
   $('pc-wa').textContent=T('pc_wa');$('pc-copy').textContent=T('pc_cp');$('pc-close').textContent=T('pc_x');themeIcon();
