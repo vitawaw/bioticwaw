@@ -20,9 +20,9 @@ const ICO={
   site:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.5 0 2-1 2-2s-1-1.5-1-2.5 1-1.5 2-1.5h2a4 4 0 0 0 4-4c0-4.5-4-8-9-8z"/></svg>'
 };
 const CHEV='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-const TOOLS=[['tool-pill','tl_pill','tt_t'],['tool-d','tl_d','td_t'],['tool-ca','tl_ca','tp_t'],['tool-gz','tl_gz','tg_t'],['tool-ml','tl_ml','ml_t'],['tool-sch','tl_sch','sc_t'],['tool-labs','tl_labs','lb_t'],['tool-ul','tl_ul','tl_t'],['tool-u','tl_u','tu_t']];
+const TOOLS=[]; // 1.19 (test): the vitamin and supplement tools were removed
 /** the line under a tool's name on the tools page (1.14.0: never the same words as the name) */
-const TOOLSUB={'tool-sch':'ts_sch','tool-labs':'ts_labs','tool-u':'ts_u'};
+const TOOLSUB={};
 const tabIco=p=>{const s=(p==='meds'||p==='links')&&$(p)?$(p).querySelector('.hi svg'):$('t-'+p)&&$('t-'+p).querySelector('svg');return s?s.outerHTML:ICO.info};
 /** true when the signed-in account may edit this part: 'nut' | 'inter' | 'refs' | 'text' */
 const CAN=k=>typeof OWN!=='undefined'&&OWN.on&&(OWN.local||OWN.role==='owner'||(k!=='text'&&!!(OWN.perms&&OWN.perms[k]))); // texts and pages: owner only
@@ -70,7 +70,7 @@ document.addEventListener('click',e=>{
 const WIDE=()=>matchMedia('(min-width:1024px)').matches;
 const pickNut=k=>openNut(k);
 const SECTIONS=['calc','tools','interactions','sources','roadmap','meds','sch','labs','ul']; // 1.14.1: meds/sch/labs are sections too (owner: bar, order, names)
-const SECTOOL={sch:'tool-sch',labs:'tool-labs',ul:'tool-ul'}; // sections that are a tool's own page
+const SECTOOL={}; // sections that are a tool's own page (none left)
 const SECKEY0={calc:'tab_calc',tools:'tab_tools',interactions:'tab_int',sources:'tab_src',roadmap:'tab_rm',notif:'nt_t',meds:'mm_t',links:'lk_t',sch:'tl_sch',labs:'tl_labs',ul:'tl_ul'};
 const SECKEY=SECKEY0;
 /* ===================== main sections (owner, 1.12.0): order everywhere, the bar (≤4), hidden ones, names, colors =====================
@@ -159,7 +159,7 @@ function toolList(){
 const toolName=t=>{const n=CFG.tools&&CFG.tools.names&&CFG.tools.names[t[0]];return (n&&(LANG==='ar'?n.ar:(n.en||n.ar)))||T(t[1])};
 /* 1.16.0 «أدوات المتابعة»: the owner chooses what is in it — tools, any section, any information page (also pages added
    later) — with «+ إضافة», removes an item with its ✎ and orders them with ⋮⋮. Saved in CFG.tools.follow. */
-const FOLLOW0=['tool-sch','tool-ul','tool-labs'];
+const FOLLOW0=[];
 /** 1.16.2 the team's own pages: one list for the menu («الأقسام») and the follow-up tools' «+ إضافة», so a team page added later
     appears in both by itself. Shown only to the signed-in team (and «فحص المصادر» only to whoever edits sources). */
 const TEAMX=()=>{const own=typeof OWN!=='undefined'&&OWN.on&&!OWN.preview;return [

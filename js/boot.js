@@ -23,7 +23,7 @@ show(startPage);
 // 1.16.3: «جرّب مثالاً» and the example numbers exist only on the test site
 document.body.classList.toggle('demo',typeof IS_PREVIEW!=='undefined'&&IS_PREVIEW);
 statHit('open',''); // 1.17.0 anonymous visit count (sent when the tab is hidden; never for the team, see stats.js)
-toolActs(); // 1.16.4: «جرّب مثالاً» (test site) + «مسح البيانات» in every tool; fields stay empty until an example or the user fills them
+
 if(FRAME){$('welcome').hidden=true;loadPublished().finally(frameDraft)}
 else{loadPublished();const h0=location.hash;routeSpecial();if(!/^#(owner|join)|type=recovery|error_code=otp_expired/.test(h0))resumeSession()} // 1.17.1 also on #tool-… / #v-… / #info-… (it was skipped there)
 if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
