@@ -1153,3 +1153,10 @@ body:not(.demo) #example,body:not(.demo) [data-ex],body:not(.demo) .tex,body:not
 .stempty{background:var(--soft);border-radius:12px;padding:10px 12px}
 .stbad{color:var(--bad)}
 .stpriv{margin-top:14px}
+
+/* 1.21: antibiotics page */
+.abxlist{display:grid;gap:12px;margin-top:12px}
+.abxcard{background:var(--card,#fff);border:1px solid var(--edge,#d9e2ef);border-radius:14px;padding:14px 16px}
+.abxcard h3{margin:0 0 6px;font-size:18px}
+.abxcard ul{margin:6px 0;padding-inline-start:20px}
+.abxcard p{margin:4px 0}

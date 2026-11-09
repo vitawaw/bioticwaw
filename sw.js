@@ -1,24 +1,24 @@
 // BIOTICWAW service worker: lets the installed app open offline.
 // VERSION and FILES are updated by tools/set_version.py; do not edit them by hand.
-const VERSION='bioticwaw-1.0.0-84880d63';
+const VERSION='bioticwaw-1.0.0-d43ec1e4';
 const FILES=[
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './css/app.css?v=1.0.0-92756d1f',
+  './css/app.css?v=1.0.0-dfb8a0cb',
   './js/pre.js?v=1.0.0-e186d15a',
   './js/config.js?v=1.0.0-a4473c26',
-  './js/i18n.js?v=1.0.0-13b9010b',
+  './js/i18n.js?v=1.0.0-f50866bb',
   './js/data.js?v=1.0.0-0d86288e',
   './js/util.js?v=1.0.0-035b84b1',
   './js/validation.js?v=1.0.0-b9312dd7',
   './js/render.js?v=1.0.0-0c728587',
   './js/calculators.js?v=1.0.0-ce8b42fa',
   './js/content.js?v=1.0.0-6e1ff2fb',
-  './js/lists.js?v=1.0.0-25201dae',
-  './js/ui.js?v=1.0.0-ab744f62',
+  './js/lists.js?v=1.0.0-f999110a',
+  './js/ui.js?v=1.0.0-fd487ab9',
   './js/published.js?v=1.0.0-bf497084',
   './js/owner.js?v=1.0.0-3173a321',
   './js/nav.js?v=1.0.0-837144f9',

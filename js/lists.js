@@ -15,7 +15,7 @@ const iTerms=q=>{if(!q)return[];const t=[q];if(q.length>=3){for(const m of medBa
 function abBlock(onMeds){
   const A=(CFG.ab||[]).filter(a=>a&&a.n&&(a.inter||[]).length);
   if(!A.length||onMeds||ISRC||IF!=='all')return '';
-  return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
+  return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3><p><button type="button" class="btn" data-goabx="1">${esc(T('abx_go'))}</button></p>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
 }
 function renderInter(){
   $('filters').innerHTML=(ISRC&&REFS[ISRC]?`<button type="button" class="srcf" data-clrsrc="1" aria-pressed="true">${T('su_src').replace('{n}',ISRC)} ×</button>`:'')+KEYS.filter(k=>k==='all'||INTER.some(x=>x[0]===k)).map(k=>`<button data-f="${esc(k)}" aria-pressed="${!ISRC&&k===IF}">${esc(kname(k))}<bdi class="fc">${INTER.filter(x=>k==='all'||x[0]===k).length}</bdi></button>`).join('');
@@ -217,3 +217,20 @@ document.addEventListener('click',e=>{
 // a button or link inside an opened card does its job and the window closes (e.g. «used in» → the calculator)
 document.addEventListener('click',e=>{if(e.target.closest('#sheet-b .cardfull')&&e.target.closest('button,a'))setTimeout(()=>{if(SHEET&&SHEET.key==='card')closeSheet(false)},0)});
 
+
+/* 1.21 (test): the antibiotics page: approved antibiotics from the published settings (CFG.ab) */
+function renderAbx(){
+  const el=$('abxlist'); if(!el)return;
+  const A=(CFG.ab||[]).filter(a=>a&&a.n);
+  if(!A.length){el.innerHTML=`<p class="inone">${esc(T('abx_none'))}</p>`;return}
+  const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
+  const row=(k,v)=>v?`<p><b>${esc(T(k))}:</b> ${esc(v)}</p>`:'';
+  el.innerHTML=A.map(a=>{
+    const inter=(a.inter||[]).map(x=>`<li><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</li>`).join('');
+    return `<article class="abxcard"><h3>${esc(tx(a.n))}</h3>`+
+      (a.aware?`<p class="hint">${esc(T('abx_aware'))}: ${esc(a.aware)}</p>`:'')+
+      row('abx_uses',tx(a.uses))+row('abx_dose',tx(a.dose))+row('abx_renal',tx(a.renal))+row('abx_timing',tx(a.timing))+
+      (inter?`<p><b>${esc(T('abx_inter'))}:</b></p><ul>${inter}</ul>`:'')+
+      (a.r&&a.r.length?`<p class="hint">${esc(T('abx_src'))}: ${a.r.map(n=>'['+n+']').join(' ')}</p>`:'')+'</article>';
+  }).join('');
+}

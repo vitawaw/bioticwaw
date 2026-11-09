@@ -3,7 +3,7 @@
    language switch (setLang), event wiring, colors and refreshAll().
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== navigation ===================== */
-const PAGES=['calc','tools','interactions','sources','roadmap','notif','team','menu','meds','links','stats'];
+const PAGES=['calc','tools','interactions','sources','roadmap','notif','team','menu','meds','links','stats','abx'];
 let cur='calc',CALCV=false,TOOLV=''; // CALCV: the chosen vitamin's page (patient data + result) instead of the list of vitamins
 /** 1.17.1 after a reload the saved session is restored a moment after the first page is drawn: a team-only page asked for in
     the address (pharmacists, visit dashboard, link check, a section hidden from visitors) waits for it instead of jumping away */
@@ -25,6 +25,7 @@ function show(p,view){
   if(TOOLV==='tool-sch'||TOOLV==='tool-labs'||TOOLV==='tool-ul'){const own=$({'tool-sch':'t-sch','tool-labs':'t-labs','tool-ul':'t-ul'}[TOOLV]);
     if(!own.classList.contains('offbar')){$('t-tools').setAttribute('aria-selected',false);own.setAttribute('aria-selected',true)}}
   if(p==='team'&&typeof openTeamPage==='function')openTeamPage();
+  if(p==='abx'&&typeof renderAbx==='function')renderAbx();
   if(p==='stats'&&typeof openStats==='function')openStats();
   if(typeof statHit==='function'){if(TOOLV)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team'&&p!=='stats')statHit('section',p)}
   sharedParts(p);
@@ -73,6 +74,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-clrsrc]')){e.preventDefault();ISRC=null;renderInter();return}
   if(e.target.closest('[data-share]')){e.preventDefault();shareResult();return}
   if(e.target.closest('[data-report]')){e.preventDefault();openReport();return}
+  if(e.target.closest('[data-goabx]')){e.preventDefault();go('abx');return}
   const rg=e.target.closest('[data-rmgo]');if(rg){e.preventDefault();const f=GO[rg.dataset.rmgo];if(f)f();return}
   const dm=e.target.closest('[data-delmed]');if(dm){e.preventDefault();MEDS.splice(+dm.dataset.delmed,1);saveMeds();renderInter();return}
   const a=e.target.closest('[data-ref]');if(!a)return;e.preventDefault();

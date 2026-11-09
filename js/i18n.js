@@ -252,4 +252,10 @@ tm_err_member:['هذا البريد لديه حساب مسبقاً','This email 
 tm_susp_msg:['حسابك موقوف حالياً. تواصل مع المالك.','Your account is suspended. Contact the owner.'],
 tm_noperm:['ليست لديك صلاحية لهذا. يمكن للمالك تفعيلها.','You do not have permission for this. The owner can turn it on.'],
 tm_perm_on:['مفعّلة','On'],tm_perm_off:['مطفأة','Off'],tm_tap:['اضغط على الصلاحية لتشغيلها أو إطفائها','Tap a permission to turn it on or off'],
+abx_t:['المضادات الحيوية','Antibiotics'],
+abx_h:['معلومات من مصادر رسمية: الجرعات حسب العدوى، وتعديل الكلى، وتوقيت الأخذ، والتداخلات. راجع الصيدلي قبل أي وصفة.','Information from official sources: doses by infection, kidney adjustment, timing and interactions. Check with the pharmacist before any prescription.'],
+abx_none:['لم تُعتمد المضادات بعد. تظهر هنا بعد مراجعة الصيدلي واعتمادها.','No antibiotics approved yet. They appear here once reviewed and approved.'],
+abx_aware:['تصنيف AWaRe','AWaRe group'],abx_uses:['الاستخدام','Use'],abx_dose:['الجرعة','Dose'],abx_renal:['الكلى','Kidney'],
+abx_timing:['توقيت الأخذ','Timing'],abx_inter:['التداخلات','Interactions'],abx_src:['المصادر','Sources'],abx_go:['صفحة المضادات الحيوية','Antibiotics page'],
+tab_abx:['المضادات','Antibiotics'],
 });
