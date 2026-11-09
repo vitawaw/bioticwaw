@@ -64,7 +64,19 @@ Items marked ⚠ need a check before approval.
 - ⚠ Other indications (bronchitis, Pneumocystis, traveller's diarrhoea) are not in the fetched text.
 - **Interactions (6.4):** warfarin (prolongs prothrombin time; monitor INR); phenytoin (may raise levels); methotrexate (avoid; raises free methotrexate).
 
-## Items needing a check before the pharmacist's approval
+## Resolution of the five open points (latest official source first)
+
+| # | Point | Latest source checked | Result adopted | Confidence |
+|---|---|---|---|---|
+| 1 | Nitrofurantoin kidney threshold | DailyMed setid 152e4fe2 (updated 30 Jan 2023) and DailyMed setid 00ca617f: both list "creatinine clearance under 60 mL/min" as a **contraindication** (significant renal impairment), and the neuropathy warning uses the same threshold | **Contraindicated under 60 mL/min.** The "caution" wording comes from another manufacturer's copy and is not used. The older UK/Irish guideline (HSE table, caution at 45–60 and long-term use contraindicated below 45) is recorded as a conflict for the pharmacist | High for the label; the guideline differs |
+| 2 | Amoxicillin–clavulanate duration | DailyMed setid 26e1d503, "Updated June 18, 2026" (the latest revision) | The label gives **no duration** except acute otitis media: 10 days (Dosage, Table 3, footnote b). Other durations come from the WHO AWaRe book (S1) or NICE guidance (S7), recorded per indication | High |
+| 3 | Ciprofloxacin dose table | DailyMed setid 178dc379 (text version) | The indication table and the kidney table (CrCl > 50 usual; 30–50: 250–500 mg every 12 h; 5–29: 250–500 mg every 18 h; dialysis: 250–500 mg every 24 h after dialysis) are in the label text; the image note no longer applies | High |
+| 4 | SMX–TMP kidney table | FDA SPL a56a7056 (effective 7 June 2023): the table is cut off in the fetched text. Other sources agree: half the usual dose at CrCl 15–30 mL/min; not recommended below 15 mL/min (PrescriberPoint tablet summary; Mylan injection label, supporting only). WHO prequalification advises close monitoring for hyperkalaemia at 15–30 mL/min | **Half the usual dose at 15–30 mL/min; not recommended below 15 mL/min.** Official tablet label still to confirm on DailyMed | Medium: the consistent figure is from secondary sources |
+| 5 | Azithromycin label version | DailyMed setid 7e7c2f49 (checked this session); FDA Zithromax label 2021 with the same dosing, kidney and antacid text | Content unchanged; the version is the current DailyMed copy | High |
+
+**Consequence for the review:** items 1 and 4 remain for the pharmacist to confirm. Items 2, 3 and 5 are settled.
+
+## Items still open for the pharmacist (after the resolution above)
 1. Nitrofurantoin: the kidney threshold (contraindicated under 60 mL/min, or caution).
 2. Amoxicillin–clavulanate: duration of treatment (not in the fetched text).
 3. Ciprofloxacin: the dose table is an image; confirm each value on the page.
