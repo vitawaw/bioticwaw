@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.2.0';
+const APP_VERSION='1.3.0';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -38,7 +38,6 @@ const DEFAULT_CFG={
    {id:'disclaimer',t:{"ar": "إخلاء المسؤولية", "en": "Disclaimer"},b:{"ar": "## للتثقيف ومساعدة الصيدلي\nالمعلومات في التطبيق للتثقيف ولمساعدة الصيدلي والطبيب، ولا تغني عن الاستشارة الطبية.\n\n## قبل أي جرعة علاجية\n- لا تبدأ جرعة علاجية ولا توقفها دون مراجعة الطبيب أو الصيدلي.\n- احرص أكثر في الحمل والأطفال ومرضى الكلى.\n- اتبع وصفة الطبيب إذا اختلفت عن النتيجة.", "en": "## For education and to support pharmacists\nThe information in this app is for education and to support pharmacists and doctors; it does not replace medical advice.\n\n## Before any treatment dose\n- Do not start or stop a treatment dose without a doctor or pharmacist.\n- Take extra care in pregnancy, children and kidney disease.\n- Follow the doctor's prescription if it differs from the result."}},
   ],
   roadmap:[
-   {"st": "now", "go": "meds", "ic": "pill", "t": {"ar": "أدوية المريض مرتبة أبجدياً", "en": "Patient medicines, sorted A–Z"}, "d": {"ar": "أضف أدوية المريض فتظهر التداخلات التي تخصها فقط. الأدوية مرتبة بالعربية أو الإنجليزية مع عنوان لكل حرف.", "en": "Add the patient's medicines to see only the interactions that concern them. Sorted in Arabic or English with a heading for each letter."}},
    {"st": "now", "go": "sources", "ic": "chart", "t": {"ar": "مصدر رسمي لكل رقم", "en": "An official source for every number"}, "d": {"ar": "كل جرعة وتداخل يحمل رقم مصدره من إرشادات ونشرات رسمية، وروابط المصادر تُفحص بانتظام.", "en": "Every dose and interaction carries the number of its source from official guidelines and labels, and the source links are checked regularly."}},
    {"st": "now", "go": "report", "ic": "share", "t": {"ar": "تقرير للطبيب وبطاقة للمريض", "en": "Doctor report and patient card"}, "d": {"ar": "ملف مفصّل بالنتيجة والخطة والمصادر للطبيب، وبطاقة مبسطة يسلّمها الصيدلي للمريض.", "en": "A detailed file with the result, plan and sources for the doctor, and a simple card the pharmacist hands to the patient."}},
    {"st": "now", "go": "calc", "ic": "plus", "t": {"ar": "واجهة أوضح", "en": "A clearer layout"}, "d": {"ar": "أربعة مربعات في كل سطر بالرمز والاسم، وبطاقات بارزة بحافة ملونة حسب الخطورة أو الحالة، على الهاتف والآيباد والكمبيوتر.", "en": "Four tiles per line with symbol and name, and cards that stand out with a coloured edge by severity or status, on phone, iPad and computer."}},

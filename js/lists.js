@@ -278,3 +278,11 @@ document.addEventListener('click',async e=>{
   if(hd&&OWN&&OWN.client){e.preventDefault();const {error}=await OWN.client.rpc('antibiotic_set_flag',{p_id:hd.dataset.abhide,p_hidden:hd.dataset.v==='1'});
     if(error){toast(T('o_neterr'));return}await renderAbAdmin()}
 });
+
+/* 1.3.0: «القادم»: the upcoming items from the settings, as plain cards (no editing here) */
+function renderRoadmap(){
+  const el=$('rmlist'); if(!el)return;
+  const lab={now:T('up_now'),dev:T('up_dev'),plan:T('up_plan'),idea:T('up_idea')};
+  const items=(CFG.roadmap||[]).filter(x=>x&&x.t&&!x.hidden);
+  el.innerHTML=items.length?items.map(x=>`<article class="abxcard"><h3>${esc(tx2(x.t))}</h3>`+(lab[x.st]?`<p class="hint">${esc(lab[x.st])}</p>`:'')+(x.d?`<p>${esc(tx2(x.d))}</p>`:'')+'</article>').join(''):`<p class="inone">${esc(T('rm_go_none'))}</p>`;
+}

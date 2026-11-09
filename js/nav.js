@@ -359,78 +359,17 @@ function mgSortable(){
 }
 /** The menu: on the «Menu» page (r='m', Facebook style: account card, shortcut tiles, lists) and in the side menu (r='d', lists). */
 function menuHTML(r){
-  const page=r==='m',own=typeof OWN!=='undefined'&&OWN.on;
-  const row=(c)=>{
-    const inner=`<span class="di"${c.page?` style="${colorVars(c.page)}"`:''}>${c.ico||ICO.info}</span><span class="mt">${esc(c.label)}${c.sub?`<small>${esc(c.sub)}</small>`:''}</span>${c.n?`<span class="cnt">${c.n}</span>`:''}${c.href||c.on!=null?'':CHEVS}`;
-    if(c.href)return `<a class="mi" href="${esc(c.href)}"${/^https?:/.test(c.href)?' target="_blank" rel="noopener"':''}>${inner}</a>`;
-    return `<button type="button" class="mi${c.cls?' '+c.cls:''}${c.on?' on':''}" data-na="${r}${ACT[r].push(c.f)-1}"${c.on?' aria-current="page"':''}>${inner}</button>`;
-  };
-  const tile=(c)=>{
-    const inner=`<span class="di"${c.page?` style="${colorVars(c.page)}"`:''}>${c.ico||ICO.info}</span><span class="tl">${esc(c.label)}</span>${c.n?`<span class="tcount">${c.n}</span>`:''}`;
-    if(c.href)return `<a class="mtile" href="${esc(c.href)}"${/^https?:/.test(c.href)?' target="_blank" rel="noopener"':''}>${inner}</a>`;
-    return `<button type="button" class="mtile" data-na="${r}${ACT[r].push(c.f)-1}">${inner}</button>`;
-  };
-  const seg=(ico,label,cs)=>`<div class="mi seg"><span class="di">${ico}</span><span class="mt">${esc(label)}</span><div class="segc">${cs.map(x=>chipH(r,x)).join('')}</div></div>`;
-  const grp=(title,body,cls='')=>body?`<div class="mg${cls?' '+cls:''}">${title?`<h3>${esc(title)}</h3>`:''}<div class="ml">${body}</div></div>`:'';
-  const acc=(key,ico,title,body)=>body?`<details class="macc" name="macc-${r}" data-acc="${key}"${MOPEN===key?' open':''}><summary class="mi"><span class="di">${ico}</span><span class="mt">${esc(title)}</span>${CHEV}</summary><div class="macb">${body}</div></details>`:'';
-  const pg=id=>visiblePages().find(p=>p.id===id),pgItem=p=>({label:tx2(p.t)+(p.hidden?' · '+T('pg_hidden'):''),ico:ICO.info,f:()=>openPage(p.id)});
-  let h='';
-  if(!page)h+=`<div class="slogo"><span class="mk"><svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg></span><span class="wm">BIOTIC<em>WAW</em></span></div>`;
-  // account card at the top (Facebook: your profile); publishing is in the bar at the top of every page
-  h+=own
-    ?`<div class="mcard solo"><span class="av">${MI2.shield}</span><div class="mt"><b>${esc(whoLabel())}</b><small>${esc(T('mn_team'))}</small></div></div>`
-    :`<div class="mcard"><span class="av">${MI2.user}</span><div class="mt"><b>${esc(T('mr_account'))}</b><small>${esc(T('mn_guest'))}</small></div></div><div class="mcard-a"><div class="filters">${chipH(r,{label:T('o_login'),cls:'pri',f:()=>openOwner()})}${chipH(r,{label:T('mr_join'),f:()=>openOwner({join:''})})}</div></div>`;
-  // search is fixed at the top of every page (opposite 🔔), not repeated here
-  // 1.13.0: the groups below are named, ordered and filled by the owner (✎ and ⋮⋮ in «edit texts» mode); defaults as before
-  const ed=MEDIT(),SPECIAL=['faq','howto','privacy','disclaimer','suggest','who','about','method'];
-  const G={};
-  // «your shortcuts»: round, scrolls sideways, the last 6 used (not arranged by hand)
-  G.recent=RECENT.map(recentItem).filter(Boolean).slice(0,6);
-  // shortcut tiles: sections not in the bar, my lab results, my medicines, the link check (team), information pages
-  G.short=[...navMore().map(p=>({key:'p-'+p,label:T(SECKEY[p])+(navHidden(p)?' · '+T('pg_hidden'):''),ico:tabIco(p),page:p,f:()=>go(p)})),
-    ...TEAMX().map(x=>({key:x.k,label:x.name,ico:x.ico,page:x.page,f:x.f})),
-    ...visiblePages().filter(p=>!SPECIAL.includes(p.id)).map(p=>({key:'pg-'+p.id,...pgItem(p)}))];
-  // «help and information», each on its own: how to use · FAQ · about us · suggest a feature · privacy policy · disclaimer
-  const PICO={howto:MI2.book,faq:MI2.q,who:MI2.user,about:ICO.info,method:MI2.book,suggest:MI.mail,privacy:MI2.shield,disclaimer:ICO.info};
-  G.help=['howto','faq','who','about','method','suggest','privacy','disclaimer'].map(pg).filter(Boolean).map(p=>({key:'pg-'+p.id,...pgItem(p),ico:PICO[p.id]}));
-  G.apps=[{key:'share',label:T('mr_share'),ico:MI.share,f:shareApp},{key:'clear',label:T('cd_t'),ico:MI.trash,f:clearMyData}];
-  // the team: management sections, pharmacists (own page)
-  G.admin=(own?adminGroups():[]).map(g=>({...g,key:'ad-'+g.id}));
-  // contact (WhatsApp · e-mail · call) right above the settings; an invited pharmacist talks to the owner directly
-  const con=[];
-  if(PHONEF())con.push({key:'wa',label:T('mr_wa'),ico:MI.wa,href:waLink('BIOTICWAW')});
-  if(EMAILF())con.push({key:'mail',label:T('mr_mail'),ico:MI.mail,href:mailto('BIOTICWAW – '+L('اقتراح','Suggestion'))});
-  if(PHONEF())con.push({key:'call',label:T('mr_call'),ico:MI.call,href:'tel:'+PHONEF().replace(/[^+\d]/g,'')});
-  G.contact=own&&!ISOWNER()?[]:con;
-  G.settings=[{key:'lang',label:T('mr_lang'),v:LANG==='ar'?'العربية':'English',ico:MI.lang,f:()=>setLang(LANG==='ar'?'en':'ar')},
-    {key:'theme',label:T('mr_theme'),v:T(isDark()?'mr_dark':'mr_light'),ico:MI.theme,f:()=>setTheme(isDark()?'light':'dark')},
-    {key:'install',label:T('mr_install'),v:T('mr_install_v'),ico:MI.install,f:installApp}]; // 1.16.0: install sits with language and appearance
-  const r3b=c=>{const inner=`<span class="di">${c.ico}</span><b>${esc(c.label)}</b>${c.v?`<small>${esc(c.v)}</small>`:''}`;
-    return c.href?`<a class="m3b" href="${esc(c.href)}"${/^https?:/.test(c.href)?' target="_blank" rel="noopener"':''}>${inner}</a>`:`<button type="button" class="m3b" data-na="${r}${ACT[r].push(c.f)-1}">${inner}</button>`};
-  // owner (1.16.0): every group and item keeps its look and gets ⋮⋮ (drag inside its group) and ✎ (name in Arabic and English, hide/show)
-  const ctl=(c)=>`<span class="drag idrag" tabindex="0" role="button" aria-label="${esc(T('o_drag'))}">⋮⋮</span>${EPEN(`data-mged="${esc(c.key)}"`)}`;
-  const eWrap=(c,inner,cls)=>`<div class="medit ${cls}${mgOff(c.key)?' hid':''}" data-sid="${esc(c.key)}">${inner}${ctl(c)}</div>`;
-  const head=(id,t)=>ed?`<div class="mgh${mgOff('g:'+id)?' hid':''}"><span class="drag gdrag" tabindex="0" role="button" aria-label="${esc(T('o_drag'))}">⋮⋮</span><h3>${esc(t||T('mg_noname'))}${mgOff('g:'+id)?' · '+esc(T('pg_hidden')):''}</h3>${EPEN(`data-mged="g:${id}"`)}</div>`:(t?`<h3>${esc(t)}${own&&mgOff('g:'+id)?' · '+esc(T('pg_hidden')):''}</h3>`:'');
-  const body=(id,items)=>{
-    if(!items.length)return '';
-    if(id==='recent')return `<div class="mrec">${items.map(c=>`<button type="button" class="mrc" data-na="${r}${ACT[r].push(c.f)-1}" style="${colorVars(c.page)}"><span class="di">${c.ico}</span><span>${esc(c.label)}</span></button>`).join('')}</div>`;
-    items=mgItems(id,items);
-    // 1.14.6: what the owner hid is gone for visitors; the team sees it marked «hidden»
-    if(id!=='admin'){if(!own)items=items.filter(c=>!mgOff(c.key));else items=items.map(c=>mgOff(c.key)?{...c,label:c.label+' · '+T('pg_hidden')}:c);if(!items.length)return ''}
-    const E=ed,L=(cls,x)=>E?`<div class="${cls} mgl" data-g="${id}">${x}</div>`:`<div class="${cls}">${x}</div>`;
-    if(id==='short')return L('mtiles',items.map(c=>E?eWrap(c,tile(c),'tw'):tile(c)).join(''));
-    if(id==='help')return E?L('mlh',items.map(c=>eWrap(c,`<div class="ml one">${row(c)}</div>`,'rw')).join('')):items.map(c=>`<div class="ml one">${row(c)}</div>`).join('');
-    // 1.16.0: the management lists can be moved too (⋮⋮ inside the group, the group itself with its heading's ⋮⋮)
-    const adm=g=>g.go?row({label:g.label,ico:g.ico,n:g.n,f:g.go}):acc('ad-'+g.id,g.ico,g.label,g.rows.map(row).join(''));
-    if(id==='admin')return E?L('ml maccs',items.map(g=>eWrap(g,adm(g),'rw')).join('')):`<div class="ml maccs">${items.map(adm).join('')}</div>`;
-    if(id==='contact'||id==='settings')return L('m3',items.map(c=>E?eWrap(c,r3b(c),'tw'):r3b(c)).join(''));
-    return L('ml',items.map(c=>E?eWrap(c,row(c),'rw'):row(c)).join(''));
-  };
-  if(ed)h+=`<p class="hint mgedh">${esc(T('o_tile_hint'))}</p>`;
-  h+=`<div class="mgs" data-r="${r}">`+mgOrder().filter(id=>ed||own||id==='admin'||!mgOff('g:'+id)).map(id=>{const b=body(id,G[id]||[]);return b||(ed&&id!=='recent'&&(G[id]||[]).length)?`<div class="mg" data-sid="${id}">${head(id,mgName(id))}${b}</div>`:''}).join('')+`</div>`;
-  if(own)h+=`<div class="mg"><div class="ml maccs">`+acc('mine',MI.key,T('mr_mine'),[!OWN.local&&row({label:T('ac_t'),ico:MI.key,f:openAccount}),!ISOWNER()&&row({label:T('mr_myperms'),ico:ICO.check,f:showMyPerms})].filter(Boolean).join(''))+`</div></div>`;
-  if(own)h+=`<button type="button" class="mout" data-na="${r}${ACT[r].push(logout)-1}">${MI.out}<span>${esc(T('o_logout'))}</span></button>`;
-  return h;
+  // 1.3.0: the menu keeps only: calculator, interactions, sources, actions (owner), upcoming, and sign in / out
+  const own=typeof OWN!=='undefined'&&OWN.on;
+  const items=[
+    {label:T('tab_calc'),f:()=>go('calc')},
+    {label:T('tab_int'),f:()=>go('interactions')},
+    {label:T('tab_src'),f:()=>go('sources')},
+    ...(own?[{label:T('lg_t'),f:()=>openLog()}]:[]),
+    {label:T('up_t'),f:()=>go('roadmap')},
+    own?{label:T('nav_logout'),f:()=>logout()}:{label:T('nav_login'),f:()=>openOwner()},
+  ];
+  return '<div class="mlist">'+items.map(c=>`<button type="button" class="mi" data-na="${r}${ACT[r].push(c.f)-1}"><span class="mt">${esc(c.label)}</span></button>`).join('')+'</div>';
 }
 /* folding lists stay open or closed when the menu is redrawn */
 /* one folding list open at a time: opening one closes the one that was open (its items show under it) */

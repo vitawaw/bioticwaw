@@ -3,7 +3,7 @@
    language switch (setLang), event wiring, colors and refreshAll().
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== navigation ===================== */
-const PAGES=['calc','interactions','sources','notif','team','menu','abx']; // 1.2.0: calculator, interactions, medicines (abx), sources; the rest was removed
+const PAGES=['calc','interactions','sources','notif','team','menu','abx','roadmap']; // 1.2.0: calculator, interactions, medicines (abx), sources; the rest was removed
 let cur='calc',CALCV=false,TOOLV=''; // CALCV: the chosen vitamin's page (patient data + result) instead of the list of vitamins
 /** 1.17.1 after a reload the saved session is restored a moment after the first page is drawn: a team-only page asked for in
     the address (pharmacists, visit dashboard, link check, a section hidden from visitors) waits for it instead of jumping away */
@@ -22,6 +22,7 @@ function show(p,view){
   // a section that is a tool's page (schedule, lab results) is the selected tab while its tool is open
   if(p==='team'&&typeof openTeamPage==='function')openTeamPage();
   if(p==='abx'&&typeof renderAbx==='function')renderAbx();
+  if(p==='roadmap'&&typeof renderRoadmap==='function')renderRoadmap();
   if(typeof statHit==='function'){if(false)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team')statHit('section',p)}
   sharedParts(p);
   if(typeof rememberRecent==='function')rememberRecent(TOOLV?'t:'+TOOLKIND[TOOLV]:'p:'+p);

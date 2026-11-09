@@ -273,4 +273,11 @@ ab_src:['أرقام المصادر (مفصولة بفاصلة)','Source numbers 
 ab_need:['الاسم بالعربية والمعرّف مطلوبان. المعرّف أحرف إنجليزية صغيرة وأرقام فقط.','Arabic name and ID are required. The ID uses only lowercase English letters and digits.'],
 ab_saved:['تم حفظ المضاد. يظهر للزوار بعد النشر.','Saved. Visitors see it after publishing.'],
 ab_hidden_on:['إخفاء','Hide'],ab_hidden_off:['إظهار','Show'],
+up_t:['القادم','Upcoming'],
+up_now:['متوفر الآن','Available now'],
+up_dev:['قيد التطوير','In development'],
+up_plan:['مخطط','Planned'],
+up_idea:['فكرة','Idea'],
+nav_login:['دخول المالك','Owner sign in'],
+nav_logout:['خروج','Sign out'],
 });
