@@ -1,48 +1,47 @@
-# Plan: 100 antibiotics
+# Plan: 100 antibiotics (working plan, 2026-11-09)
 
 ## Goal
-Build a source-based database of 100 systemic antibiotics for pharmacists, with doses by infection, kidney adjustment, timing, interactions and sources.
+Every one of the 100 antibiotics in `antibiotics_100.csv` on the site with: uses, adult dose, kidney adjustment, timing,
+the label's clinically important interactions, a dose calculator built from the label, and the source of every number.
 
-## Scope
-- The 100 drugs are listed in `antibiotics_100.csv`, grouped by class.
-- Only systemic antibiotics used in medicine. Topical-only products (for example mupirocin, bacitracin) are excluded.
-- The AWaRe group of each drug comes from the 2023 WHO classification (S2). The column "aware_proposed" is left blank until checked.
+## Method (one pipeline for every drug)
+1. **Label evidence.** `tools/fetch_labels.py` saves the official label as exact text in `labels/<id>.json`
+   (openFDA = the FDA label on DailyMed: set id, version date, indications, dosage and administration with tables,
+   contraindications, drug interactions, renal sections). For a drug with no US label, the official EU/UK label
+   (EMA SmPC or the UK eMC) is used and named as such. Nothing is written from memory or from a secondary site.
+2. **Authoring.** `batchN.json` holds each drug in Arabic and English (uses, dose, renal, timing), its interactions
+   (from the label's interactions section; `major` = contraindicated or "avoid" in the label, `moderate` = dose change or
+   monitoring, `minor` = laboratory test interference) and the source ids. The calculator rules go into `js/abrules.js`.
+3. **Checks.** `tests/abrules_test.mjs` (fallback per row, both languages, known values from each label),
+   `tools/check_batch.py` (no < or >, Arabic and English present, every interaction cites a source, every drug has a label).
+4. **Loading.** `tools/batch_sql.py` writes `supabase/manual/batchN_load_test.sql` (sources, antibiotics with
+   `reviewed = false`, interactions). Loaded on the TEST project only.
+5. **Approval.** The owner approves in 🔔 (one drug, or «اعتماد الكل» for a whole batch) and presses «نشر».
+   Calculators show to visitors only for approved and published drugs.
+6. **Release.** Main site only after the owner says «انشر».
 
-## Phases and output
-| Phase | Work | Output | Target |
-|---|---|---|---|
-| 1 | Verify the classification of each drug (S2) | AWaRe group in the CSV | 100 drugs |
-| 2 | Collect the label (S4 or S5) for each drug: doses, renal, timing, interactions | One row per drug in the CSV | 10 drugs per batch |
-| 3 | Add the guideline reference (S1, S7, S9) for the main infections | Indication list per drug | same batches |
-| 4 | Top interactions per drug (3–5), with source | Interactions table (draft) | same batches |
-| 5 | Pharmacist review (you) of each batch | Status "approved" or "needs change" | after each batch |
-| 6 | Load approved drugs into the test database | Records with reviewed=false until you approve | after review |
-| 7 | Publish to the main site | After your approval only | last |
+## Calculator scope
+- Adults (18 and over). Creatinine clearance by Cockcroft-Gault (actual, ideal or adjusted weight as in `abCrCl`).
+- Doses by infection where the label lists them; kidney bands exactly as the label's table; dialysis as the label says.
+- Weight-based doses (mg/kg) are calculated from the weight entered and capped where the label gives a maximum.
+- Under 18: the calculator says the dose is not calculated for children and points to the label section.
+- Drugs dosed by blood levels (vancomycin, aminoglycosides, colistin…) show the label's starting dose and say that
+  the dose is then adjusted by levels; the calculator never replaces monitoring.
 
-## Batches (suggested order: most used first)
-1. Batch 1 (10): amoxicillin, amoxicillin-clavulanate, cefalexin, doxycycline, ciprofloxacin, azithromycin, nitrofurantoin, metronidazole, ceftriaxone, sulfamethoxazole-trimethoprim
-2. Batch 2 (10): clarithromycin, levofloxacin, cefuroxime, cefixime, clindamycin, flucloxacillin, cefazolin, gentamicin, vancomycin, linezolid
-3. Batches 3–10: the rest of the CSV, in the order of the class groups.
+## Batches (10 drugs each, most used first; batch 1 is loaded)
+1. amoxicillin, amoxicillin-clavulanate, cefalexin, doxycycline, ciprofloxacin, azithromycin, nitrofurantoin, metronidazole, ceftriaxone, sulfamethoxazole-trimethoprim
+2. clarithromycin, levofloxacin, cefuroxime, cefixime, clindamycin, flucloxacillin, cefazolin, gentamicin, vancomycin, linezolid
+3. ampicillin, ampicillin-sulbactam, penicillin V, benzathine penicillin, procaine penicillin, dicloxacillin, piperacillin-tazobactam, temocillin, cefradine, cefadroxil
+4. cefalotin, cefaclor, cefprozil, cefpodoxime, cefdinir, cefditoren, cefoxitin, cefotetan, cefotaxime, ceftazidime
+5. cefepime, ceftaroline, ceftobiprole, cefiderocol, ceftolozane-tazobactam, ceftazidime-avibactam, imipenem-cilastatin, meropenem, ertapenem, doripenem
+6. aztreonam, meropenem-vaborbactam, amikacin, tobramycin, streptomycin, plazomicin, erythromycin, roxithromycin, josamycin, telithromycin
+7. lincomycin, minocycline, tetracycline, tigecycline, omadacycline, eravacycline, moxifloxacin, ofloxacin, norfloxacin, gemifloxacin
+8. delafloxacin, gatifloxacin, nalidixic acid, trimethoprim, sulfadiazine, fosfomycin, tinidazole, secnidazole, teicoplanin, daptomycin
+9. dalbavancin, oritavancin, tedizolid, rifampicin, rifabutin, rifapentine, isoniazid, ethambutol, pyrazinamide, bedaquiline
+10. delamanid, pretomanid, chloramphenicol, colistin, polymyxin B, fusidic acid, fidaxomicin, rifaximin, lefamulin, pristinamycin
 
-## Acceptance rules for each drug (before it goes to review)
-- Two official sources at least (S4 or S5 and S1/S2/S7/S9).
-- Dose copied from the label with the section number, never from a secondary site.
-- Kidney adjustment stated, or "no adjustment in the label" with the label section.
-- AWaRe group checked against S2.
-- Interactions: at least the 3 most important, each with its source.
-- Arabic and English text for every field.
-
-## Team and time
-- Data collection: I collect and record sources, batch by batch.
-- Review: you (the pharmacist) approve each batch in writing before it is loaded.
-- A batch of 10 needs about one working session for collection and one for review.
-
-## Risks
-- Labels differ by country and manufacturer. The record shows which label it comes from.
-- Kidney dosing is the most error-prone part. The calculator will only use the drugs you approve.
-- Guidelines change. Every source has a check date.
-
-## Decisions needed from you
-1. Confirm the 100-drug list (add or remove drugs).
-2. Confirm which label is primary: FDA (S4) or EMA (S5).
-3. Confirm the batch order above.
+## Rules for every drug
+- The dose and the kidney table are copied from the label (section named); the label version date is recorded.
+- A drug withdrawn from a market keeps its last official label and says so.
+- Every interaction cites its source; Arabic and English for every field; no < or > in any text.
+- Open clinical points are listed for the owner in `OPEN_POINTS.md`, never guessed.

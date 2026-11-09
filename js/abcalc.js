@@ -1,36 +1,58 @@
-/* BIOTICWAW · js/abcalc.js (1.4.2, test)
+/* BIOTICWAW · js/abcalc.js (1.6.0, test)
    One calculation engine for all antibiotic dose calculators. The drug rules are data in js/abrules.js (ABC_RULES).
    Creatinine clearance: Cockcroft-Gault (S10 in docs/antibiotics/SOURCES.md). Results are for professional review.
-   Plain script (no build step); loaded after abrules.js and lists.js. */
+   Rule format (see js/abrules.js): rows of ordered rules {when, text}; the first rule whose `when` matches gives the text.
+   `when` keys: an input id (equal, or one of an array of values), or a range on crcl (mL/min), age (years) or wt (kg): {gt, gte, lt, lte}.
+   Text tokens: {mgkg:A} or {mgkg:A-B} = A (to B) mg per kg, optionally @act (actual, default) / @ibw / @adj weight and
+   |max:M (mg, the label's maximum per dose); @lean = ideal weight when obese, else actual. {scrx:N} = serum creatinine × N. Plain script (no build step); loaded after abrules.js and lists.js. */
 const ABC_SRC = {cg:'Cockcroft DW, Gault MH. Nephron 1976;16:31–41'};
-/* Cockcroft-Gault creatinine clearance (mL/min). Weight: actual, or ideal / adjusted when obese (actual over 120% of ideal). */
+/* ideal body weight (Devine) and the weight used for Cockcroft-Gault: actual, or adjusted when actual is over 120% of ideal */
+function abWeights(sex,wKg,hCm){
+  if(!(wKg>0&&hCm>0))return null;
+  const ibw=(sex==='m'?50:45.5)+2.3*(hCm/2.54-60);
+  const adj=wKg>1.2*ibw?ibw+0.4*(wKg-ibw):wKg;
+  return {act:wKg,ibw,adj,obese:wKg>1.2*ibw};
+}
+/* Cockcroft-Gault creatinine clearance (mL/min) */
 function abCrCl(age,sex,wKg,hCm,scr){
   if(!(age>=0&&wKg>0&&hCm>0&&scr>0))return null;
-  const inches=hCm/2.54, ibw=(sex==='m'?50:45.5)+2.3*(inches-60);
-  let w=wKg; if(wKg>1.2*ibw) w=ibw+0.4*(wKg-ibw); else if(wKg<ibw) w=wKg;
-  const v=(140-age)*w/(72*scr)*(sex==='f'?0.85:1);
-  return {crcl:v, weight:w, ibw};
+  const W=abWeights(sex,wKg,hCm);
+  const v=(140-age)*W.adj/(72*scr)*(sex==='f'?0.85:1);
+  return {crcl:v, weight:W.adj, ibw:W.ibw, obese:W.obese};
 }
-/* does one `when` object match the answers (x) and the clearance (cr)? Empty object = always. */
-function abMatch(when,x,cr){
+const abIn=(v,b)=>v!=null&&!Number.isNaN(v)&&(b.gt===undefined||v>b.gt)&&(b.gte===undefined||v>=b.gte)&&(b.lt===undefined||v<b.lt)&&(b.lte===undefined||v<=b.lte);
+/* does one `when` object match? x = the drug's own answers; ctx = {cr, age, wt}. Empty object = always. */
+function abMatch(when,x,ctx){
+  if(typeof ctx!=='object'||ctx===null)ctx={cr:ctx}; // older calls passed the clearance alone
   for(const key of Object.keys(when)){
-    if(key==='crcl'){
-      const b=when.crcl;
-      if(b.gt!==undefined&&!(cr>b.gt))return false;
-      if(b.gte!==undefined&&!(cr>=b.gte))return false;
-      if(b.lt!==undefined&&!(cr<b.lt))return false;
-      if(b.lte!==undefined&&!(cr<=b.lte))return false;
-    } else if(x[key]!==when[key]) return false;
+    if(key==='crcl'){if(!abIn(ctx.cr,when.crcl))return false}
+    else if(key==='age'){if(!abIn(ctx.age,when.age))return false}
+    else if(key==='wt'){if(!abIn(ctx.wt,when.wt))return false}
+    else if(Array.isArray(when[key])){if(!when[key].includes(x[key]))return false} // one of several values
+    else if(x[key]!==when[key]) return false;
   }
   return true;
 }
-/* evaluate a drug: returns the rows to show (first matching rule per row; a row with no match is left out) */
-function abEval(rule,x,cr){
+/* mg per kg tokens → numbers (rounded like a prescription: 10 mg steps from 100 mg, 5 mg steps from 20 mg) */
+const abRound=v=>v>=100?Math.round(v/10)*10:v>=20?Math.round(v/5)*5:Math.round(v*10)/10;
+function abFill(t,ctx){
+  // {scrx:N} = serum creatinine (mg/dL) × N, e.g. the gentamicin dosing interval in hours (creatinine × 8)
+  t=String(t).replace(/\{scrx:([\d.]+)\}/g,(m,n)=>ctx&&ctx.scr>0?String(Math.round(ctx.scr*+n)):'—');
+  return t.replace(/\{mgkg:([\d.]+)(?:-([\d.]+))?(?:@(act|ibw|adj|lean))?(?:\|max:([\d.]+))?\}/g,(m,a,b,basis,max)=>{
+    const W=ctx&&ctx.W;if(!W)return '—';
+    // lean = an estimate of lean body mass: the ideal weight when the patient is obese, otherwise the actual weight
+    const w=basis==='ibw'?W.ibw:basis==='adj'?W.adj:basis==='lean'?(W.obese?W.ibw:W.act):W.act, cap=v=>max?Math.min(v,+max):v;
+    const lo=abRound(cap(+a*w));return b?lo+'–'+abRound(cap(+b*w)):String(lo);
+  });
+}
+/* evaluate a drug: the rows to show (first matching rule per row; a row with no match is left out) */
+function abEval(rule,x,cr,ctx){
+  ctx=Object.assign({},ctx||{},{cr:typeof cr==='number'?cr:(ctx&&ctx.cr)});
   const rows=[];
   for(const row of rule.rows){
-    const hit=row.rules.find(r=>abMatch(r.when,x,cr));
+    const hit=row.rules.find(r=>abMatch(r.when,x,ctx));
     if(!hit) continue;
-    rows.push({k:row.k,v:hit.text,strong:!!row.strong,warn:!!(row.warn||hit.warn)});
+    rows.push({k:row.k,v:{ar:abFill(hit.text.ar,ctx),en:abFill(hit.text.en,ctx)},strong:!!row.strong,warn:!!(row.warn||hit.warn)});
   }
   return {rows,notes:rule.notes};
 }
@@ -54,21 +76,26 @@ function abcOpen(){
   const res=document.getElementById('res'); if(res)res.innerHTML='';
   if(!f)return;
   if(!c){f.hidden=true;f.innerHTML='';return}
-  const common=`<div class="f"><label class="l" for="abscr">${esc(L('الكرياتينين في الدم (مل/دل)','Serum creatinine (mg/dL)'))}</label><input type="number" id="abscr" min="0.2" max="15" step="0.1" inputmode="decimal" placeholder="${esc(L('مثال: 1.1','e.g. 1.1'))}"></div>`;
+  const common=c.noRenal?'':`<div class="f"><label class="l" for="abscr">${esc(L('الكرياتينين في الدم (مل/دل)','Serum creatinine (mg/dL)'))}</label><input type="number" id="abscr" min="0.2" max="15" step="0.1" inputmode="decimal" placeholder="${esc(L('مثال: 1.1','e.g. 1.1'))}"></div>`;
   const extra=c.inputs.map(fl=>fl.type==='select'?`<div class="f"><label class="l" for="ab_${fl.id}">${esc(L(fl.label.ar,fl.label.en))}</label><select id="ab_${fl.id}">${fl.options.map(o=>`<option value="${o[0]}">${esc(L(o[1].ar,o[1].en))}</option>`).join('')}</select></div>`:`<label class="chk"><input type="checkbox" id="ab_${fl.id}"><span>${esc(L(fl.label.ar,fl.label.en))}</span></label>`).join('');
   f.innerHTML=`<div class="grid">${common}${extra}</div><button type="button" class="btn pri" id="abcgo">${esc(L('احسب الجرعة','Calculate the dose'))}</button>`;
   f.hidden=false; document.getElementById('abcgo').onclick=abcRun;
 }
 function abcRun(){
   const c=ABC_RULES[ABC_SEL]; const g=id=>document.getElementById(id);
-  const age=+((g('age')||{}).value), sex=(g('sex')||{}).value||'f', w=+((g('wt')||{}).value), h=+((g('ht')||{}).value), scr=+((g('abscr')||{}).value);
+  const num=id=>{const e=g(id);return e&&e.value!==''?+e.value:NaN};
+  const age=num('age'), sex=(g('sex')||{}).value||'f', w=num('wt'), h=num('ht'), scr=num('abscr');
   const out=document.getElementById('res');
-  const cg=abCrCl(age,sex,w,h,scr);
-  if(!cg){out.innerHTML=`<p class="inone">${esc(L('أدخل العمر والوزن والطول والكرياتينين.','Enter age, weight, height and creatinine.'))}</p>`;return}
+  const W=abWeights(sex,w,h);
+  const cg=c.noRenal?null:abCrCl(age,sex,w,h,scr);
+  if(!(age>=0)||!W||(!c.noRenal&&!cg)){out.innerHTML=`<p class="inone">${esc(c.noRenal?L('أدخل العمر والوزن والطول.','Enter age, weight and height.'):L('أدخل العمر والوزن والطول والكرياتينين.','Enter age, weight, height and creatinine.'))}</p>`;return}
   const x={}; c.inputs.forEach(fl=>{const e=g('ab_'+fl.id); x[fl.id]=fl.type==='check'?!!(e&&e.checked):(e?e.value:'')});
-  const r=abEval(c,x,cg.crcl);
+  const r=abEval(c,x,cg?cg.crcl:null,{age,wt:w,W,scr:scr>0?scr:null});
+  // children: the calculators are for adults unless the drug carries its own rules for children
+  if(age<18&&!c.peds)r.rows.unshift({k:{ar:'تنبيه',en:'Warning'},v:{ar:'هذه الحاسبة للبالغين (18 سنة فأكثر). جرعة الأطفال من الملصق'+(c.pedsRef?' ('+c.pedsRef+')':'')+' ويحددها الطبيب والصيدلي.',en:'This calculator is for adults (18 and over). The dose for children comes from the label'+(c.pedsRef?' ('+c.pedsRef+')':'')+' and is set by the doctor and pharmacist.'},warn:true});
   const rowsH=r.rows.map(rw=>`<div class="abcrow${rw.strong?' strong':''}${rw.warn?' warn':''}"><b>${esc(L(rw.k.ar,rw.k.en))}:</b> ${esc(L(rw.v.ar,rw.v.en))}</div>`).join('');
-  out.innerHTML=`<div class="abcres"><p class="hint">${esc(L('تصفية الكرياتينين (Cockcroft-Gault): ','Creatinine clearance (Cockcroft-Gault): '))}<b>${cg.crcl.toFixed(0)} ${esc(L('مل/دقيقة','mL/min'))}</b></p>${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)} · ${esc(ABC_SRC.cg)}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`+
+  const crH=cg?`<p class="hint">${esc(L('تصفية الكرياتينين (Cockcroft-Gault): ','Creatinine clearance (Cockcroft-Gault): '))}<b>${cg.crcl.toFixed(0)} ${esc(L('مل/دقيقة','mL/min'))}</b> · ${esc(cg.obese?L('بالوزن المعدّل ','with the adjusted weight '):L('بالوزن الفعلي ','with the actual weight '))}${cg.weight.toFixed(0)} ${esc(L('كغ','kg'))}</p>`:'';
+  out.innerHTML=`<div class="abcres">${crH}${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)}${cg?' · '+esc(ABC_SRC.cg):''}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`+
     `<div class="ract abcact"><button class="btn" type="button" id="abccopy">${esc(T('ab_copy'))}</button><button class="btn" type="button" id="abcprint">${esc(T('ab_print'))}</button></div>`;
   $('abccopy').onclick=abcCopy;$('abcprint').onclick=abcPrint;
 }
