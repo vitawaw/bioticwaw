@@ -1169,3 +1169,7 @@ body:not(.demo) #example,body:not(.demo) [data-ex],body:not(.demo) .tex,body:not
 .abcrow{padding:8px 10px;border-radius:10px;background:var(--soft)}
 .abcrow.strong{background:var(--ok-bg)}
 .abcrow.warn{background:var(--bad-bg);color:var(--bad)}
+
+/* 1.4.3: the drug list is one dropdown above the patient data (same design tokens) */
+#picker{display:block}
+#picker .f{margin:0}

@@ -39,17 +39,25 @@ function abcInit(){
   // shown only for antibiotics that are approved and published (CFG.ab); the owner also sees the unpublished ones, marked
   const pub=new Set((CFG.ab||[]).map(x=>x.id)), own=typeof OWN!=='undefined'&&OWN.on;
   const keys=Object.keys(ABC_RULES).filter(k=>pub.has(k)||own);
-  pk.innerHTML=keys.map(k=>`<button type="button" class="abcpick" data-abc="${k}">${esc(L(ABC_RULES[k].name.ar,ABC_RULES[k].name.en))}${pub.has(k)?'':' ·'+esc(L('غير منشور','not published'))}</button>`).join('')||`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;
-  pk.onclick=e=>{const b=e.target.closest('[data-abc]');if(!b)return;ABC_SEL=b.dataset.abc;abcOpen();};
+  if(!keys.length){pk.innerHTML=`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;return}
+  const cur=ABC_SEL&&keys.includes(ABC_SEL)?ABC_SEL:'';
+  pk.innerHTML=`<div class="f"><label class="l" for="abcsel">${esc(L('اختر المضاد الحيوي','Choose the antibiotic'))}</label><select id="abcsel">`+
+    `<option value="">${esc(L('— اختر دواءً —','— Choose a drug —'))}</option>`+
+    keys.map(k=>`<option value="${k}"${k===cur?' selected':''}>${esc(L(ABC_RULES[k].name.ar,ABC_RULES[k].name.en))}${pub.has(k)?'':' ('+esc(L('غير منشور','not published'))+')'}</option>`).join('')+
+    `</select></div>`;
+  document.getElementById('abcsel').onchange=e=>{ABC_SEL=e.target.value||null;abcOpen();};
+  if(ABC_SEL) abcOpen();
 }
 let ABC_SEL=null;
 function abcOpen(){
-  const f=document.getElementById('abcfields'), c=ABC_RULES[ABC_SEL]; if(!f||!c)return;
+  const f=document.getElementById('abcfields'), c=ABC_RULES[ABC_SEL];
+  const res=document.getElementById('res'); if(res)res.innerHTML='';
+  if(!f)return;
+  if(!c){f.hidden=true;f.innerHTML='';return}
   const common=`<div class="f"><label class="l" for="abscr">${esc(L('الكرياتينين في الدم (مل/دل)','Serum creatinine (mg/dL)'))}</label><input type="number" id="abscr" min="0.2" max="15" step="0.1" inputmode="decimal" placeholder="${esc(L('مثال: 1.1','e.g. 1.1'))}"></div>`;
   const extra=c.inputs.map(fl=>fl.type==='select'?`<div class="f"><label class="l" for="ab_${fl.id}">${esc(L(fl.label.ar,fl.label.en))}</label><select id="ab_${fl.id}">${fl.options.map(o=>`<option value="${o[0]}">${esc(L(o[1].ar,o[1].en))}</option>`).join('')}</select></div>`:`<label class="chk"><input type="checkbox" id="ab_${fl.id}"><span>${esc(L(fl.label.ar,fl.label.en))}</span></label>`).join('');
-  f.innerHTML=`<h3 class="abch">${esc(L(c.name.ar,c.name.en))}</h3><div class="grid">${common}${extra}</div><button type="button" class="btn pri" id="abcgo">${esc(L('احسب الجرعة','Calculate the dose'))}</button>`;
+  f.innerHTML=`<div class="grid">${common}${extra}</div><button type="button" class="btn pri" id="abcgo">${esc(L('احسب الجرعة','Calculate the dose'))}</button>`;
   f.hidden=false; document.getElementById('abcgo').onclick=abcRun;
-  const res=document.getElementById('res'); if(res)res.innerHTML='';
 }
 function abcRun(){
   const c=ABC_RULES[ABC_SEL]; const g=id=>document.getElementById(id);
