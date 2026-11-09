@@ -3,14 +3,14 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='0.1.0';
+const APP_VERSION='1.17.3';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
 /* the live site (production) uses the real project; the preview links (*.workers.dev other than production) use the separate
    free test project «bioticwaw-test», so saving and publishing on a preview never touches the live site (1.12.2) */
-const SB_LIVE={url:'',key:''}; // filled when the BIOTICWAW Supabase project exists
-const SB_TEST={url:'',key:''}; // the BIOTICWAW test project
+const SB_LIVE={url:'https://pxvytusjqpvuwsbiraia.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4dnl0dXNqcXB2dXdzYmlyYWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTQwNzksImV4cCI6MjEwOTc5MDA3OX0.BPAmId10hJEAEV3nKDOkMu7sUSyAkMAP3JzX4exprdY'}; // filled when the BIOTICWAW Supabase project exists
+const SB_TEST={url:'https://ehmucaelvxrftspkqrtq.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobXVjYWVsdnhyZnRzcGtxcnRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTU4NjEsImV4cCI6MjEwOTc5MTg2MX0.0rT591287VaTPMb3R6GXRT6D54DGrHSqmZ_mkEyrh6w'}; // the BIOTICWAW test project
 const IS_PREVIEW=/\.workers\.dev$/.test(location.hostname)&&!/^bioticwaw\./.test(location.hostname);
 const SB=IS_PREVIEW?SB_TEST:SB_LIVE; // public anon keys only (data is protected by RLS); never the service_role key
 

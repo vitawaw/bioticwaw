@@ -252,7 +252,7 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   (not inside buttons/links/labels). Labels: nv_order «تعديل وترتيب القوائم», pg_order_l «تعديل وترتيب الصفحات», o_texts «تعديل وترتيب».
 - **1.12.2 (preview)**: preview links use a separate free Supabase project **(مشروع تجريبي قديم)** (المشروع التجريبي الجديد `ehmucaelvxrftspkqrtq`): `SB_LIVE`/`SB_TEST`/`IS_PREVIEW`
   in config.js (*.workers.dev ≠ production → test), `_headers` connect-src has both, `wrangler.jsonc` previews vars → test, production cron
-  also wakes the test project (`TEST_SUPABASE_*` vars). Built by `supabase/test_project_setup.sql` (all migrations except the 3 content-only
+  also wakes the test project (`TEST_SUPABASE_*` vars). Built by `supabase/build_new_project.sql` (all migrations except the 3 content-only
   files + copy of the live published content + content tables rebuilt from it; refuses to run twice). APPLIED by Claude on 2026-11-02
   (pg_net fetched the raw file, md5-checked, `execute`d in one migration; schema fingerprint identical to live; pg_net is still enabled there,
   dropping it needs an approval). He signs up on the preview with bioticwaw26@gmail.com (دعوة المالك في ملف الترحيل الأول).

@@ -13,19 +13,19 @@
   },
   // public values only (the anon key is meant to be public; data is protected by RLS)
   "vars": {
-    "SUPABASE_URL": "",
-    "SUPABASE_ANON_KEY": "",
+    "SUPABASE_URL": "https://pxvytusjqpvuwsbiraia.supabase.co",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4dnl0dXNqcXB2dXdzYmlyYWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTQwNzksImV4cCI6MjEwOTc5MDA3OX0.BPAmId10hJEAEV3nKDOkMu7sUSyAkMAP3JzX4exprdY",
     // the test project (preview links) — only woken up by the daily cron
-    "TEST_SUPABASE_URL": "",
-    "TEST_SUPABASE_ANON_KEY": ""
+    "TEST_SUPABASE_URL": "https://ehmucaelvxrftspkqrtq.supabase.co",
+    "TEST_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobXVjYWVsdnhyZnRzcGtxcnRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTU4NjEsImV4cCI6MjEwOTc5MTg2MX0.0rT591287VaTPMb3R6GXRT6D54DGrHSqmZ_mkEyrh6w"
   },
   "triggers": { "crons": ["17 4 * * *"] },
   "observability": { "enabled": true },
   // previews use the separate free test project «bioticwaw-test» (same tables, its own data), so a preview never touches the live site
   "previews": {
     "vars": {
-      "SUPABASE_URL": "",
-      "SUPABASE_ANON_KEY": ""
+      "SUPABASE_URL": "https://ehmucaelvxrftspkqrtq.supabase.co",
+      "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobXVjYWVsdnhyZnRzcGtxcnRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTU4NjEsImV4cCI6MjEwOTc5MTg2MX0.0rT591287VaTPMb3R6GXRT6D54DGrHSqmZ_mkEyrh6w"
     }
   }
 }
