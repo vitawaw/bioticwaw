@@ -210,7 +210,7 @@ function loadShared(code){
 }
 
 /* ===================== wiring ===================== */
-const F={d:fD,b12:fB12,fol:fFol,fe:fFe,ca:fCa,mg:fMg,c:fC,zn:fZn,preg:fPreg,inf:fInf,vac:fVA,bar:fBar,thi:fThi};
+const F=new Proxy({},{get:(t,k)=>t[k]||(()=>{})}); // 1.19 (test): no built-in calculators; custom ones are not computed here
 function apply(){
   showFor();
   document.querySelectorAll('#picker button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===K));
