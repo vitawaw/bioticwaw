@@ -861,5 +861,259 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'مع الطعام أو بدونه. المكورات العقدية الحالّة بيتا: 10 أيام على الأقل.',en:'With or without food. Beta-haemolytic streptococci: at least 10 days.'}
+  },
+  oxacillin: {
+    name:{ar:'أوكساسيلين',en:'Oxacillin'},
+    label:'DailyMed, oxacillin injection (2026-08-31), Dosage and Administration', srcIds:[57], noRenal:true, pedsRef:'Dosage and Administration',
+    inputs:[{id:'sev',type:'select',label:{ar:'شدة العدوى',en:'Severity'},options:[['mild',{ar:'خفيفة إلى متوسطة',en:'Mild to moderate'}],['severe',{ar:'شديدة',en:'Severe'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين (وريدي)',en:'Adult dose (IV)'},strong:true,rules:[
+        {when:{sev:'severe'},text:{ar:'1 غرام كل 4 إلى 6 ساعات',en:'1 g every 4 to 6 h'}},
+        {when:{},text:{ar:'250 إلى 500 ملغ كل 4 إلى 6 ساعات',en:'250 to 500 mg every 4 to 6 h'}}
+      ]},
+      {k:{ar:'الكلى',en:'Kidney'},rules:[
+        {when:{},text:{ar:'مع قصور كلوي معروف أو مشتبه به: يُنظر في تخفيض الجرعة الكلية ومراقبة المستوى (لا جدول في الملصق).',en:'With known or suspected kidney impairment: consider a lower total dose and monitor levels (no table in the label).'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{},text:{ar:'العنقوديات الشديدة: 14 يوماً على الأقل، و48 ساعة بعد زوال الحمى والأعراض وسلبية الزرع.',en:'Severe staphylococcal infection: at least 14 days, and 48 h after fever and symptoms stop and cultures are negative.'}}
+      ]}
+    ],
+    notes:{ar:'الحذر من التهاب الوريد خاصة عند كبار السن.',en:'Watch for thrombophlebitis, especially in older people.'}
+  },
+
+  cefaclor: {
+    name:{ar:'سيفاكلور',en:'Cefaclor'},
+    label:'DailyMed, cefaclor (2025-05-01), Dosage and Administration', srcIds:[58], noRenal:true, pedsRef:'Dosage and Administration',
+    inputs:[{id:'sev',type:'select',label:{ar:'شدة العدوى',en:'Severity'},options:[['usual',{ar:'معتادة',en:'Usual'}],['severe',{ar:'أشد (مثل الالتهاب الرئوي)',en:'More severe (such as pneumonia)'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{sev:'severe'},text:{ar:'500 ملغ كل 8 ساعات (ضعف الجرعة المعتادة)',en:'500 mg every 8 h (double the usual dose)'}},
+        {when:{},text:{ar:'250 ملغ كل 8 ساعات',en:'250 mg every 8 h'}}
+      ]},
+      {k:{ar:'الكلى',en:'Kidney'},rules:[
+        {when:{},text:{ar:'الجرعة عادة دون تغيير في القصور الكلوي.',en:'The dose is usually unchanged in kidney impairment.'}}
+      ]}
+    ],
+    notes:{ar:'المكورات العقدية الحالّة بيتا: 10 أيام على الأقل. مع الطعام أو بدونه.',en:'Beta-haemolytic streptococci: at least 10 days. With or without food.'}
+  },
+
+  cefprozil: {
+    name:{ar:'سيفبروزيل',en:'Cefprozil'},
+    label:'DailyMed, cefprozil (2026-07-09), Dosage and Administration', srcIds:[59], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+        ['phar',{ar:'البلعوم واللوزتين',en:'Pharyngitis or tonsillitis'}],
+        ['sinus',{ar:'التهاب الجيوب الحاد',en:'Acute sinusitis'}],
+        ['aecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],
+        ['skin',{ar:'الجلد غير المعقد',en:'Uncomplicated skin infection'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة (13 سنة فأكثر)',en:'Usual dose (13 and over)'},rules:[
+        {when:{ind:'phar'},text:{ar:'500 ملغ كل 24 ساعة لـ10 أيام',en:'500 mg every 24 h for 10 days'}},
+        {when:{ind:'sinus'},text:{ar:'250 أو 500 ملغ كل 12 ساعة لـ10 أيام (الأعلى للمتوسطة إلى الشديدة)',en:'250 or 500 mg every 12 h for 10 days (the higher dose for moderate to severe)'}},
+        {when:{ind:'aecb'},text:{ar:'500 ملغ كل 12 ساعة لـ10 أيام',en:'500 mg every 12 h for 10 days'}},
+        {when:{},text:{ar:'250 ملغ كل 12 ساعة، أو 500 ملغ كل 24 أو كل 12 ساعة، لـ10 أيام',en:'250 mg every 12 h, or 500 mg every 24 or 12 h, for 10 days'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:30}},text:{ar:'50% من الجرعة المعتادة بالفاصل نفسه',en:'50% of the usual dose at the same interval'}},
+        {when:{},text:{ar:'الجرعة المعتادة (تصفية 30 فأكثر)',en:'Usual dose (clearance 30 or more)'}}
+      ]},
+      {k:{ar:'الغسيل',en:'Dialysis'},opt:true,rules:[
+        {when:{hd:true},text:{ar:'يُعطى بعد انتهاء جلسة الغسيل.',en:'Give after the dialysis session ends.'}}
+      ]}
+    ],
+    notes:{ar:'الطعام لا يؤثر على امتصاصه. لا تعديل للكبد.',en:'Food does not affect its absorption. No liver adjustment.'}
+  },
+
+  cefpodox: {
+    name:{ar:'سيفبودوكسيم بروكسيتيل',en:'Cefpodoxime proxetil'},
+    label:'DailyMed, cefpodoxime proxetil tablets (2026-07-30), Dosage and Administration', srcIds:[60], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+        ['phar',{ar:'البلعوم واللوزتين',en:'Pharyngitis or tonsillitis'}],
+        ['cap',{ar:'التهاب الرئة المجتمعي',en:'Community pneumonia'}],
+        ['aecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],
+        ['gono',{ar:'السيلان غير المعقد',en:'Uncomplicated gonorrhoea'}],
+        ['skin',{ar:'الجلد',en:'Skin infection'}],
+        ['sinus',{ar:'التهاب الجيوب الفكية الحاد',en:'Acute maxillary sinusitis'}],
+        ['uti',{ar:'المسالك البولية غير المعقدة',en:'Uncomplicated urinary infection'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة (12 سنة فأكثر)',en:'Usual dose (12 and over)'},rules:[
+        {when:{ind:'phar'},text:{ar:'100 ملغ كل 12 ساعة لـ5 إلى 10 أيام',en:'100 mg every 12 h for 5 to 10 days'}},
+        {when:{ind:'cap'},text:{ar:'200 ملغ كل 12 ساعة لـ14 يوماً',en:'200 mg every 12 h for 14 days'}},
+        {when:{ind:['aecb','sinus']},text:{ar:'200 ملغ كل 12 ساعة لـ10 أيام',en:'200 mg every 12 h for 10 days'}},
+        {when:{ind:'gono'},text:{ar:'200 ملغ مرة واحدة',en:'200 mg once'}},
+        {when:{ind:'skin'},text:{ar:'400 ملغ كل 12 ساعة لـ7 إلى 14 يوماً',en:'400 mg every 12 h for 7 to 14 days'}},
+        {when:{},text:{ar:'100 ملغ كل 12 ساعة لـ7 أيام',en:'100 mg every 12 h for 7 days'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'الجرعة 3 مرات أسبوعياً بعد الغسيل',en:'The dose 3 times a week after dialysis'}},
+        {when:{crcl:{lt:30}},text:{ar:'الجرعة نفسها كل 24 ساعة',en:'The same dose every 24 h'}},
+        {when:{},text:{ar:'لا تعديل (تصفية 30 فأكثر)',en:'No change (clearance 30 or more)'}}
+      ]}
+    ],
+    notes:{ar:'الأقراص مع الطعام. مضادات الحموضة بجرعات عالية ومضادات H2 تقلل امتصاصه.',en:'Tablets with food. High-dose antacids and H2 blockers reduce its absorption.'}
+  },
+
+  cefdinir: {
+    name:{ar:'سيفدينير',en:'Cefdinir'},
+    label:'DailyMed, cefdinir capsules (2025-10-14), Dosage and Administration', srcIds:[61], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+        ['cap',{ar:'التهاب الرئة المجتمعي',en:'Community pneumonia'}],
+        ['skin',{ar:'الجلد غير المعقد',en:'Uncomplicated skin infection'}],
+        ['aecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],
+        ['sinus',{ar:'التهاب الجيوب الفكية الحاد',en:'Acute maxillary sinusitis'}],
+        ['phar',{ar:'البلعوم واللوزتين',en:'Pharyngitis or tonsillitis'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة',en:'Usual dose'},rules:[
+        {when:{ind:['cap','skin']},text:{ar:'300 ملغ كل 12 ساعة لـ10 أيام',en:'300 mg every 12 h for 10 days'}},
+        {when:{ind:'sinus'},text:{ar:'300 ملغ كل 12 ساعة أو 600 ملغ كل 24 ساعة لـ10 أيام',en:'300 mg every 12 h or 600 mg every 24 h for 10 days'}},
+        {when:{},text:{ar:'300 ملغ كل 12 ساعة لـ5 إلى 10 أيام، أو 600 ملغ كل 24 ساعة لـ10 أيام',en:'300 mg every 12 h for 5 to 10 days, or 600 mg every 24 h for 10 days'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'300 ملغ يوماً بعد يوم، و300 ملغ في نهاية كل جلسة غسيل',en:'300 mg every other day, and 300 mg at the end of each dialysis session'}},
+        {when:{crcl:{lt:30}},text:{ar:'300 ملغ مرة يومياً',en:'300 mg once a day'}},
+        {when:{},text:{ar:'لا تعديل (تصفية 30 فأكثر)',en:'No change (clearance 30 or more)'}}
+      ]},
+      {k:{ar:'طريقة الأخذ',en:'How to take'},rules:[
+        {when:{},text:{ar:'مع الطعام أو بدونه. قبل مضادات الحموضة أو الحديد بساعتين أو بعدها بساعتين.',en:'With or without food. 2 h before or after antacids or iron.'}}
+      ]}
+    ],
+    notes:{ar:'المرة الواحدة يومياً لم تُدرس في الالتهاب الرئوي وعدوى الجلد: مرتين يومياً فيهما.',en:'Once-daily dosing was not studied in pneumonia and skin infection: twice a day for those.'}
+  },
+
+  cefditoren: {
+    name:{ar:'سيفديتورين بيفوكسيل',en:'Cefditoren pivoxil'},
+    label:'DailyMed, Spectracef (2013-06-04, last US label), Dosage and Administration', srcIds:[62], pedsRef:'Dosage and Administration',
+    inputs:[{id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+      ['cap',{ar:'التهاب الرئة المجتمعي',en:'Community pneumonia'}],['aecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],
+      ['phar',{ar:'البلعوم أو الجلد غير المعقد',en:'Pharyngitis or uncomplicated skin'}]]}],
+    rows:[
+      {k:{ar:'الجرعة المعتادة (12 سنة فأكثر)',en:'Usual dose (12 and over)'},rules:[
+        {when:{ind:'cap'},text:{ar:'400 ملغ مرتين يومياً لـ14 يوماً',en:'400 mg twice a day for 14 days'}},
+        {when:{ind:'aecb'},text:{ar:'400 ملغ مرتين يومياً لـ10 أيام',en:'400 mg twice a day for 10 days'}},
+        {when:{},text:{ar:'200 ملغ مرتين يومياً',en:'200 mg twice a day'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:30}},text:{ar:'200 ملغ مرة يومياً (الفشل الكلوي النهائي: الجرعة غير محددة)',en:'200 mg once a day (end-stage kidney disease: dose not determined)'}},
+        {when:{crcl:{lt:50}},text:{ar:'لا يزيد على 200 ملغ مرتين يومياً',en:'Not more than 200 mg twice a day'}},
+        {when:{},text:{ar:'لا تعديل',en:'No change'}}
+      ]}
+    ],
+    notes:{ar:'مع الوجبات، وليس مع مضادات الحموضة أو مضادات H2. ممنوع مع نقص الكارنيتين وحساسية بروتين الحليب (كازينات). آخر ملصق أمريكي 2013.',en:'With meals, not with antacids or H2 blockers. Contraindicated in carnitine deficiency and milk protein (caseinate) allergy. Last US label 2013.'}
+  },
+
+  cefoxitin: {
+    name:{ar:'سيفوكسيتين',en:'Cefoxitin'},
+    label:'DailyMed, cefoxitin for injection (2026-08-24), Dosage and Administration, Tables 1 and 2', srcIds:[63], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'sev',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[['unc',{ar:'غير معقدة',en:'Uncomplicated'}],['mod',{ar:'متوسطة الشدة إلى شديدة',en:'Moderately severe to severe'}],['high',{ar:'تحتاج جرعات أعلى (مثل الغنغرينا الغازية)',en:'Needs higher doses (e.g. gas gangrene)'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة مع كلى سليمة (جدول 1)',en:'Dose with normal kidneys (Table 1)'},rules:[
+        {when:{sev:'mod'},text:{ar:'1 غرام كل 4 ساعات أو 2 غرام كل 6 إلى 8 ساعات (6 إلى 8 غرام يومياً)',en:'1 g every 4 h or 2 g every 6 to 8 h (6 to 8 g a day)'}},
+        {when:{sev:'high'},text:{ar:'2 غرام كل 4 ساعات أو 3 غرام كل 6 ساعات (12 غرام يومياً)',en:'2 g every 4 h or 3 g every 6 h (12 g a day)'}},
+        {when:{},text:{ar:'1 غرام كل 6 إلى 8 ساعات (3 إلى 4 غرام يومياً)',en:'1 g every 6 to 8 h (3 to 4 g a day)'}}
+      ]},
+      {k:{ar:'حسب الكلى بعد تحميل 1 إلى 2 غرام (جدول 2)',en:'By kidney function after a 1 to 2 g load (Table 2)'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'جرعة التحميل 1 إلى 2 غرام بعد كل جلسة غسيل، ثم الصيانة حسب التصفية',en:'The 1 to 2 g loading dose after each dialysis session, then maintenance by clearance'}},
+        {when:{crcl:{lt:5}},text:{ar:'0.5 إلى 1 غرام كل 24 إلى 48 ساعة',en:'0.5 to 1 g every 24 to 48 h'}},
+        {when:{crcl:{lt:10}},text:{ar:'0.5 إلى 1 غرام كل 12 إلى 24 ساعة',en:'0.5 to 1 g every 12 to 24 h'}},
+        {when:{crcl:{lt:30}},text:{ar:'1 إلى 2 غرام كل 12 إلى 24 ساعة',en:'1 to 2 g every 12 to 24 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'1 إلى 2 غرام كل 8 إلى 12 ساعة',en:'1 to 2 g every 8 to 12 h'}},
+        {when:{},text:{ar:'لا تعديل (تصفية أكثر من 50)',en:'No change (clearance over 50)'}}
+      ]}
+    ],
+    notes:{ar:'إذا اشتُبه بالكلاميديا تُضاف تغطية لها. المكورات العقدية الحالّة بيتا: 10 أيام على الأقل.',en:'Add chlamydia cover if suspected. Beta-haemolytic streptococci: at least 10 days.'}
+  },
+
+  cefotetan: {
+    name:{ar:'سيفوتيتان',en:'Cefotetan'},
+    label:'DailyMed, cefotetan for injection (2025-01-08), Dosage and Administration', srcIds:[64], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+        ['usual',{ar:'معظم العدوى (المسالك، الجلد، مواقع أخرى)',en:'Most infections (urinary, skin, other sites)'}],
+        ['severe',{ar:'شديدة',en:'Severe'}],['life',{ar:'مهددة للحياة',en:'Life-threatening'}],['proph',{ar:'وقاية جراحية',en:'Surgical prophylaxis'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي متقطع',en:'Intermittent haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة',en:'Usual dose'},rules:[
+        {when:{ind:'severe'},text:{ar:'2 غرام وريدياً كل 12 ساعة',en:'2 g IV every 12 h'}},
+        {when:{ind:'life'},text:{ar:'3 غرام وريدياً كل 12 ساعة (حد أقصى 6 غرام يومياً)',en:'3 g IV every 12 h (at most 6 g a day)'}},
+        {when:{ind:'proph'},text:{ar:'1 أو 2 غرام وريدياً مرة واحدة قبل الجراحة بـ30 إلى 60 دقيقة',en:'1 or 2 g IV once, 30 to 60 minutes before surgery'}},
+        {when:{},text:{ar:'1 أو 2 غرام كل 12 ساعة وريدياً أو عضلياً (المسالك: 500 ملغ كل 12، أو 1 إلى 2 غرام كل 24 أو 12 ساعة)',en:'1 or 2 g every 12 h IV or IM (urinary: 500 mg every 12 h, or 1 to 2 g every 24 or 12 h)'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'ربع الجرعة المعتادة كل 24 ساعة بين الجلسات، ونصفها يوم الغسيل',en:'A quarter of the usual dose every 24 h between sessions, and half on the dialysis day'}},
+        {when:{crcl:{lt:10}},text:{ar:'الجرعة المعتادة كل 48 ساعة (أو ربع الجرعة كل 12 ساعة)',en:'The usual dose every 48 h (or a quarter of the dose every 12 h)'}},
+        {when:{crcl:{lte:30}},text:{ar:'الجرعة المعتادة كل 24 ساعة (أو نصف الجرعة كل 12 ساعة)',en:'The usual dose every 24 h (or half the dose every 12 h)'}},
+        {when:{},text:{ar:'الجرعة المعتادة كل 12 ساعة',en:'The usual dose every 12 h'}}
+      ]}
+    ],
+    notes:{ar:'لا يُخلط مع الأمينوغليكوزيدات في حقنة واحدة. إذا اشتُبه بالكلاميديا في العدوى النسائية تُضاف تغطية لها.',en:'Do not mix with aminoglycosides in one injection. In gynaecological infection, add chlamydia cover if suspected.'}
+  },
+
+  cefotaxime: {
+    name:{ar:'سيفوتاكسيم',en:'Cefotaxime'},
+    label:'DailyMed, cefotaxime for injection (2024-04-11), Dosage and Administration', srcIds:[65], pedsRef:'Dosage and Administration',
+    inputs:[{id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+      ['gono',{ar:'السيلان (الإحليل أو عنق الرحم، أو الشرج عند النساء)',en:'Gonorrhoea (urethra or cervix, or rectal in women)'}],['rgm',{ar:'السيلان الشرجي عند الرجال',en:'Rectal gonorrhoea in men'}],
+      ['unc',{ar:'غير معقدة',en:'Uncomplicated'}],['mod',{ar:'متوسطة إلى شديدة',en:'Moderate to severe'}],['sep',{ar:'تحتاج جرعات أعلى (مثل تسمم الدم)',en:'Needs higher doses (e.g. septicaemia)'}],
+      ['life',{ar:'مهددة للحياة',en:'Life-threatening'}],['proph',{ar:'وقاية جراحية',en:'Surgical prophylaxis'}]]}],
+    rows:[
+      {k:{ar:'الجرعة المعتادة',en:'Usual dose'},rules:[
+        {when:{ind:'gono'},text:{ar:'0.5 غرام عضلياً مرة واحدة',en:'0.5 g IM once'}},
+        {when:{ind:'rgm'},text:{ar:'1 غرام عضلياً مرة واحدة',en:'1 g IM once'}},
+        {when:{ind:'unc'},text:{ar:'1 غرام كل 12 ساعة',en:'1 g every 12 h'}},
+        {when:{ind:'sep'},text:{ar:'2 غرام وريدياً كل 6 إلى 8 ساعات',en:'2 g IV every 6 to 8 h'}},
+        {when:{ind:'life'},text:{ar:'2 غرام وريدياً كل 4 ساعات (حد أقصى 12 غرام يومياً)',en:'2 g IV every 4 h (at most 12 g a day)'}},
+        {when:{ind:'proph'},text:{ar:'1 غرام مرة واحدة قبل الجراحة بـ30 إلى 90 دقيقة',en:'1 g once, 30 to 90 minutes before surgery'}},
+        {when:{},text:{ar:'1 إلى 2 غرام كل 8 ساعات',en:'1 to 2 g every 8 h'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:20}},text:{ar:'نصف الجرعة',en:'Half the dose'}},
+        {when:{},text:{ar:'لا تعديل (تصفية 20 فأكثر)',en:'No change (clearance 20 or more)'}}
+      ]}
+    ],
+    notes:{ar:'إذا اشتُبه بالكلاميديا تُضاف تغطية لها.',en:'Add chlamydia cover if suspected.'}
+  },
+
+  ceftaz: {
+    name:{ar:'سيفتازيديم',en:'Ceftazidime'},
+    label:'DailyMed, ceftazidime for injection (2026-08-03), Dosage and Administration, Table 3 and renal table', srcIds:[66], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
+        ['usual',{ar:'الجرعة المعتادة',en:'Usual'}],['uuti',{ar:'المسالك غير المعقدة',en:'Uncomplicated urinary'}],['cuti',{ar:'المسالك المعقدة',en:'Complicated urinary'}],
+        ['bone',{ar:'العظام والمفاصل',en:'Bone and joint'}],['pneu',{ar:'التهاب رئة غير معقد أو جلد خفيف',en:'Uncomplicated pneumonia or mild skin'}],
+        ['sev',{ar:'نسائية أو بطنية خطيرة، سحايا، أو مهددة للحياة',en:'Serious gynaecological or abdominal, meningitis, or life-threatening'}]]},
+      {id:'dial',type:'select',label:{ar:'الغسيل الكلوي',en:'Dialysis'},options:[['none',{ar:'لا',en:'None'}],['hd',{ar:'غسيل دموي',en:'Haemodialysis'}],['pd',{ar:'غسيل بريتوني',en:'Peritoneal dialysis'}]]}
+    ],
+    rows:[
+      {k:{ar:'الجرعة مع كلى سليمة (جدول 3)',en:'Dose with normal kidneys (Table 3)'},rules:[
+        {when:{ind:'uuti'},text:{ar:'250 ملغ كل 12 ساعة',en:'250 mg every 12 h'}},
+        {when:{ind:'cuti'},text:{ar:'500 ملغ كل 8 إلى 12 ساعة',en:'500 mg every 8 to 12 h'}},
+        {when:{ind:'bone'},text:{ar:'2 غرام وريدياً كل 12 ساعة',en:'2 g IV every 12 h'}},
+        {when:{ind:'pneu'},text:{ar:'500 ملغ إلى 1 غرام كل 8 ساعات',en:'500 mg to 1 g every 8 h'}},
+        {when:{ind:'sev'},text:{ar:'2 غرام وريدياً كل 8 ساعات',en:'2 g IV every 8 h'}},
+        {when:{},text:{ar:'1 غرام كل 8 إلى 12 ساعة',en:'1 g every 8 to 12 h'}}
+      ]},
+      {k:{ar:'حسب الكلى (بعد تحميل 1 غرام)',en:'By kidney function (after a 1 g load)'},strong:true,rules:[
+        {when:{dial:'hd'},text:{ar:'1 غرام تحميل، ثم 1 غرام بعد كل جلسة غسيل',en:'1 g loading, then 1 g after each dialysis session'}},
+        {when:{dial:'pd'},text:{ar:'1 غرام تحميل، ثم 500 ملغ كل 24 ساعة',en:'1 g loading, then 500 mg every 24 h'}},
+        {when:{crcl:{lt:6}},text:{ar:'500 ملغ كل 48 ساعة',en:'500 mg every 48 h'}},
+        {when:{crcl:{lt:16}},text:{ar:'500 ملغ كل 24 ساعة',en:'500 mg every 24 h'}},
+        {when:{crcl:{lt:31}},text:{ar:'1 غرام كل 24 ساعة',en:'1 g every 24 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'1 غرام كل 12 ساعة',en:'1 g every 12 h'}},
+        {when:{},text:{ar:'لا تعديل (تصفية أكثر من 50)',en:'No change (clearance over 50)'}}
+      ]}
+    ],
+    notes:{ar:'في العدوى الشديدة التي تحتاج 6 غرام يومياً مع القصور الكلوي، يمكن زيادة جرعة الجدول 50% أو تقريب الفواصل.',en:'In severe infection that would need 6 g a day, the table dose may be increased by 50% or given more often.'}
   }
 };
