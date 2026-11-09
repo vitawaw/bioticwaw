@@ -235,7 +235,7 @@ async function renderAbAdmin(){
   const {data,error}=await OWN.client.rpc('antibiotics_all');
   if(error||!Array.isArray(data)){el.innerHTML=`<p class="hint">${esc(T('o_neterr'))}</p>`;return}
   window.ABLIST=data;
-  el.innerHTML=`<div class="filters"><button type="button" class="btn pri" data-abadd="1">${esc(T('ab_add'))}</button></div>`+
+  el.innerHTML=`<button class="oadd otop" type="button" data-abadd="1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>${esc(T('ab_addbtn'))}</span></button>`+
     (data.length?data.map(a=>`<div class="abrow"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b> ${a.hidden?`<span class="hidb bh">${esc(T('o_hiddenb'))}</span>`:''} `+
       `<button type="button" class="btn" data-abedit="${esc(a.id)}">${esc(T('ab_edit'))}</button> `+
       `<button type="button" class="btn" data-abhide="${esc(a.id)}" data-v="${a.hidden?'0':'1'}">${esc(T(a.hidden?'ab_hidden_off':'ab_hidden_on'))}</button></div>`).join(''):'');

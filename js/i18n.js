@@ -280,4 +280,5 @@ up_plan:['مخطط','Planned'],
 up_idea:['فكرة','Idea'],
 nav_login:['دخول المالك','Owner sign in'],
 nav_logout:['خروج','Sign out'],
+ab_addbtn:['إضافة مضاد حيوي','Add an antibiotic'],
 });
