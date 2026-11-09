@@ -12,7 +12,7 @@ const DRUG_AR={"رالتيغرافير": "raltegravir", "رالتغرافير": 
 const DRUG_CLASS={levofloxacin:'quinolone',ofloxacin:'quinolone',norfloxacin:'quinolone',minocycline:'tetracycline',ibandronate:'bisphosphonate'};
 const iTerms=q=>{if(!q)return[];const t=[q];if(q.length>=3){for(const m of medBase())for(const a of m.ar)if(normAr(a).includes(q))t.push(m.en);for(const[a,e]of Object.entries(DRUG_CLASS))if(a.includes(q)||q.includes(a))t.push(e)}return t};
 /* 1.18 (test): approved antibiotics and their interactions, shown under the interaction list (only when the list is not filtered) */
-function abBlock(){
+function abBlock(onMeds){
   const A=(CFG.ab||[]).filter(a=>a&&a.n&&(a.inter||[]).length);
   if(!A.length||onMeds||ISRC||IF!=='all')return '';
   return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
@@ -27,7 +27,7 @@ function renderInter(){
   const card=x=>`<div class="icard sevb-${x[6]}${x[7]?'':' pending'}${x[8]?' hid':''}" data-sid="${x[5]}"><div class="who"><span class="sev sev-${x[6]}">${T('sev_'+x[6])}</span>${esc(L(x[1][0],x[1][1]))} <em>+ ${esc(L(x[2][0],x[2][1]))}</em></div><div class="what">${esc(L(x[3][0],x[3][1]))}${R(x[4])}</div>${stampHTML(x[10],x[11])}${icActs(x)}${actBar('i',x[5],{rv:x[7],hidden:x[8],drag:true})}</div>`,bySev=(a,b)=>SEVORD[a[6]]-SEVORD[b[6]];
   // 1.14.6: one list of cards like the sources page (the supplement chips at the top filter it)
   const body='<div class="cgrid">'+ish.sort(bySev).map(card).join('')+'</div>';
-  $('ilist').innerHTML=(ish.length?'':`<p class="inone">${T(onMeds&&!MEDS.length?'mp_none':'i_none')}</p>`)+bulkBar('i',ish.filter(x=>!x[7]).length)+body+abBlock();
+  $('ilist').innerHTML=(ish.length?'':`<p class="inone">${T(onMeds&&!MEDS.length?'mp_none':'i_none')}</p>`)+bulkBar('i',ish.filter(x=>!x[7]).length)+body+abBlock(onMeds);
   $('icount').textContent=INTER.length;
   // owner: drag ⋮⋮ to change the order of interactions (dangerous ones always stay first: the order counts inside each severity)
   sortable($('ilist'),'.icard',(ids,it)=>{if(!ISOWNER()||!Array.isArray(CFG.inter))return;
