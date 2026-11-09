@@ -17,19 +17,25 @@ function abBlock(onMeds){
   if(!A.length||onMeds||ISRC||IF!=='all')return '';
   return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3><p><button type="button" class="btn" data-goabx="1">${esc(T('abx_go'))}</button></p>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
 }
-/* 1.4.5 (test): the interactions page = every published antibiotic with its interactions, in one list (no choice needed).
-   The search box filters the names. Data: CFG.ab (published only). */
+/* 1.4.6 (test): the interactions page is arranged like the calculator page: choose a drug from the list (1), its
+   interactions appear below (2). Data: CFG.ab (published only). */
+let ISEL=null;
 function abPicker(){
   const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
   const A=(CFG.ab||[]).filter(a=>a&&a.n);
   $('filters').innerHTML='';$('filters').hidden=true;
-  if(!A.length){$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
-  const q=normAr($('isearch')?$('isearch').value:'');
-  const list=A.filter(a=>!q||normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));
-  if(!list.length){$('ilist').innerHTML=`<p class="inone">${esc(T('i_none'))}</p>`;return}
-  $('ilist').innerHTML='<div class="abi-list">'+list.map(a=>`<article class="abx-card"><h3>${esc(tx(a.n))}</h3>`+
-    ((a.inter||[]).length?(a.inter||[]).map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+
-    '</article>').join('')+'</div>';
+  const pk=$('ipicker');
+  if(!A.length){pk.innerHTML='';$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
+  if(ISEL&&!A.some(a=>a.id===ISEL))ISEL=null;
+  // the global search (openSearch) sets the hidden box: open the first drug that matches it
+  const q=normAr($('isearch')&&$('isearch').value?$('isearch').value:'');
+  if(!ISEL&&q){const m=A.find(a=>normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));if(m)ISEL=m.id}
+  pk.innerHTML=`<div class="f"><label class="l" for="intsel">${esc(T('s1'))}</label><select id="intsel"><option value="">${esc(T('ab_choose'))}</option>`+
+    A.map(a=>`<option value="${esc(a.id)}"${a.id===ISEL?' selected':''}>${esc(tx(a.n))}</option>`).join('')+'</select></div>';
+  $('intsel').onchange=e=>{ISEL=e.target.value||null;renderInter()};
+  const cur=A.find(a=>a.id===ISEL);
+  $('ilist').innerHTML=!cur?`<p class="inone">${esc(T('ab_pick_hint'))}</p>`
+    :`<article class="abx-card"><h3>${esc(tx(cur.n))}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
 }
 function renderInter(){
   $('filters').innerHTML=(ISRC&&REFS[ISRC]?`<button type="button" class="srcf" data-clrsrc="1" aria-pressed="true">${T('su_src').replace('{n}',ISRC)} ×</button>`:'')+KEYS.filter(k=>k==='all'||INTER.some(x=>x[0]===k)).map(k=>`<button data-f="${esc(k)}" aria-pressed="${!ISRC&&k===IF}">${esc(kname(k))}<bdi class="fc">${INTER.filter(x=>k==='all'||x[0]===k).length}</bdi></button>`).join('');

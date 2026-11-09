@@ -1181,3 +1181,7 @@ body:not(.demo) #example,body:not(.demo) [data-ex],body:not(.demo) .tex,body:not
 #interactions .abx-card h3{margin:0 0 8px;font:800 calc(16px*var(--fsh,1))/1.35 var(--f-display);color:var(--ink)}
 #interactions .abx-card .abi{margin:6px 0;color:var(--ink);font:500 calc(14px*var(--fsb,1))/1.7 var(--f-body)}
 #interactions .abx-card .hint{margin:4px 0 0}
+
+/* 1.4.6: the interactions page uses the calculator layout (drug list on top, result below) */
+#ipicker{display:block}
+#ipicker .f{margin:0}
