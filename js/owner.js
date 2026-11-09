@@ -78,6 +78,7 @@ function decorate(){
 /* ----- generic dialog ----- */
 /** err: {i: field index, msg} shows the problem under that field (or {msg} for the whole form) */
 function dialog({title,fields=[],info='',buttons,err=null,two=false}){
+  if(!buttons||!buttons.length)buttons=[{label:T('o_cancel'),action:'cancel'}]; // every dialog can be closed
   return new Promise(res=>{
     $('dlg-t').textContent=title;$('dlg-m').hidden=!(err&&err.i==null);$('dlg-m').textContent=err&&err.i==null?err.msg:'';
     $('dlg-b').innerHTML=(info?`<p class="info">${esc(info)}</p>`:'')+fields.map((f,i)=>{
@@ -101,6 +102,7 @@ function dialog({title,fields=[],info='',buttons,err=null,two=false}){
     $('dlgf').onsubmit=e=>{e.preventDefault();const b=buttons.find(x=>x.pri);finish({action:b.action,values:read()})};
     dialog.msg=m=>{$('dlg-m').textContent=m;$('dlg-m').hidden=false};
     dialog.cancel=()=>finish({action:'cancel',values:read()});
+    $('dlg-x').onclick=()=>finish({action:'cancel',values:[]});
     $('dlg').hidden=false;const bad=$('dlg-b').querySelector('.row.bad input,.row.bad textarea,.row.bad select,.row.bad .checks input');const first=bad||$('dlg-b').querySelector('input,textarea,select');
     (first||$('dlg-a').querySelector('button')).focus();if(bad)bad.closest('.row').scrollIntoView({block:'center'});
   });

@@ -17,25 +17,20 @@ function abBlock(onMeds){
   if(!A.length||onMeds||ISRC||IF!=='all')return '';
   return `<h3 class="abh">${esc(L('المضادات الحيوية','Antibiotics'))}</h3><p><button type="button" class="btn" data-goabx="1">${esc(T('abx_go'))}</button></p>`+A.map(a=>`<div class="abcard"><p><b>${esc(a.n[LANG]||a.n.en)}</b>${a.aware?` <span class="hint">${esc(L('تصنيف AWaRe: ','AWaRe group: ')+a.aware)}</span>`:''}</p>`+a.inter.map(x=>`<p class="abi"><strong>${esc(x.b[LANG]||x.b.en)}</strong> — ${esc(x.d[LANG]||x.d.en)}</p>`).join('')+'</div>').join('');
 }
-/* 1.4.4 (test): the interactions page shows the approved and published antibiotics. Choose one to see its interactions;
-   the search box filters the antibiotic names. Data: CFG.ab (published). */
-let ABSEL=null;
+/* 1.4.5 (test): the interactions page = every published antibiotic with its interactions, in one list (no choice needed).
+   The search box filters the names. Data: CFG.ab (published only). */
 function abPicker(){
   const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
-  const A=(CFG.ab||[]).filter(a=>a&&a.n&&(a.inter||[]).length);
-  $('filters').innerHTML='';
+  const A=(CFG.ab||[]).filter(a=>a&&a.n);
+  $('filters').innerHTML='';$('filters').hidden=true;
+  if(!A.length){$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
   const q=normAr($('isearch')?$('isearch').value:'');
   const list=A.filter(a=>!q||normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));
-  if(ABSEL&&!A.some(a=>a.id===ABSEL))ABSEL=null;
-  if(!A.length){$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
-  const pick=`<div class="abpick">${list.map(a=>`<button type="button" class="abpk" data-abpick="${esc(a.id)}" aria-pressed="${a.id===ABSEL}">${esc(tx(a.n))}</button>`).join('')}</div>`;
-  const cur=A.find(a=>a.id===ABSEL);
-  const body=cur?`<div class="abcard"><p><b>${esc(tx(cur.n))}</b></p>`+cur.inter.map(x=>`<p class="abi"><strong>${esc(tx(x.b))}</strong>: ${esc(tx(x.d))}</p>`).join('')+'</div>'
-    :`<p class="inone">${esc(T('ab_pick_hint'))}</p>`;
-  $('ilist').innerHTML=(list.length?'':`<p class="inone">${esc(T('i_none'))}</p>`)+pick+body;
+  if(!list.length){$('ilist').innerHTML=`<p class="inone">${esc(T('i_none'))}</p>`;return}
+  $('ilist').innerHTML='<div class="abi-list">'+list.map(a=>`<article class="abx-card"><h3>${esc(tx(a.n))}</h3>`+
+    ((a.inter||[]).length?(a.inter||[]).map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+
+    '</article>').join('')+'</div>';
 }
-const ilEl=document.getElementById('ilist');
-if(ilEl)ilEl.addEventListener('click',e=>{const b=e.target.closest('[data-abpick]');if(!b)return;ABSEL=b.dataset.abpick;renderInter()});
 function renderInter(){
   $('filters').innerHTML=(ISRC&&REFS[ISRC]?`<button type="button" class="srcf" data-clrsrc="1" aria-pressed="true">${T('su_src').replace('{n}',ISRC)} ×</button>`:'')+KEYS.filter(k=>k==='all'||INTER.some(x=>x[0]===k)).map(k=>`<button data-f="${esc(k)}" aria-pressed="${!ISRC&&k===IF}">${esc(kname(k))}<bdi class="fc">${INTER.filter(x=>k==='all'||x[0]===k).length}</bdi></button>`).join('');
   if(IF!=='all'&&!INTER.some(x=>x[0]===IF))IF='all';
@@ -279,7 +274,7 @@ async function abEdit(id){
   ];
   let err=null;
   while(true){
-    const r=await dialog({err,title:T(isNew?'ab_add':'ab_edit'),fields,buttons:[]});
+    const r=await dialog({err,title:T(isNew?'ab_add':'ab_edit'),fields,buttons:[{label:T('ab_savebtn'),pri:true,action:'ok'},{label:T('o_cancel'),action:'cancel'}]});
     if(r.action!=='ok')return;
     const v=r.values.map(x=>(x||'').trim());
     const newId=isNew?v[0].toLowerCase():o.id;
