@@ -234,3 +234,56 @@ function renderAbx(){
       (a.r&&a.r.length?`<p class="hint">${esc(T('abx_src'))}: ${a.r.map(n=>'['+n+']').join(' ')}</p>`:'')+'</article>';
   }).join('');
 }
+
+/* 1.1 (test): the owner's editor for antibiotics (on the calculator page, above the list). Every write goes through
+   database functions that check the owner role themselves (antibiotic_save, antibiotic_set_flag). */
+async function renderAbAdmin(){
+  const el=$('nadm'); if(!el)return;
+  if(typeof OWN==='undefined'||!OWN.on||OWN.preview||!OWN.client){el.innerHTML='';return}
+  el.innerHTML=`<p class="hint">${esc(T('ab_loading'))}</p>`;
+  const {data,error}=await OWN.client.rpc('antibiotics_all');
+  if(error||!Array.isArray(data)){el.innerHTML=`<p class="hint">${esc(T('o_neterr'))}</p>`;return}
+  window.ABLIST=data;
+  el.innerHTML=`<div class="filters"><button type="button" class="btn pri" data-abadd="1">${esc(T('ab_add'))}</button></div>`+
+    (data.length?data.map(a=>`<div class="abrow"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b> ${a.hidden?`<span class="hidb bh">${esc(T('o_hiddenb'))}</span>`:''} `+
+      `<button type="button" class="btn" data-abedit="${esc(a.id)}">${esc(T('ab_edit'))}</button> `+
+      `<button type="button" class="btn" data-abhide="${esc(a.id)}" data-v="${a.hidden?'0':'1'}">${esc(T(a.hidden?'ab_hidden_off':'ab_hidden_on'))}</button></div>`).join(''):'');
+}
+async function abEdit(id){
+  const o=id?(window.ABLIST||[]).find(x=>x.id===id):null,isNew=!o;
+  if(!isNew&&!o)return;
+  const g=(k,l)=>o&&o[k]?(o[k][l]||''):'';
+  const fields=[
+    {label:T('ab_id'),value:isNew?'':o.id,ltr:1,type:'text'},
+    {label:T('ab_name_ar'),value:isNew?'':g('n','ar')},{label:T('ab_name_en'),value:isNew?'':g('n','en'),ltr:1},
+    {label:T('ab_aware'),type:'select',options:[['',T('ab_aw_none')],['access','Access'],['watch','Watch'],['reserve','Reserve']],value:isNew?'':(o.aware||'')},
+    {label:T('ab_cls_ar'),value:isNew?'':g('cls','ar')},{label:T('ab_cls_en'),value:isNew?'':g('cls','en'),ltr:1},
+    {label:T('ab_uses_ar'),type:'textarea',value:isNew?'':g('uses','ar')},{label:T('ab_uses_en'),type:'textarea',value:isNew?'':g('uses','en'),ltr:1},
+    {label:T('ab_dose_ar'),type:'textarea',value:isNew?'':g('dose','ar')},{label:T('ab_dose_en'),type:'textarea',value:isNew?'':g('dose','en'),ltr:1},
+    {label:T('ab_renal_ar'),type:'textarea',value:isNew?'':g('renal','ar')},{label:T('ab_renal_en'),type:'textarea',value:isNew?'':g('renal','en'),ltr:1},
+    {label:T('ab_timing_ar'),type:'textarea',value:isNew?'':g('timing','ar')},{label:T('ab_timing_en'),type:'textarea',value:isNew?'':g('timing','en'),ltr:1},
+    {label:T('ab_src'),value:isNew?'':(o.r||[]).join(', '),ltr:1},
+  ];
+  let err=null;
+  while(true){
+    const r=await dialog({err,title:T(isNew?'ab_add':'ab_edit'),fields,buttons:[]});
+    if(r.action!=='ok')return;
+    const v=r.values.map(x=>(x||'').trim());
+    const newId=isNew?v[0].toLowerCase():o.id;
+    if(!newId||!/^[a-z0-9_]{1,24}$/.test(newId)||!v[1]){err={i:!/^[a-z0-9_]{1,24}$/.test(newId)?0:1,msg:T('ab_need')};continue}
+    const src=v[14].split(/[,،\s]+/).filter(Boolean).map(Number);
+    if(src.some(n=>!Number.isInteger(n)||n<1)){err={i:14,msg:T('ab_need')};continue}
+    const p={id:newId,n:{ar:v[1],en:v[2]},aware:v[3],cls:{ar:v[4],en:v[5]},uses:{ar:v[6],en:v[7]},dose:{ar:v[8],en:v[9]},
+      renal:{ar:v[10],en:v[11]},timing:{ar:v[12],en:v[13]},r:src,hidden:!!(o&&o.hidden)};
+    const {error:e2}=await OWN.client.rpc('antibiotic_save',{p});
+    if(e2){toast(T('o_neterr'));return}
+    toast(T('ab_saved'));await renderAbAdmin();return;
+  }
+}
+document.addEventListener('click',async e=>{
+  const add=e.target.closest('[data-abadd]'),ed=e.target.closest('[data-abedit]'),hd=e.target.closest('[data-abhide]');
+  if(add){e.preventDefault();abEdit(null);return}
+  if(ed){e.preventDefault();abEdit(ed.dataset.abedit);return}
+  if(hd&&OWN&&OWN.client){e.preventDefault();const {error}=await OWN.client.rpc('antibiotic_set_flag',{p_id:hd.dataset.abhide,p_hidden:hd.dataset.v==='1'});
+    if(error){toast(T('o_neterr'));return}await renderAbAdmin()}
+});

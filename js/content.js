@@ -75,6 +75,7 @@ function vBadge(k){if(VBADGE[k])return VBADGE[k];const c=CUST[k],n=c&&((c.n&&c.n
 function filterNuts(){const q=normAr($('nsearch')&&$('nsearch').value);document.querySelectorAll('#picker button[data-k]').forEach(b=>b.classList.toggle('nf',!!q&&!normAr(b.textContent).includes(q)));document.querySelectorAll('#picker .pkh').forEach(h=>h.classList.toggle('nf',!!q))}
 /** owner: each vitamin carries its own buttons (drag ⋮⋮ to reorder · edit · hide/show · delete); «add» is under the list */
 function renderNutAdmin(){
+  if(typeof renderAbAdmin==='function'){renderAbAdmin();return} // 1.1 (test): the antibiotics editor replaces the old nutrient editor
   const el=$('nadm'),pk=$('picker');if(!el)return;
   if(typeof OWN==='undefined'||!OWN.on||OWN.preview){el.innerHTML='';return}
   const hide=NHIDE(),cust=Object.fromEntries(NCUST().map(c=>[c.id,c]));
