@@ -22,6 +22,7 @@ function show(p,view){
   // a section that is a tool's page (schedule, lab results) is the selected tab while its tool is open
   if(p==='team'&&typeof openTeamPage==='function')openTeamPage();
   if(p==='abx'&&typeof renderAbx==='function')renderAbx();
+  if(p==='abx'&&typeof renderAbAdmin==='function')renderAbAdmin();
   if(p==='roadmap'&&typeof renderRoadmap==='function')renderRoadmap();
   if(typeof statHit==='function'){if(false)statHit('tool',TOOLV.slice(5));else if(p!=='menu'&&p!=='notif'&&p!=='team')statHit('section',p)}
   sharedParts(p);

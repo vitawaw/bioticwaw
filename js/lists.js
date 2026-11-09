@@ -229,12 +229,14 @@ function renderAbx(){
 /* 1.1 (test): the owner's editor for antibiotics (on the calculator page, above the list). Every write goes through
    database functions that check the owner role themselves (antibiotic_save, antibiotic_set_flag). */
 async function renderAbAdmin(){
-  const el=$('nadm'); if(!el)return;
-  if(typeof OWN==='undefined'||!OWN.on||OWN.preview||!OWN.client){el.innerHTML='';return}
+  const el=$('abxadm'); if(!el)return;
+  if(typeof OWN==='undefined'||!OWN.on||OWN.preview||!OWN.client){el.innerHTML='';window.ABPEND=[];return}
   el.innerHTML=`<p class="hint">${esc(T('ab_loading'))}</p>`;
   const {data,error}=await OWN.client.rpc('antibiotics_all');
   if(error||!Array.isArray(data)){el.innerHTML=`<p class="hint">${esc(T('o_neterr'))}</p>`;return}
   window.ABLIST=data;
+  window.ABPEND=data.filter(a=>!a.reviewed&&!a.deleted);
+  if(typeof renderNotifPending==='function')renderNotifPending();
   el.innerHTML=`<button class="oadd otop" type="button" data-abadd="1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>${esc(T('ab_addbtn'))}</span></button>`+
     (data.length?data.map(a=>`<div class="abrow"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b> ${a.hidden?`<span class="hidb bh">${esc(T('o_hiddenb'))}</span>`:''} `+
       `<button type="button" class="btn" data-abedit="${esc(a.id)}">${esc(T('ab_edit'))}</button> `+
@@ -286,3 +288,19 @@ function renderRoadmap(){
   const items=(CFG.roadmap||[]).filter(x=>x&&x.t&&!x.hidden);
   el.innerHTML=items.length?items.map(x=>`<article class="abxcard"><h3>${esc(tx2(x.t))}</h3>`+(lab[x.st]?`<p class="hint">${esc(lab[x.st])}</p>`:'')+(x.d?`<p>${esc(tx2(x.d))}</p>`:'')+'</article>').join(''):`<p class="inone">${esc(T('rm_go_none'))}</p>`;
 }
+
+/* 1.3.3 (test): antibiotics saved but not approved: listed in the owner's notifications, with an approve button */
+function abPendHTML(){
+  const P=window.ABPEND||[];
+  if(!P.length)return '';
+  return `<h3 class="nsec">${esc(T('abx_pend_t'))}</h3><p class="hint">${esc(T('abx_pend_h'))}</p>`+
+    P.map(a=>`<div class="ncard unread"><div class="nb"><div class="nh"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b></div>`+
+      `<div class="filters"><button type="button" class="btn pri" data-abok="${esc(a.id)}">${esc(T('abx_ok_btn'))}</button></div></div></div>`).join('');
+}
+function renderNotifPending(){const b=$('notif-b');if(!b)return;const old=b.querySelector('.abpend');if(old)old.remove();const h=abPendHTML();if(h){b.insertAdjacentHTML('afterbegin',`<div class="abpend">${h}</div>`)}}
+document.addEventListener('click',async e=>{
+  const ok=e.target.closest('[data-abok]');if(!ok||!OWN||!OWN.client)return;
+  e.preventDefault();const {error}=await OWN.client.rpc('antibiotic_approve',{p_id:ok.dataset.abok});
+  if(error){toast(T('o_neterr'));return}
+  toast(T('ab_saved'));await renderAbAdmin();
+});

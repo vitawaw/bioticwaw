@@ -420,7 +420,7 @@ function renderNotif(opening){
       OWN.client.from('notifications').update({read:true}).eq('read',false).then(r=>{if(r&&r.error)return;mine.forEach(n=>n.read=true);renderNav()});
     }
   }
-  $('notif-b').innerHTML=h;$('notif-p').innerHTML=(OWN.on?`<div class="nsep"></div>`:'')+pubNotifHTML();
+  $('notif-b').innerHTML=h;if(typeof renderNotifPending==='function')renderNotifPending();$('notif-p').innerHTML=(OWN.on?`<div class="nsep"></div>`:'')+pubNotifHTML();
   if(opening){pubSeen();setTimeout(renderNav,0)}
 }
 /* ===================== source links (owner, in 🔔) =====================

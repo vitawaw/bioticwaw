@@ -270,7 +270,7 @@ function renderNav(){
 }
 // older names (owner bar «awaiting review ›», tests)
 /** 🔔 opens in a floating window over the page you are on */
-function openNotif(){if(SHEET&&SHEET.key==='notif')return;openSheet(T('nt_t'),$('notifbox'),{key:'notif',onClose:()=>renderNav()});renderNotif(true);renderNav()}
+function openNotif(){if(SHEET&&SHEET.key==='notif')return;if(typeof renderAbAdmin==='function')renderAbAdmin();openSheet(T('nt_t'),$('notifbox'),{key:'notif',onClose:()=>renderNav()});renderNotif(true);renderNav()}
 const openNav=openNotif;
 const openMore=openNav,closeNav=()=>{},closeMore=()=>{};
 
@@ -366,6 +366,7 @@ function menuHTML(r){
     {label:T('tab_int'),f:()=>go('interactions')},
     {label:T('tab_src'),f:()=>go('sources')},
     ...(own?[{label:T('lg_t'),f:()=>openLog()}]:[]),
+    {label:T('med_t'),f:()=>go('abx')},
     {label:T('up_t'),f:()=>go('roadmap')},
     own?{label:T('nav_logout'),f:()=>logout()}:{label:T('nav_login'),f:()=>openOwner()},
   ];
