@@ -30,7 +30,7 @@ with sync_playwright() as p:
             setup(pg, pub); pg.goto('http://app.test/'); pg.wait_for_timeout(700)
             if who != 'visitor':
                 login(pg); pg.wait_for_timeout(300)
-                pg.evaluate("localStorage.setItem('sb-zrlapysswtqrwfsywbvl-auth-token','x')")  # what supabase-js keeps (the fake does not)
+                pg.evaluate("localStorage.setItem('sb-pxvytusjqpvuwsbiraia-auth-token','x')")  # what supabase-js keeps (the fake does not)
             addrs = SECTIONS + TOOLS + ['v-d', 'v-fe', 'v-vita' if who == 'visitor' else 'v-vk']  # a custom vitamin: published one / the team's own content
             if who != 'visitor': addrs += ['links']
             if who == 'owner': addrs += ['team', 'stats']

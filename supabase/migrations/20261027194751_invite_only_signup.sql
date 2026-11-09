@@ -4,7 +4,7 @@ create table if not exists private.invites (
   created_at timestamptz not null default now()
 );
 revoke all on private.invites from anon, authenticated;
-insert into private.invites(email, role) values ('vitawaw26@gmail.com','owner') on conflict (email) do update set role = excluded.role;
+insert into private.invites(email, role) values ('bioticwaw26@gmail.com','owner') on conflict (email) do update set role = excluded.role;
 
 create or replace function private.guard_signup() returns trigger
 language plpgsql security definer set search_path = '' as $$
@@ -25,7 +25,7 @@ begin
   return new;
 end $$;
 
-create trigger vitawaw_guard_signup before insert on auth.users
+create trigger bioticwaw_guard_signup before insert on auth.users
   for each row execute function private.guard_signup();
-create trigger vitawaw_add_member after insert on auth.users
+create trigger bioticwaw_add_member after insert on auth.users
   for each row execute function private.add_invited_member();

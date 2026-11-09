@@ -286,7 +286,7 @@ with sync_playwright() as p:
     check('sign out other devices', ['signOut', 'others'] in o.evaluate('__calls'))
     o.click('#sheet-x'); o.wait_for_timeout(100)
     # refresh keeps the owner signed in (asks for the code because two-step is on)
-    o.evaluate("localStorage.setItem('sb-zrlapysswtqrwfsywbvl-auth-token','x');__st.mfa.aal='aal1';localStorage.setItem('__st',JSON.stringify(__st))")
+    o.evaluate("localStorage.setItem('sb-pxvytusjqpvuwsbiraia-auth-token','x');__st.mfa.aal='aal1';localStorage.setItem('__st',JSON.stringify(__st))")
     o.reload(); o.wait_for_timeout(1200)
     check('after refresh: asks for the two-step code', o.is_visible('#dlg') and 'رمز' in o.inner_text('#dlg-t'))
     o.fill('#dlgf0', '123456'); ok(o); o.wait_for_timeout(800)

@@ -3,7 +3,7 @@
 حاسبة جرعات الفيتامينات والمعادن مبنية على مصادر طبية موثوقة، بالعربية والإنكليزية.
 A source-based vitamin and mineral dose calculator (Arabic / English).
 
-- Live: https://billowing-glade-6627.vitawaw26.workers.dev
+- Live: (يُحدَّد بعد النشر على Cloudflare)
 - Version history: [CHANGELOG.md](CHANGELOG.md) · Security model: [SECURITY.md](SECURITY.md)
 
 ---

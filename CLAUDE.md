@@ -1,5 +1,7 @@
 # CLAUDE.md — handoff notes for Claude Code
 
+> مستودع BIOTICWAW الجديد (حساب bioticwaw26، مستودع vitawaw/bioticwaw). لا يرتبط بأي مشروع Supabase أو Cloudflare قديم.
+
 Read this first. It explains how the owner works, the rules that must not be broken, where things are,
 and where the project stands. Details: `README.md` (architecture, file map, tests), `SECURITY.md`, `CHANGELOG.md`.
 
@@ -14,12 +16,12 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 
 ## Release workflow (always)
 1. Work on a branch `release/X.Y.Z` from `main`. Every push builds a Cloudflare **preview**:
-   `https://release-X-Y-Z-billowing-glade-6627.vitawaw26.workers.dev` (dots → dashes). Production is untouched.
+   `https://release-X-Y-Z-<الاسم>.<الحساب>.workers.dev` (dots → dashes). Production is untouched.
 2. Before every push that changes `css/` or `js/`: `python3 tools/set_version.py X.Y.Z` (content-hashed asset URLs;
    without it browsers load stale scripts) and add a section to `CHANGELOG.md` (Arabic).
 3. Run the tests (below), send him the preview link.
 4. **Only when he says «جاهز» (or clearly approves publishing)**: merge into `main` and push → production
-   `https://billowing-glade-6627.vitawaw26.workers.dev`.
+   (رابط الإنتاج يُحدَّد بعد النشر على Cloudflare).
 - Commit messages end with the attribution lines the session asks for.
 
 ## Rules that must never be broken
@@ -36,7 +38,7 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 - Medical numbers: every dose rule must cite a trusted source (`R([n])` in `js/calculators.js`); check
   `tests/medical_cases.py` after any change.
 
-## Database (Supabase project `zrlapysswtqrwfsywbvl`, eu-central-1)
+## Database (Supabase project `pxvytusjqpvuwsbiraia` = bioticwaw, eu-central-1; test: `ehmucaelvxrftspkqrtq` = bioticwaw-test)
 - Every change = a new file in `supabase/migrations/` named with the **version Supabase assigns** when applied
   (check with list_migrations, rename the file to match).
 - Changes must stay **compatible with the version currently live** (production may be older than the branch).
@@ -248,12 +250,12 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   Any interface text: T() uses CFG.text[key] for every I18N key without HTML (`TXOK`); `openTexts()`/`drawTexts()` (owner.js, Menu →
   Site appearance → tx_all) searches all keys; editText keeps {placeholders}; decorate() puts ✎ on every [data-t] heading/paragraph
   (not inside buttons/links/labels). Labels: nv_order «تعديل وترتيب القوائم», pg_order_l «تعديل وترتيب الصفحات», o_texts «تعديل وترتيب».
-- **1.12.2 (preview)**: preview links use a separate free Supabase project **vitawaw-test** (`qzxdvdesscsyqbaqyuqb`, same org): `SB_LIVE`/`SB_TEST`/`IS_PREVIEW`
+- **1.12.2 (preview)**: preview links use a separate free Supabase project **(مشروع تجريبي قديم)** (المشروع التجريبي الجديد `ehmucaelvxrftspkqrtq`): `SB_LIVE`/`SB_TEST`/`IS_PREVIEW`
   in config.js (*.workers.dev ≠ production → test), `_headers` connect-src has both, `wrangler.jsonc` previews vars → test, production cron
   also wakes the test project (`TEST_SUPABASE_*` vars). Built by `supabase/test_project_setup.sql` (all migrations except the 3 content-only
   files + copy of the live published content + content tables rebuilt from it; refuses to run twice). APPLIED by Claude on 2026-11-02
   (pg_net fetched the raw file, md5-checked, `execute`d in one migration; schema fingerprint identical to live; pg_net is still enabled there,
-  dropping it needs an approval). He signs up on the preview with vitawaw26@gmail.com («لدي دعوة»; owner invite is in the file).
+  dropping it needs an approval). He signs up on the preview with bioticwaw26@gmail.com (دعوة المالك في ملف الترحيل الأول).
   Trick for big SQL without pasting: apply_migration on the TEST project works from here (live writes still need his approval).
   Every future DB migration must be applied to BOTH projects (test first).
   Old branches release/1.1.0–1.6.0 and ci-probe are KEPT (he decided not to delete them). Their old preview links still use the LIVE DB;
@@ -373,7 +375,7 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   SQL editor on 2026-10-29 because the MCP approval prompt never reached his tablet; it is not in list_migrations).
   Checked: publishing now gives exactly the live content (35 sources / 20 interactions / 2 custom vitamins).
 - Supabase MCP write tools (apply_migration, write execute_sql) need an approval that does not show on his tablet app.
-  If a DB change is needed again, give him the raw GitHub link + the SQL editor link (…/project/zrlapysswtqrwfsywbvl/sql/new)
+  If a DB change is needed again, give him the raw GitHub link + the SQL editor link (…/project/pxvytusjqpvuwsbiraia/sql/new)
   and tell him to make sure the button says «Run», not «Run selected».
 - He clarified: the pharmacists he invites are limited assistants to the owner (not the pharmacists who visit the site).
 - Before that, live was 1.6.0 (☰ / ⋯ menus, info pages, pharmacist accounts, 1.3.0 medical fixes).

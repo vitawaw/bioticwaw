@@ -26,7 +26,7 @@ def serve(route):
 def setup(pg,pub='[]'):
     pg.add_init_script('window.__SEED='+seed+';')
     pg.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,body=fake,content_type='application/javascript'))
-    pg.route('https://zrlapysswtqrwfsywbvl.supabase.co/**',lambda r:r.fulfill(status=200,body=pub,content_type='application/json'))
+    pg.route('https://pxvytusjqpvuwsbiraia.supabase.co/**',lambda r:r.fulfill(status=200,body=pub,content_type='application/json'))
     pg.route('https://fonts.googleapis.com/**',lambda r:r.fulfill(status=200,body='',content_type='text/css'))
     pg.route('http://app.test/**',serve)
     pg.route('http://app.test/api/content',lambda r:r.fulfill(status=200,body=pub,content_type='application/json'))

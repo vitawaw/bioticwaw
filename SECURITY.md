@@ -49,4 +49,4 @@ Last full review: 2026-10-28 (version 1.2.0).
 
 ## Reporting a problem
 
-E-mail vitawaw26@gmail.com. Please do not publish details before a fix is released.
+E-mail bioticwaw26@gmail.com. Please do not publish details before a fix is released.
