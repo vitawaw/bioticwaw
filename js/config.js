@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.1.0';
+const APP_VERSION='1.1.1';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -42,6 +42,11 @@ const DEFAULT_CFG={
    {"st": "now", "go": "sources", "ic": "chart", "t": {"ar": "مصدر رسمي لكل رقم", "en": "An official source for every number"}, "d": {"ar": "كل جرعة وتداخل يحمل رقم مصدره من إرشادات ونشرات رسمية، وروابط المصادر تُفحص بانتظام.", "en": "Every dose and interaction carries the number of its source from official guidelines and labels, and the source links are checked regularly."}},
    {"st": "now", "go": "report", "ic": "share", "t": {"ar": "تقرير للطبيب وبطاقة للمريض", "en": "Doctor report and patient card"}, "d": {"ar": "ملف مفصّل بالنتيجة والخطة والمصادر للطبيب، وبطاقة مبسطة يسلّمها الصيدلي للمريض.", "en": "A detailed file with the result, plan and sources for the doctor, and a simple card the pharmacist hands to the patient."}},
    {"st": "now", "go": "calc", "ic": "plus", "t": {"ar": "واجهة أوضح", "en": "A clearer layout"}, "d": {"ar": "أربعة مربعات في كل سطر بالرمز والاسم، وبطاقات بارزة بحافة ملونة حسب الخطورة أو الحالة، على الهاتف والآيباد والكمبيوتر.", "en": "Four tiles per line with symbol and name, and cards that stand out with a coloured edge by severity or status, on phone, iPad and computer."}},
+    {"st": "dev", "go": "calc", "ic": "plus", "t": {"ar": "حاسبة جرع المضادات", "en": "Antibiotic dose calculator"}, "d": {"ar": "حساب الجرعة حسب نوع العدوى والوزن ووظيفة الكلى، لعدد محدود من المضادات، ولكل قاعدة جرعة مصدرها الرسمي. يراجعها الصيدلي قبل النشر.", "en": "The dose by infection, weight and kidney function, for a limited set of antibiotics; every dose rule has its official source. A pharmacist reviews it before publishing."}},
+    {"st": "plan", "go": "calc", "ic": "plus", "t": {"ar": "حاسبات مضادات إضافية", "en": "More antibiotic calculators"}, "d": {"ar": "إضافة حاسبات لمضادات أخرى بعد مراجعة مصادرها، حاسبة لكل مضاد أو لكل مجموعة، بنفس الطريقة والمصادر.", "en": "Add calculators for more antibiotics after their sources are reviewed, one per antibiotic or per group, with the same method and sources."}},
+    {"st": "dev", "ic": "share", "t": {"ar": "تداخلات المضادات مع بعضها", "en": "Interactions between antibiotics"}, "d": {"ar": "تداخل كل مضاد مع المضادات الأخرى، مثل الجمع الذي يزيد السمية أو يقلل الفعالية، مع المصدر وتوقيت الأخذ.", "en": "How each antibiotic interacts with other antibiotics, such as combinations that raise toxicity or lower effect, with the source and timing."}},
+    {"st": "plan", "ic": "pill", "t": {"ar": "تداخلات المضادات مع الأدوية الأخرى", "en": "Antibiotic interactions with other medicines"}, "d": {"ar": "تداخل كل مضاد مع الأدوية الشائعة، مثل مميعات الدم وأدوية الصرع، ومع الأطعمة والمنتجات، مع توقيت الأخذ ومصدر كل تداخل.", "en": "How each antibiotic interacts with common medicines, such as anticoagulants and antiepileptics, and with foods and products, with timing and the source of each interaction."}},
+    {"st": "idea", "ic": "clock", "t": {"ar": "تذكير بمدة العلاج", "en": "Treatment duration reminder"}, "d": {"ar": "تذكير بمدة العلاج الموصى بها لكل عدوى، ومتابعة إكماله، حسب المصدر الرسمي.", "en": "A reminder of the recommended treatment duration for each infection, following the official source."}},
   ]
 };
 /* ===================== data safety =====================
