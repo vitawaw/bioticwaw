@@ -65,7 +65,7 @@ and where the project stands. Details: `README.md` (architecture, file map, test
   `when` keys = input ids or `crcl:{gt,gte,lt,lte}`); `js/abcalc.js` = engine (`abCrCl` Cockcroft-Gault with ideal/adjusted
   weight, `abMatch`, `abEval`), page (`abcInit` dropdown `#abcsel` of PUBLISHED drugs only; the owner also sees unpublished
   ones), result + «نسخ النتيجة» / «طباعة» (`abcCopy`, `abcPrint`, body.printab).
-- Interactions page: `abPicker()` in `js/lists.js` = dropdown `#intsel` (step 1) + card in `#ilist` (step 2), data `CFG.ab[].inter`.
+- Interactions page (1.6.9, like the medicines page): `abPicker()` in `js/lists.js` = search `#intq` in `#ipicker` + one `.abxcard[data-ab]` per drug in `#ilist` (`intList()`), data `CFG.ab[].inter`; global search sets `ISEL` → its name goes in the box.
 - Antibiotics page + owner editor: `renderAbx()`, `renderAbAdmin()`, `abEdit()` (dialog with «حفظ»/«إلغاء»), approve in 🔔
   (`abPendHTML`, `data-abok`). Database functions: `antibiotics_all`, `antibiotic_save`, `antibiotic_set_flag`,
   `antibiotic_approve`, `publish_site` (adds `ab`). `mergeCfg` falls back to `PUBLISHED.ab` because a draft never has it.
@@ -96,7 +96,8 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   He approved («اعتماد الكل») and published on LIVE 2026-11-10 10:43 UTC: checked in the DB (100 drugs, 294 interactions, 126 sources
   published, 0 waiting) and online (3 sizes ar+en, 0 errors, all 100 calculators give a result, source links work). LIVE brand logo and
   menu order are still the defaults (he set them on TEST only).
-- **1.6.8 (preview)**: his «اين زر المود»: header `#htheme` ☾/☀ (themeBtn/THEMEDARK in ui.js; next to 🔔 on phone/iPad, after EN on PC), toggles to the opposite of what shows.
+- **1.6.9 (preview)**: his «صفحة التداخلات نفس ترتيب صفحة الأدوية»: cards + search, no dropdown.
+- **1.6.8**: his «اين زر المود»: header `#htheme` ☾/☀ (themeBtn/THEMEDARK in ui.js; next to 🔔 on phone/iPad, after EN on PC), toggles to the opposite of what shows.
 - **1.6.7 (preview)**: his «نفذ الكل» UI items: header `#hlang` (ع/EN, setLang redraws calc keeping values), menu «الإعدادات» (lang + theme auto/light/dark, `setTheme`, localStorage vw-theme), `?lang=en` (boot.js), print forced light, search `#abcq` / `#intq` (abcFill / intFill), option labels without dose (`abOptLabels`), Arabic ranges «إلى» (bidiFix), AWaRe badge `AWB()`.
 - **1.6.6**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
   (DB fingerprints LIVE = TEST, advisors expected only, index antibiotic_interactions_drug_idx on BOTH = migration 20261110103536).

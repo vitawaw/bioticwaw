@@ -83,17 +83,16 @@ async function visitor(b, name, w, h) {
   await page.click('#abcprint'); await page.waitForTimeout(100);
   check(await page.evaluate(() => window.__printed === true), `${tag} print shows only the result with the drug name`);
 
-  // interactions: choose a drug, its interactions appear
+  // interactions: one card per antibiotic, like the medicines page
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(200);
-  await page.selectOption('#intsel', 'cipro'); await page.waitForTimeout(100);
-  check((await txt(page, '#ilist')).includes('مضادات الحموضة'), `${tag} interactions: ciprofloxacin shows antacids`);
+  check(await page.evaluate(() => document.querySelectorAll('#ilist .abxcard').length === 2 && !!document.querySelector('#ilist .abxcard .aw')), `${tag} interactions: a card per antibiotic with its AWaRe badge`);
+  check(await page.evaluate(() => (document.querySelector('#ilist [data-ab="cipro"]') || {}).textContent.includes('مضادات الحموضة')), `${tag} interactions: ciprofloxacin shows antacids`);
   const sref = await page.evaluate(() => { const a = document.querySelector('#ilist a[data-ref]'); return a ? a.dataset.ref + ' ' + a.textContent : ''; });
   check(!!sref, `${tag} interactions: each one shows its source name and number (${sref})`);
   if (sref) { await page.click('#ilist a[data-ref]'); await page.waitForTimeout(400);
     check(await page.evaluate(n => !document.getElementById('sources').hidden && document.getElementById('ref-' + n).classList.contains('hl'), sref.split(' ')[0]), `${tag} tapping the source opens it in the sources list`);
     await page.evaluate(() => go('interactions')); await page.waitForTimeout(150); }
-  await page.selectOption('#intsel', 'cefalex'); await page.waitForTimeout(100);
-  check((await txt(page, '#ilist')).includes('لا توجد تداخلات منشورة'), `${tag} interactions: cephalexin says none published`);
+  check(await page.evaluate(() => (document.querySelector('#ilist [data-ab="cefalex"]') || {}).textContent.includes('لا توجد تداخلات منشورة')), `${tag} interactions: cephalexin says none published`);
   await page.screenshot({ path: path.join(SHOTS, `inter-${name}.png`), fullPage: true });
 
   // every page opens without sideways scrolling
@@ -122,8 +121,8 @@ async function visitor(b, name, w, h) {
   await page.fill('#abcq', ''); await page.waitForTimeout(100);
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(150);
   await page.fill('#intq', 'cipro'); await page.waitForTimeout(150);
-  const ifound = await page.evaluate(() => [...document.querySelectorAll('#intsel option')].map(o => o.value).filter(Boolean));
-  check(ifound.includes('cipro') && ifound.length < 10, `${tag} interactions search narrows the list (${ifound.join(',')})`);
+  const ifound = await page.evaluate(() => [...document.querySelectorAll('#ilist .abxcard')].map(o => o.dataset.ab));
+  check(ifound.join() === 'cipro', `${tag} interactions search narrows the list (${ifound.join(',')})`);
   await page.fill('#intq', ''); await page.waitForTimeout(100);
   await page.evaluate(() => go('calc')); await page.waitForTimeout(100);
   // appearance: dark, and printing is always light
@@ -137,8 +136,8 @@ async function visitor(b, name, w, h) {
   check(await page.evaluate(() => /مراقبة|وصول/.test((document.querySelector('#abxlist .aw') || {}).textContent || '')), `${tag} AWaRe group as a coloured badge in Arabic`);
   // English: the same pages in English, nothing left in Arabic in the calculator choice
   await page.evaluate(() => { setLang('en'); go('interactions'); }); await page.waitForTimeout(200);
-  const first = await page.evaluate(() => (document.querySelector('#intsel option') || {}).textContent || '');
-  check(first.includes('Choose a drug'), `${tag} English: interactions list in English`);
+  const first = await page.evaluate(() => (document.querySelector('#ilist .abxcard h3') || {}).textContent || '');
+  check(/Ciprofloxacin/.test(first), `${tag} English: interactions list in English (${first})`);
   check(await page.evaluate(() => document.documentElement.dir) === 'ltr', `${tag} English: page direction left to right`);
 
   for (const p of ['calc', 'interactions', 'abx', 'sources', 'roadmap', 'menu']) { await page.evaluate(x => go(x), p); await page.waitForTimeout(100); }
@@ -175,7 +174,7 @@ async function owner(b, name, w, h) {
   check(await page.evaluate(() => getComputedStyle(document.querySelector('#abx .hero')).backgroundImage !== 'none' || getComputedStyle(document.querySelector('#abx .hero')).backgroundColor !== 'rgba(0, 0, 0, 0)'), `${tag} the antibiotics page banner has its colours`);
   // bug fixed in 1.5.0: with a saved draft the owner still sees the published antibiotics
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(200);
-  const n = await page.evaluate(() => document.querySelectorAll('#intsel option').length - 1);
+  const n = await page.evaluate(() => document.querySelectorAll('#ilist .abxcard').length);
   check(n === 2, `${tag} interactions: the owner sees the ${n} published antibiotics`);
 
   // «اعتماد الكل» appears when more than one antibiotic waits (two made-up waiting drugs, shown only)
@@ -211,7 +210,7 @@ async function owner(b, name, w, h) {
   await page.click('#dlg-a .pri'); await page.waitForTimeout(1200);
   check(await page.evaluate(() => __calls.some(c => c[0] === 'rpc' && c[1] === 'publish_site')), `${tag} publish calls publish_site`);
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(200);
-  const after = await page.evaluate(() => [...document.querySelectorAll('#intsel option')].map(o => o.value).filter(Boolean));
+  const after = await page.evaluate(() => [...document.querySelectorAll('#ilist .abxcard')].map(o => o.dataset.ab));
   check(after.includes('amox'), `${tag} after publishing, amoxicillin is in the interactions list (${after.join(',')})`);
   await page.screenshot({ path: path.join(SHOTS, `owner-${name}.png`), fullPage: false });
   for (const p of ['calc', 'interactions', 'abx', 'sources', 'roadmap', 'menu', 'notif']) { await page.evaluate(x => go(x), p); await page.waitForTimeout(100); }

@@ -5,37 +5,37 @@
 let RTF='all';
 const tx2=o=>o?(LANG==='ar'?o.ar:(o.en||o.ar)):'';
 const iTerms=q=>q?[q]:[]; // search words (normalised by normAr)
-/* 1.4.6 (test): the interactions page is arranged like the calculator page: choose a drug from the list (1), its
-   interactions appear below (2). Data: CFG.ab (published only). */
-let ISEL=null;
+/* 1.6.9: the interactions page is arranged like the medicines page: one card per antibiotic (name, AWaRe group, its
+   interactions with their sources), with a search box above. Data: CFG.ab (published only). */
+let ISEL=null,IQ='';
 function abPicker(){
   const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
   const A=(CFG.ab||[]).filter(a=>a&&a.n);
   const pk=$('ipicker');
   if(!A.length){pk.innerHTML='';$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
-  if(ISEL&&!A.some(a=>a.id===ISEL))ISEL=null;
-  // the global search (openSearch) sets the hidden box: open the first drug that matches it
-  const q=normAr($('isearch')&&$('isearch').value?$('isearch').value:'');
-  if(!ISEL&&q){const m=A.find(a=>normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));if(m)ISEL=m.id}
-  pk.innerHTML=`<div class="f"><label class="l" for="intsel">${esc(T('s1'))}</label>`+
-    `<input type="search" id="intq" class="abq" dir="auto" autocomplete="off" placeholder="${esc(T('ab_find'))}" aria-label="${esc(T('ab_find'))}" value="${esc(IQ)}">`+
-    `<select id="intsel"></select></div>`;
-  intFill(A,tx);
-  $('intq').oninput=e=>{IQ=e.target.value;intFill(A,tx)};
-  $('intsel').onchange=e=>{ISEL=e.target.value||null;renderInter()};
-  const cur=A.find(a=>a.id===ISEL);
-  $('ilist').innerHTML=!cur?`<p class="inone">${esc(T('ab_pick_hint'))}</p>`
-    :`<article class="abx-card"><h3>${esc(tx(cur.n))} ${AWB(cur.aware)}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:cur.r)}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
+  // the global search opens one drug: show its name in the box
+  if(ISEL){const m=A.find(a=>a.id===ISEL);if(m)IQ=tx(m.n);ISEL=null}
+  const hs=$('isearch');if(hs&&hs.value){IQ=hs.value;hs.value=''}
+  if(!$('intq')){
+    pk.innerHTML=`<input type="search" id="intq" class="abq" dir="auto" autocomplete="off" placeholder="${esc(T('ab_find'))}" aria-label="${esc(T('ab_find'))}">`;
+    $('intq').oninput=e=>{IQ=e.target.value;intList()};
+  }else $('intq').placeholder=T('ab_find'),$('intq').setAttribute('aria-label',T('ab_find'));
+  if($('intq').value!==IQ)$('intq').value=IQ;
+  intList();
 }
-/** the interactions drug list, narrowed by the search box (Arabic or English name, or class); the chosen drug stays */
-function intFill(A,tx){
-  const sel=$('intsel');if(!sel)return;
+/** the cards, narrowed by the search box (Arabic or English name, or class) */
+function intList(){
+  const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
+  const A=(CFG.ab||[]).filter(a=>a&&a.n);
   const q=normAr(IQ||'').trim(),hit=a=>!q||normAr([a.n.ar||'',a.n.en||'',a.cls?(a.cls.ar||'')+' '+(a.cls.en||''):''].join(' ')).includes(q);
-  const list=A.filter(a=>hit(a)||a.id===ISEL);
-  sel.innerHTML=`<option value="">${esc(q?T('ab_found').replace('{n}',A.filter(hit).length):T('ab_choose'))}</option>`+
-    list.map(a=>`<option value="${esc(a.id)}"${a.id===ISEL?' selected':''}>${esc(tx(a.n))}</option>`).join('');
+  const L2=A.filter(hit);
+  $('ilist').innerHTML=(q?`<p class="hint">${esc(T('ab_found').replace('{n}',L2.length))}</p>`:'')+L2.map(a=>{
+    const inter=(a.inter||[]).map(x=>`<li><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:a.r)}</li>`).join('');
+    return `<article class="abxcard" data-ab="${esc(a.id)}"><h3>${esc(tx(a.n))}</h3>`+
+      (a.aware?`<p class="hint">${esc(T('abx_aware'))}: ${AWB(a.aware)}</p>`:'')+
+      (inter?`<p><b>${esc(T('abx_inter'))}:</b></p><ul>${inter}</ul>`:`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
+  }).join('');
 }
-let IQ='';
 function renderInter(){abPicker()}
 const IC={
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',

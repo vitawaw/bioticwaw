@@ -851,14 +851,11 @@ body:not(.demo) #abdemo{display:none!important}
 
 /* 1.4.5: the dialog header with its × mark; the interactions page cards (same colours and fonts as the rest of the site) */
 .dlg-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#interactions .abx-card{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:14px 16px}
-#interactions .abx-card h3{margin:0 0 8px;font:800 calc(16px*var(--fsh,1))/1.35 var(--f-display);color:var(--ink)}
-#interactions .abx-card .abi{margin:6px 0;color:var(--ink);font:500 calc(14px*var(--fsb,1))/1.7 var(--f-body)}
-#interactions .abx-card .hint{margin:4px 0 0}
 
-/* 1.4.6: the interactions page uses the calculator layout (drug list on top, result below) */
+/* 1.6.9: the interactions page is arranged like the medicines page (search box, then one card per antibiotic) */
 #ipicker{display:block}
-#ipicker .f{margin:0}
+#ipicker .abq{margin:0}
+#interactions .abxlist{margin-top:12px}
 
 /* 1.5.0: print only the dose result (same idea as the doctor report above) */
 #abprint{display:none}
