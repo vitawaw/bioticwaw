@@ -91,7 +91,7 @@ Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is insta
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
 ## Where we are (2026-11-10)
-- **LIVE = 1.6.8** (his «انشر» 2026-11-10: main fast-forwarded, no DB change; checked online 3 sizes ar+en: 100 drugs, search, EN/ع, ☾/☀, demo hidden, 0 errors).
+- **LIVE = 1.6.9** (his «انشر» 2026-11-10, interactions page as cards; checked online 3 sizes ar+en: 100 cards, 294 interactions, search, 0 errors). Before: 1.6.8 ( main fast-forwarded, no DB change; checked online 3 sizes ar+en: 100 drugs, search, EN/ع, ☾/☀, demo hidden, 0 errors).
 - Before: LIVE = 1.6.6 (he said «انشر» again on 2026-11-10; main fast-forwarded; checked online: 3 sizes ar+en, 0 errors, demo button hidden).
   He approved («اعتماد الكل») and published on LIVE 2026-11-10 10:43 UTC: checked in the DB (100 drugs, 294 interactions, 126 sources
   published, 0 waiting) and online (3 sizes ar+en, 0 errors, all 100 calculators give a result, source links work). LIVE brand logo and
