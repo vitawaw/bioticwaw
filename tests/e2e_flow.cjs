@@ -70,6 +70,9 @@ async function visitor(b, name, w, h) {
   check(/\b88\b/.test(res), `${tag} ciprofloxacin: creatinine clearance 88 mL/min`);
   check(res.includes('الجرعة المعتادة'), `${tag} ciprofloxacin: usual dose above 50 mL/min`);
   await page.screenshot({ path: path.join(SHOTS, `calc-${name}.png`), fullPage: true });
+  // «بيانات تجريبية» fills a sample patient and calculates at once
+  await page.click('#clear'); await page.click('#abdemo'); await page.waitForTimeout(200);
+  check(await page.evaluate(() => document.getElementById('age').value === '65' && /\d+ mL\/min|\d+ مل\/دقيقة/.test(document.getElementById('res').innerText)), `${tag} «بيانات تجريبية» fills a sample patient and shows the dose`);
   // copy and print the result (print is replaced by a stub that records what would be printed)
   await page.click('#abccopy'); await page.waitForTimeout(150);
   check((await txt(page, '#toast')).includes('نُسخت'), `${tag} copy the result`);

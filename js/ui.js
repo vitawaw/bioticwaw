@@ -77,6 +77,13 @@ function themeIcon(){if(typeof renderMenu==='function')renderMenu()}
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',themeIcon);
 
 /* ===================== clear ===================== */
+/* «بيانات تجريبية» (for teaching and the academic presentation): a sample patient, then the dose at once.
+   Kidney function is reduced on purpose (creatinine clearance about 40 mL/min) so the kidney adjustment shows. */
+$('abdemo').addEventListener('click',()=>{
+  if(typeof ABC_SEL==='undefined'||!ABC_SEL){const s=$('abcsel');if(!s||s.options.length<2)return;s.value=s.options[1].value;s.dispatchEvent(new Event('change'))}
+  [['age','65'],['wt','60'],['ht','160'],['abscr','1.3']].forEach(([id,v])=>{const e=$(id);if(e)e.value=v});$('sex').value='f';
+  const go=$('abcgo');if(go)go.click();toast(T('ab_demo_t'));
+});
 $('clear').addEventListener('click',()=>{['age','wt','ht','abscr'].forEach(id=>{const e=$(id);if(e)e.value=''});$('res').innerHTML=''});
 
 
