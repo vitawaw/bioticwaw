@@ -52,11 +52,10 @@ and where the project stands. Details: `README.md` (architecture, file map, test
   turn; tell him, and either retry when he is watching or give him the raw GitHub link + the SQL editor link.
 - The free projects pause after 7 idle days; the worker's daily cron (`src/worker.js`) keeps both awake.
 - Advisor warnings about owner functions callable by signed-in users are expected: each checks the owner role inside.
-- **Pending for LIVE at release** (in order): the six `20261109*` antibiotic migrations, `20261110040142_antibiotics_cleanup_hardening.sql`
-  (applied on TEST 2026-11-10 via pg_net + md5 check), then content: `supabase/manual/batches_1_10_load_test.sql` (all 100 drugs, sources 27–126,
-  294 interactions, drafts; supersedes `sources_antibiotics_1_26.sql` + `batch1_load_test.sql`, but run `sources_antibiotics_1_26.sql` first
-  for sources 1–26); then he approves in 🔔 («اعتماد الكل») and publishes. The LIVE published/draft config still holds the vitamin-era
-  info pages, which override the built-in ones (TEST has none): at release reset `pages` in the LIVE draft to the built-in pages.
+- **LIVE released 2026-11-10 (1.6.5)**: on LIVE via pg_net + md5 (versions 20261110102821…102841): the six antibiotic migrations + the cleanup
+  migration; content: sources_antibiotics_1_26.sql + batches_1_10_load_test.sql (100 drugs waiting, 294 interactions, 126 sources).
+  LIVE had already been emptied (0 sources, no info pages, 8 hidden vitamin rows dropped with the nutrients table). main = branch (fast-forward).
+  Left for him on LIVE: log in → 🔔 «اعتماد الكل» → «نشر» (until then visitors see «لا توجد حاسبات منشورة بعد»).
 - Big SQL without pasting: push the file, `select net.http_get(raw GitHub URL at the commit)`, check `md5(content)` against the local file,
   then `execute` it (apply_migration for schema changes, execute_sql for content). Worked on TEST on 2026-11-10 without an approval prompt.
 
@@ -93,6 +92,7 @@ Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is insta
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
 ## Where we are (2026-11-10)
+- **LIVE = 1.6.5** (he said «انشر» on 2026-11-10). Logo files for his presentation: `docs/logo/` (PNG + SVG).
 - The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
   review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».
 - **1.6.5 (preview)**: his «عند الخروج لا يطبق الحفظ» (company logo): it WAS saved + published (checked in the TEST DB); the browser kept
