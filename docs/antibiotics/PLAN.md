@@ -1,7 +1,7 @@
-# Plan: 100 antibiotics (working plan, 2026-11-09)
+# Plan: 100 antibiotics (done 2026-11-10, version 1.6.0)
 
 ## Goal
-Every one of the 100 antibiotics in `antibiotics_100.csv` on the site with: uses, adult dose, kidney adjustment, timing,
+Every one of the 100 antibiotics in `LIST.md` on the site with: uses, adult dose, kidney adjustment, timing,
 the label's clinically important interactions, a dose calculator built from the label, and the source of every number.
 
 ## Method (one pipeline for every drug)
@@ -13,8 +13,8 @@ the label's clinically important interactions, a dose calculator built from the 
    (from the label's interactions section; `major` = contraindicated or "avoid" in the label, `moderate` = dose change or
    monitoring, `minor` = laboratory test interference) and the source ids. The calculator rules go into `js/abrules.js`.
 3. **Checks.** `tests/abrules_test.mjs` (fallback per row, both languages, known values from each label),
-   `tools/check_batch.py` (no < or >, Arabic and English present, every interaction cites a source, every drug has a label).
-4. **Loading.** `tools/batch_sql.py` writes `supabase/manual/batchN_load_test.sql` (sources, antibiotics with
+   `python3 tools/abx.py check N` (no < or >, Arabic and English present, every interaction cites a source, every drug has a label, AWaRe 2023).
+4. **Loading.** `python3 tools/abx.py sql N` writes `supabase/manual/batchN_load_test.sql` (sources, antibiotics with
    `reviewed = false`, interactions). Loaded on the TEST project only.
 5. **Approval.** The owner approves in 🔔 (one drug, or «اعتماد الكل» for a whole batch) and presses «نشر».
    Calculators show to visitors only for approved and published drugs.
@@ -28,20 +28,15 @@ the label's clinically important interactions, a dose calculator built from the 
 - Drugs dosed by blood levels (vancomycin, aminoglycosides, colistin…) show the label's starting dose and say that
   the dose is then adjusted by levels; the calculator never replaces monitoring.
 
-## Batches (10 drugs each, most used first; batch 1 is loaded)
-1. amoxicillin, amoxicillin-clavulanate, cefalexin, doxycycline, ciprofloxacin, azithromycin, nitrofurantoin, metronidazole, ceftriaxone, sulfamethoxazole-trimethoprim
-2. clarithromycin, levofloxacin, cefuroxime, cefixime, clindamycin, flucloxacillin, cefazolin, gentamicin, vancomycin, linezolid
-3. ampicillin, ampicillin-sulbactam, penicillin V, benzathine penicillin, procaine penicillin, dicloxacillin, piperacillin-tazobactam, temocillin, cefradine, cefadroxil
-4. cefalotin, cefaclor, cefprozil, cefpodoxime, cefdinir, cefditoren, cefoxitin, cefotetan, cefotaxime, ceftazidime
-5. cefepime, ceftaroline, ceftobiprole, cefiderocol, ceftolozane-tazobactam, ceftazidime-avibactam, imipenem-cilastatin, meropenem, ertapenem, doripenem
-6. aztreonam, meropenem-vaborbactam, amikacin, tobramycin, streptomycin, plazomicin, erythromycin, roxithromycin, josamycin, telithromycin
-7. lincomycin, minocycline, tetracycline, tigecycline, omadacycline, eravacycline, moxifloxacin, ofloxacin, norfloxacin, gemifloxacin
-8. delafloxacin, gatifloxacin, nalidixic acid, trimethoprim, sulfadiazine, fosfomycin, tinidazole, secnidazole, teicoplanin, daptomycin
-9. dalbavancin, oritavancin, tedizolid, rifampicin, rifabutin, rifapentine, isoniazid, ethambutol, pyrazinamide, bedaquiline
-10. delamanid, pretomanid, chloramphenicol, colistin, polymyxin B, fusidic acid, fidaxomicin, rifaximin, lefamulin, pristinamycin
+## Batches
+All 10 batches are written, with calculators, and loaded on the TEST project as drafts (one file:
+`supabase/manual/batches_1_10_load_test.sql`). The full list with labels, dates and source ids: `LIST.md`.
+Six planned drugs had no official label anywhere and were replaced: procaine penicillin, doripenem, gatifloxacin, nalidixic acid,
+cefalotin, cefradine → penicillin G potassium, imipenem-relebactam, aztreonam-avibactam, methenamine, oxacillin, sulbactam-durlobactam.
 
 ## Rules for every drug
 - The dose and the kidney table are copied from the label (section named); the label version date is recorded.
 - A drug withdrawn from a market keeps its last official label and says so.
 - Every interaction cites its source; Arabic and English for every field; no < or > in any text.
-- Open clinical points are listed for the owner in `OPEN_POINTS.md`, never guessed.
+- Open clinical points go to the owner (listed in `CLAUDE.md`, «Where we are»), never guessed. When a label gives no kidney
+  number, the calculator asks yes/no instead of using a guessed threshold.

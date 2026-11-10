@@ -147,7 +147,7 @@ function drawLook(){
   const sel=(id,v)=>`<select id="${id}">${F.map(o=>`<option value="${o[0]}"${o[0]===v?' selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
   const rng=(id,v,lab)=>`<div class="lkrow"><label class="l" for="${id}">${esc(lab)} <b id="${id}v">${Math.round(v*100)}%</b></label><input type="range" id="${id}" min="0.85" max="1.3" step="0.05" value="${v}"></div>`;
   ACT.s=[];const S=c=>chipH('s',c);
-  $('sheet-b').innerHTML=`<div class="lksample" aria-hidden="true"><h3>${esc(T('lk_s_h'))}</h3><p>${esc(T('lk_s_p'))}</p><div class="picker lktiles"><button type="button" tabindex="-1"><i class="tico">D</i><span>${esc(T('n_d'))}</span></button><button type="button" tabindex="-1"><i class="tico">Fe</i><span>${esc(T('n_fe'))}</span></button></div></div>
+  $('sheet-b').innerHTML=`<div class="lksample" aria-hidden="true"><h3>${esc(T('lk_s_h'))}</h3><p>${esc(T('lk_s_p'))}</p><div class="picker lktiles"><button type="button" tabindex="-1"><i class="tico">Am</i><span>${esc(L('أموكسيسيلين','Amoxicillin'))}</span></button><button type="button" tabindex="-1"><i class="tico">Ci</i><span>${esc(L('سيبروفلوكساسين','Ciprofloxacin'))}</span></button></div></div>
     <h4 class="lkh4">${esc(T('lk_fonts'))}</h4><div class="lkrow"><label class="l" for="lkfb">${esc(T('lk_fb'))}</label>${sel('lkfb',l.fb)}</div><div class="lkrow"><label class="l" for="lkfh">${esc(T('lk_fh'))}</label>${sel('lkfh',l.fh)}</div>
     <h4 class="lkh4">${esc(T('lk_sizes'))}</h4>${rng('lksb',l.sb,T('lk_sb'))}${rng('lksh',l.sh,T('lk_sh'))}${rng('lkst',l.st||1,T('lk_st'))}
     <h4 class="lkh4">${esc(T('lk_cols'))}</h4><div class="lkcols">${LOOKSEC().map(p=>`<div class="lkcol" style="${colorVars(p)}"><span class="lkn">${esc(p==='team'?T('ad_team'):T(SECKEY[p]))}</span><input type="color" data-lkc="${p}" data-i="0" value="${CFG.colors[p][0]}" aria-label="${esc(T('o_c1'))}"><input type="color" data-lkc="${p}" data-i="1" value="${CFG.colors[p][1]}" aria-label="${esc(T('o_c2'))}"></div>`).join('')}</div>
@@ -636,7 +636,7 @@ function pubSummary(){
   const ok=x=>x.rv===false?x.pv||null:x,live=x=>x&&!x.hidden;
   const P=PUBLISHED||{},d=DELS();
   const nutHide=NHIDE(),nut=[...NCUST(),...(d.nut||[])].map(ok).filter(live);
-  const keys=new Set(BUILTIN.filter(k=>!nutHide.includes(k)).concat(nut.map(c=>c.id)));
+  const keys=new Set(nut.map(c=>c.id));
   const A={refs:[...(CFG.refs||[]),...(d.refs||[])].map(ok).filter(live).map(x=>st({id:x.id,org:x.org,title:x.title,url:x.url,ar:x.ar,en:x.en,kind:x.kind})),
     inter:[...(CFG.inter||[]),...(d.inter||[])].map(ok).filter(x=>live(x)&&keys.has(x.k)).map(x=>st({k:x.k,a:x.a,b:x.b,d:x.d,sev:x.sev,r:x.r,...(x.g&&x.g.d?{g:x.g}:{})})),
     nut:nut.map(c=>st({id:c.id,n:c.n,h:c.h,uk:c.uk,rows:c.rows,plan:c.plan,note:c.note,r:c.r}))};
@@ -711,7 +711,7 @@ function drawLog(){
   const fmtD=d=>{try{return new Date(d).toLocaleString(LANG==='ar'?'ar-IQ-u-nu-latn':'en-GB',{dateStyle:'medium',timeStyle:'short'})}catch(e){return d}};
   const det=r=>{if(!r.detail)return '';if(r.kind==='team'&&r.action!=='perms')return r.detail;
     const parts=[...new Set(r.detail.split(',').map(k=>LOGFIELD[k]?T(LOGFIELD[k]):r.kind==='team'?(I18N['pl_'+k]?T('pl_'+k):k):k))];return T(r.kind==='team'?'lg_perms':'lg_what')+' '+parts.join(L('، ',', '))};
-  const lab=r=>{let l=r.label||r.item||'';if(r.kind==='int'){const i=l.indexOf(' + '),k=i>0?l.slice(0,i):'';if(k&&(KEYS.includes(k)||I18N['n_'+k]))l=kname(k)+l.slice(i)}else if(r.kind==='nut'&&r.item&&(KEYS.includes(r.item)))l=kname(r.item);return l};
+  const lab=r=>r.label||r.item||'';
   const what=r=>{const kn=I18N['lk_'+r.kind]?T('lk_'+r.kind):r.kind;return r.kind==='publish'?(r.label?`«${r.label}»`:''):r.kind==='draft'?'':`${kn}: ${lab(r)}`};
   $('sheet-b').innerHTML=`<p class="hint">${esc(T(ISOWNER()?'lg_i_own':'lg_i_team'))}</p>`+
     `<div class="filters lgf">${Object.keys(LOGKIND).map(k=>`<button type="button" data-logf="${k}" aria-pressed="${k===LOGF}">${esc(T('lg_f_'+k))}<bdi class="fc">${rows.filter(r=>!LOGKIND[k]||LOGKIND[k].includes(r.kind)).length}</bdi></button>`).join('')}</div>`+

@@ -26,6 +26,7 @@ jobs:
       - name: Dose rules and texts
         run: |
           node tests/abrules_test.mjs
+          node tests/data_check.cjs
           node tests/i18n_check.mjs
       - name: Install Playwright (Chromium)
         run: |

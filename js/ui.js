@@ -56,9 +56,6 @@ document.querySelectorAll('.tab[data-p]').forEach(t=>{
   });
 });
 document.addEventListener('click',e=>{
-  const gi=e.target.closest('[data-goint]');if(gi){e.preventDefault();IF=gi.dataset.goint;renderInter();go('interactions');return}
-  const sr=e.target.closest('[data-isrc]');if(sr){e.preventDefault();ISRC=+sr.dataset.isrc;IF='all';renderInter();go('interactions');return}
-  if(e.target.closest('[data-clrsrc]')){e.preventDefault();ISRC=null;renderInter();return}
   if(e.target.closest('[data-goabx]')){e.preventDefault();go('abx');return}
   const rg=e.target.closest('[data-rmgo]');if(rg){e.preventDefault();const f=GO[rg.dataset.rmgo];if(f)f();return}
   const a=e.target.closest('[data-ref]');if(!a)return;e.preventDefault();
@@ -67,7 +64,6 @@ document.addEventListener('click',e=>{
   const li=$('ref-'+a.dataset.ref);if(li){li.classList.add('hl');setTimeout(()=>li.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}),30)}
 });
 $('back').addEventListener('click',()=>{const to=$('back').dataset.to||'calc';go(to);if(to==='calc'&&innerWidth<900)setTimeout(()=>$('resbox').scrollIntoView({block:'start'}),30)});
-$('filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;IF=b.dataset.f;ISRC=null;renderInter()});
 $('rtfilters').addEventListener('click',e=>{const b=e.target.closest('[data-rtf]');if(!b)return;RTF=b.dataset.rtf;renderRefs()});
 
 

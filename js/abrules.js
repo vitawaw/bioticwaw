@@ -9,7 +9,7 @@
 const ABC_RULES = {
   amox: {
     name:{ar:'أموكسيسيلين',en:'Amoxicillin'},
-    label:'DailyMed (setid bb7733f8…), 2.2 and 2.5', srcIds:[3],
+    label:'DailyMed, amoxicillin capsules (2026-07-07), 2.2 and 2.5', srcIds:[27],
     inputs:[
       {id:'sev',type:'select',label:{ar:'شدة العدوى',en:'Infection severity'},options:[['mild',{ar:'خفيفة إلى متوسطة',en:'Mild to moderate'}],['severe',{ar:'شديدة',en:'Severe'}]]},
       {id:'hd',type:'check',label:{ar:'غسيل كلوي (دياليزا)',en:'On haemodialysis'}}
@@ -40,7 +40,7 @@ const ABC_RULES = {
 
   cefalex: {
     name:{ar:'سيفالكسين',en:'Cephalexin'},
-    label:'DailyMed capsule label (setid 11cfefee…), 2.1 and 2.3', srcIds:[7],
+    label:'DailyMed, cephalexin capsules (2026-08-24), 2.1 and 2.3', srcIds:[29],
     inputs:[],
     rows:[
       {k:{ar:'الجرعة المعتادة (ملصق 2.1)',en:'Usual dose (label 2.1)'},rules:[
@@ -63,7 +63,7 @@ const ABC_RULES = {
 
   cipro: {
     name:{ar:'سيبروفلوكساسين',en:'Ciprofloxacin'},
-    label:'DailyMed tablet label (setid 178dc379…), indication and kidney tables', srcIds:[20,4],
+    label:'DailyMed, ciprofloxacin tablets (2026-07-13), indication and kidney tables', srcIds:[31],
     inputs:[
       {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
         ['skin',{ar:'الجلد: 500–750 ملغ كل 12 ساعة، 7 إلى 14 يوماً',en:'Skin: 500–750 mg q12h, 7–14 days'}],
@@ -276,7 +276,7 @@ const ABC_RULES = {
 
   smx_tmp: {
     name:{ar:'سلفاميثوكسازول–تريميثوبريم',en:'Sulfamethoxazole–trimethoprim'},
-    label:'DailyMed, sulfamethoxazole and trimethoprim (2026-09-02), Dosage and Administration', srcIds:[36], pedsRef:'Dosage and Administration',
+    label:'DailyMed, sulfamethoxazole and trimethoprim (2026-08-25), Dosage and Administration', srcIds:[36], pedsRef:'Dosage and Administration',
     inputs:[
       {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[
         ['uti',{ar:'التهاب المسالك البولية',en:'Urinary tract infection'}],
@@ -404,7 +404,7 @@ const ABC_RULES = {
 
   cefurox: {
     name:{ar:'سيفوروكسيم أكسيتيل',en:'Cefuroxime axetil'},
-    label:'DailyMed, cefuroxime axetil tablets (2026-08-05), sections 2.2 and 2.5', srcIds:[39], pedsRef:'2.2',
+    label:'DailyMed, cefuroxime axetil tablets (2026-01-16), sections 2.2 and 2.5', srcIds:[39], pedsRef:'2.2',
     inputs:[
       {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
         ['phar',{ar:'البلعوم واللوزتين',en:'Pharyngitis or tonsillitis'}],
@@ -436,7 +436,7 @@ const ABC_RULES = {
 
   cefixime: {
     name:{ar:'سيفيكسيم',en:'Cefixime'},
-    label:'DailyMed, cefixime tablets (2026-08-05), sections 2.1 and 2.3', srcIds:[40], pedsRef:'2.2',
+    label:'DailyMed, cefixime tablets (2026-04-06), sections 2.1 and 2.3', srcIds:[40], pedsRef:'2.2',
     inputs:[
       {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['usual',{ar:'عدوى معتادة',en:'Usual infection'}],['gono',{ar:'السيلان غير المعقد',en:'Uncomplicated gonorrhoea'}]]},
       {id:'dial',type:'select',label:{ar:'الغسيل الكلوي',en:'Dialysis'},options:[['none',{ar:'لا',en:'None'}],['hd',{ar:'غسيل دموي',en:'Haemodialysis'}],['capd',{ar:'غسيل بريتوني مستمر',en:'Continuous peritoneal dialysis'}]]}
@@ -459,7 +459,7 @@ const ABC_RULES = {
 
   clinda: {
     name:{ar:'كليندامايسين',en:'Clindamycin'},
-    label:'DailyMed, clindamycin hydrochloride capsules (2026-07-17), Dosage and Administration', srcIds:[41], noRenal:true, pedsRef:'Dosage and Administration',
+    label:'DailyMed, clindamycin hydrochloride capsules (2026-06-03), Dosage and Administration', srcIds:[41], noRenal:true, pedsRef:'Dosage and Administration',
     inputs:[
       {id:'sev',type:'select',label:{ar:'شدة العدوى',en:'Severity'},options:[['serious',{ar:'خطيرة',en:'Serious'}],['more',{ar:'أشد',en:'More severe'}]]}
     ],
@@ -584,7 +584,7 @@ const ABC_RULES = {
 
   linezolid: {
     name:{ar:'لينيزوليد',en:'Linezolid'},
-    label:'DailyMed, linezolid tablets (2026-09-03), section 2.1 Table 1', srcIds:[46], noRenal:true, pedsRef:'2.1',
+    label:'DailyMed, linezolid tablets (2026-08-24), section 2.1 Table 1', srcIds:[46], noRenal:true, pedsRef:'2.1',
     inputs:[
       {id:'ind',type:'select',label:{ar:'نوع العدوى',en:'Type of infection'},options:[
         ['pneu',{ar:'التهاب الرئة (مستشفى أو مجتمع) أو الجلد المعقد',en:'Pneumonia (hospital or community) or complicated skin'}],
@@ -702,7 +702,7 @@ const ABC_RULES = {
   },
 
   pen_g: {
-    name:{ar:'بنسلين G البوتاسيوم',en:'Penicillin G potassium'},
+    name:{ar:'بنزيل بنسلين البوتاسيوم (بنسلين G)',en:'Penicillin G potassium'},
     label:'DailyMed, Pfizerpen (Pfizer, 2025-12-16), Dosage and Administration', srcIds:[51], pedsRef:'Dosage and Administration',
     inputs:[
       {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[

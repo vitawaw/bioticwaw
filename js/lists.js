@@ -2,19 +2,15 @@
    Interactions tab (filters + search incl. Arabic drug names), sources tab, roadmap ('coming next') and contact links.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== interactions & sources ===================== */
-let IF='all',RTF='all',ISRC=null;
-const BUILTIN=[]; // 1.19 (test): the built-in vitamin calculators were removed
-let KEYS=['all',...BUILTIN],CUST={};
+let RTF='all';
 const tx2=o=>o?(LANG==='ar'?o.ar:(o.en||o.ar)):'';
 const iTerms=q=>q?[q]:[]; // search words (normalised by normAr)
-const kname=k=>k==='all'?T('all'):CUST[k]?tx2(CUST[k].n):T('n_'+k);
 /* 1.4.6 (test): the interactions page is arranged like the calculator page: choose a drug from the list (1), its
    interactions appear below (2). Data: CFG.ab (published only). */
 let ISEL=null;
 function abPicker(){
   const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
   const A=(CFG.ab||[]).filter(a=>a&&a.n);
-  $('filters').innerHTML='';$('filters').hidden=true;
   const pk=$('ipicker');
   if(!A.length){pk.innerHTML='';$('ilist').innerHTML=`<p class="inone">${esc(T('ab_pub_none'))}</p>`;return}
   if(ISEL&&!A.some(a=>a.id===ISEL))ISEL=null;

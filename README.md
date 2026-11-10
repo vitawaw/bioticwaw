@@ -61,7 +61,7 @@ Browser ──► Cloudflare (static files: index.html, css/, js/, fonts/)      
 | `supabase/manual/` | Content files (sources, antibiotic batches) run by hand, test first. |
 | `tests/` | Automated tests (see below). |
 | `tools/set_version.py` | Sets the version and content hashes in every file at once. |
-| `docs/antibiotics/` | The 100 drugs: `batchN.json` (content written from the labels), `labels/` (saved official labels), `aware_2023.json`, `PLAN.md`. |
+| `docs/antibiotics/` | The 100 drugs: `LIST.md` (the 100 drugs, labels, dates, source ids), `batchN.json` (content written from the labels), `labels/` (saved official labels), `aware_2023.json`, `PLAN.md`. |
 | `tools/fetch_labels.py`, `tools/fetch_eu_labels.py` | Download the official labels (DailyMed / openFDA, then eMC, EMA, ANSM). |
 | `tools/abx.py` | `check N` checks a batch; `sql N` writes `supabase/manual/batchN_load_test.sql` (drafts, reviewed = false). |
 
