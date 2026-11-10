@@ -1,13 +1,13 @@
 // BIOTICWAW service worker: lets the installed app open offline.
 // VERSION and FILES are updated by tools/set_version.py; do not edit them by hand.
-const VERSION='bioticwaw-1.6.4-6755d8ad';
+const VERSION='bioticwaw-1.6.4-9be951f8';
 const FILES=[
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './css/app.css?v=1.6.4-dd2807c5',
+  './css/app.css?v=1.6.4-b7b319dc',
   './js/pre.js?v=1.6.4-e186d15a',
   './js/config.js?v=1.6.4-f2f62bfe',
   './js/i18n.js?v=1.6.4-98bdb3bd',
@@ -15,7 +15,7 @@ const FILES=[
   './js/render.js?v=1.6.4-0c8ce0d5',
   './js/content.js?v=1.6.4-aac4e179',
   './js/lists.js?v=1.6.4-41cba5a4',
-  './js/ui.js?v=1.6.4-8cca90ef',
+  './js/ui.js?v=1.6.4-74526a59',
   './js/published.js?v=1.6.4-bf497084',
   './js/owner.js?v=1.6.4-25696659',
   './js/nav.js?v=1.6.4-35f8b57d',

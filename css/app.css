@@ -810,8 +810,8 @@ html.frame #instbar{display:none}
 @media print{#instbar{display:none}}
 /* 1.16.2 upper limit: what it means */
 
-/* 1.16.3 examples only on the test site (body.demo) */
-body:not(.demo) #example,body:not(.demo) [data-ex],body:not(.demo) [data-tex]{display:none!important}
+/* «بيانات تجريبية» only on the test site (body.demo, set in boot.js on the preview) */
+body:not(.demo) #abdemo{display:none!important}
 
 /* 1.16.4 the schedule's groups stack (they sat side by side on wide screens); tool buttons like the calculator's */
 /* 1.21: antibiotics page */

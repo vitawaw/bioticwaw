@@ -77,7 +77,7 @@ function themeIcon(){if(typeof renderMenu==='function')renderMenu()}
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',themeIcon);
 
 /* ===================== clear ===================== */
-/* «بيانات تجريبية» (for teaching and the academic presentation): a sample patient, then the dose at once.
+/* «بيانات تجريبية» (test site only, for teaching and the academic presentation): a sample patient, then the dose at once.
    Kidney function is reduced on purpose (creatinine clearance about 40 mL/min) so the kidney adjustment shows. */
 $('abdemo').addEventListener('click',()=>{
   if(typeof ABC_SEL==='undefined'||!ABC_SEL){const s=$('abcsel');if(!s||s.options.length<2)return;s.value=s.options[1].value;s.dispatchEvent(new Event('change'))}
