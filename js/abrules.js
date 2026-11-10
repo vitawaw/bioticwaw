@@ -1537,5 +1537,208 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'مع الطعام أو بدونه. لا تعديل في ضعف الكبد وحده.',en:'With or without food. No change for liver impairment alone.'}
+  },
+
+  lincomycin: {
+    name:{ar:'لينكومايسين',en:'Lincomycin'},
+    label:'DailyMed, lincomycin injection (2026-08-04), Dosage and Administration', srcIds:[87], pedsRef:'Dosage and Administration',
+    inputs:[
+      {id:'route',type:'select',label:{ar:'الطريق والشدة',en:'Route and severity'},options:[['im',{ar:'عضلي، خطيرة',en:'IM, serious'}],['im2',{ar:'عضلي، أشد',en:'IM, more severe'}],['iv',{ar:'وريدي',en:'IV'}]]},
+      {id:'sevr',type:'check',label:{ar:'ضعف كلوي شديد',en:'Severe kidney impairment'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{route:'im'},text:{ar:'600 ملغ عضلياً كل 24 ساعة',en:'600 mg IM every 24 h'}},
+        {when:{route:'im2'},text:{ar:'600 ملغ عضلياً كل 12 ساعة أو أكثر',en:'600 mg IM every 12 h or more often'}},
+        {when:{},text:{ar:'600 ملغ إلى 1 غرام وريدياً كل 8 إلى 12 ساعة (حتى 8 غرامات يومياً في الحالات المهددة للحياة)',en:'600 mg to 1 g IV every 8 to 12 h (up to 8 g a day in life-threatening cases)'}}
+      ]},
+      {k:{ar:'الكلى',en:'Kidneys'},rules:[
+        {when:{sevr:true},text:{ar:'25 إلى 30% من الجرعة المعتادة',en:'25 to 30% of the usual dose'}},
+        {when:{},text:{ar:'بلا تعديل (الملصق يخفض الجرعة في الضعف الشديد فقط)',en:'No change (the label lowers the dose only in severe impairment)'}}
+      ]}
+    ],
+    notes:{ar:'كل 1 غرام في 100 مل على الأقل وخلال ساعة على الأقل؛ لا يُحقن دفعة واحدة. يُوقف عند الإسهال الشديد.',en:'Each 1 g in at least 100 mL over at least 1 hour; never a direct push. Stop if significant diarrhoea occurs.'}
+  },
+
+  minocycline: {
+    name:{ar:'مينوسايكلين',en:'Minocycline'},
+    label:'DailyMed, minocycline hydrochloride capsules (2026-07-16), Dosage and Administration', srcIds:[88], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['usual',{ar:'العدوى المعتادة',en:'Usual infections'}],['gonu',{ar:'التهاب الإحليل السيلاني عند الرجال',en:'Gonococcal urethritis in men'}],['mening',{ar:'حامل المكورات السحائية',en:'Meningococcal carrier'}]]},
+      {id:'ckd',type:'check',label:{ar:'ضعف كلوي',en:'Kidney impairment'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:['gonu','mening']},text:{ar:'100 ملغ كل 12 ساعة لمدة 5 أيام',en:'100 mg every 12 h for 5 days'}},
+        {when:{},text:{ar:'200 ملغ أولاً، ثم 100 ملغ كل 12 ساعة',en:'200 mg first, then 100 mg every 12 h'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{ckd:true},text:{ar:'ضعف الكلى: لا يتجاوز 200 ملغ في 24 ساعة، مع مراقبة الكرياتينين واليوريا.',en:'Kidney impairment: not over 200 mg in 24 h, with creatinine and urea monitoring.'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام أو بدونه، مع الماء. بعيداً عن مضادات الحموضة والحديد. لا يُعطى تحت 8 سنوات إلا للضرورة.',en:'With or without food, with water. Apart from antacids and iron. Not under 8 years unless essential.'}
+  },
+
+  tetracycline: {
+    name:{ar:'تتراسيكلين',en:'Tetracycline'},
+    label:'DailyMed, tetracycline hydrochloride capsules (2026-05-22), Dosage and Administration', srcIds:[89], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['usual',{ar:'العدوى المعتادة',en:'Usual infections'}],['severe',{ar:'عدوى شديدة',en:'Severe infection'}],['chl',{ar:'الكلاميديا',en:'Chlamydia'}],['syph',{ar:'الزهري المبكر (حساسية البنسلين)',en:'Early syphilis (penicillin allergy)'}],['syph2',{ar:'الزهري أكثر من سنة (عدا العصبي)',en:'Syphilis over 1 year (not neurosyphilis)'}],['bru',{ar:'البروسيلا (مع الستربتومايسين)',en:'Brucellosis (with streptomycin)'}],['acne',{ar:'حب الشباب الشديد',en:'Severe acne'}]]},
+      {id:'ckd',type:'check',label:{ar:'ضعف كلوي',en:'Kidney impairment'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'severe'},text:{ar:'500 ملغ 4 مرات يومياً',en:'500 mg four times a day'}},
+        {when:{ind:'chl'},text:{ar:'500 ملغ 4 مرات يومياً لمدة 7 أيام على الأقل',en:'500 mg four times a day for at least 7 days'}},
+        {when:{ind:'syph'},text:{ar:'500 ملغ 4 مرات يومياً لمدة 15 يوماً',en:'500 mg four times a day for 15 days'}},
+        {when:{ind:'syph2'},text:{ar:'500 ملغ 4 مرات يومياً لمدة 30 يوماً',en:'500 mg four times a day for 30 days'}},
+        {when:{ind:'bru'},text:{ar:'500 ملغ 4 مرات يومياً لمدة 3 أسابيع',en:'500 mg four times a day for 3 weeks'}},
+        {when:{ind:'acne'},text:{ar:'1 غرام يومياً مقسمة، ثم 125 إلى 500 ملغ يومياً عند التحسن',en:'1 g a day divided, then 125 to 500 mg a day once better'}},
+        {when:{},text:{ar:'500 ملغ مرتين يومياً أو 250 ملغ 4 مرات (1 غرام يومياً)',en:'500 mg twice a day or 250 mg four times a day (1 g a day)'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{ckd:true},text:{ar:'ضعف الكلى: جرعة كلية أقل (جرعات أصغر أو فواصل أطول)؛ خطر سمية كبدية.',en:'Kidney impairment: a lower total dose (smaller doses or longer intervals); risk of liver toxicity.'}}
+      ]}
+    ],
+    notes:{ar:'مع الماء؛ الطعام والحليب ومضادات الحموضة والحديد والزنك تقلل الامتصاص. لا يُعطى تحت 8 سنوات إلا للضرورة.',en:'With water; food, dairy, antacids, iron and zinc reduce absorption. Not under 8 years unless essential.'}
+  },
+
+  tigecycline: {
+    name:{ar:'تيجيسايكلين',en:'Tigecycline'},
+    label:'DailyMed, tigecycline for injection (2026-02-17), sections 2.1 and 2.2', srcIds:[90], pedsRef:'8.4', noRenal:true,
+    inputs:[{id:'hep',type:'check',label:{ar:'ضعف كبدي شديد (Child-Pugh C)',en:'Severe liver impairment (Child-Pugh C)'}}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{hep:true},text:{ar:'100 ملغ أولاً، ثم 25 ملغ كل 12 ساعة',en:'100 mg first, then 25 mg every 12 h'}},
+        {when:{},text:{ar:'100 ملغ أولاً، ثم 50 ملغ كل 12 ساعة',en:'100 mg first, then 50 mg every 12 h'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'زيادة الوفيات مقارنة بالبدائل: يُستعمل عند عدم ملاءمة غيره. فحص التخثر والفيبرينوجين.',en:'Higher all-cause mortality than comparators: use when others are not suitable. Check clotting and fibrinogen.'}}
+      ]}
+    ],
+    notes:{ar:'تسريب خلال 30 إلى 60 دقيقة. الجلد والبطن 5 إلى 14 يوماً، الرئة 7 إلى 14. لا تعديل كلوي.',en:'Infusion over 30 to 60 minutes. Skin and abdomen 5 to 14 days, pneumonia 7 to 14. No kidney adjustment.'}
+  },
+
+  omadacycline: {
+    name:{ar:'أومادا سايكلين',en:'Omadacycline'},
+    label:'DailyMed, Nuzyra (2026-05-27), sections 2.1 to 2.3', srcIds:[91], pedsRef:'8.4', noRenal:true,
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['cabp',{ar:'التهاب الرئة المكتسب',en:'Community-acquired pneumonia'}],['skin',{ar:'عدوى الجلد الحادة',en:'Acute skin infection'}]]},
+      {id:'route',type:'select',label:{ar:'الطريق',en:'Route'},options:[['iv',{ar:'وريدي',en:'IV'}],['po',{ar:'فموي',en:'By mouth'}]]}
+    ],
+    rows:[
+      {k:{ar:'جرعة البداية',en:'Loading'},strong:true,rules:[
+        {when:{route:'po',ind:'skin'},text:{ar:'450 ملغ مرة يومياً في اليومين الأول والثاني',en:'450 mg once a day on days 1 and 2'}},
+        {when:{route:'po'},text:{ar:'300 ملغ مرتين في اليوم الأول',en:'300 mg twice on day 1'}},
+        {when:{},text:{ar:'200 ملغ وريدياً خلال 60 دقيقة (أو 100 ملغ مرتين خلال 30 دقيقة) في اليوم الأول',en:'200 mg IV over 60 minutes (or 100 mg twice over 30 minutes) on day 1'}}
+      ]},
+      {k:{ar:'الصيانة',en:'Maintenance'},strong:true,rules:[
+        {when:{route:'po'},text:{ar:'300 ملغ فموياً مرة يومياً',en:'300 mg by mouth once a day'}},
+        {when:{},text:{ar:'100 ملغ وريدياً خلال 30 دقيقة مرة يومياً',en:'100 mg IV over 30 minutes once a day'}}
+      ]}
+    ],
+    notes:{ar:'المدة 7 إلى 14 يوماً. الأقراص: صيام 4 ساعات قبلها، ثم لا طعام ساعتين ولا ألبان أو مضادات حموضة 4 ساعات. لا تعديل كلوي أو كبدي.',en:'7 to 14 days. Tablets: fast 4 hours before, then no food for 2 hours and no dairy or antacids for 4 hours. No kidney or liver adjustment.'}
+  },
+
+  eravacycline: {
+    name:{ar:'إيرافا سايكلين',en:'Eravacycline'},
+    label:'DailyMed, Xerava (2025-03-31), sections 2.1 to 2.3', srcIds:[92], pedsRef:'8.4', noRenal:true,
+    inputs:[
+      {id:'hep',type:'check',label:{ar:'ضعف كبدي شديد (Child-Pugh C)',en:'Severe liver impairment (Child-Pugh C)'}},
+      {id:'ind3a',type:'check',label:{ar:'مع محفز قوي لـ CYP3A (ريفامبين…)',en:'With a strong CYP3A inducer (rifampin…)'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind3a:true},text:{ar:'{mgkg:1.5} ملغ كل 12 ساعة (1.5 ملغ/كغ)',en:'{mgkg:1.5} mg every 12 h (1.5 mg/kg)'}},
+        {when:{hep:true},text:{ar:'{mgkg:1} ملغ كل 12 ساعة في اليوم الأول، ثم كل 24 ساعة (1 ملغ/كغ)',en:'{mgkg:1} mg every 12 h on day 1, then every 24 h (1 mg/kg)'}},
+        {when:{},text:{ar:'{mgkg:1} ملغ كل 12 ساعة (1 ملغ/كغ)',en:'{mgkg:1} mg every 12 h (1 mg/kg)'}}
+      ]}
+    ],
+    notes:{ar:'تسريب خلال 60 دقيقة تقريباً، 4 إلى 14 يوماً. بالوزن الفعلي. لا تعديل كلوي.',en:'Infusion over about 60 minutes, 4 to 14 days. Actual weight. No kidney adjustment.'}
+  },
+
+  moxi: {
+    name:{ar:'موكسيفلوكساسين',en:'Moxifloxacin'},
+    label:'DailyMed, moxifloxacin tablets (2026-08-17), section 2.1, Table 1', srcIds:[93], pedsRef:'8.4', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['cap',{ar:'التهاب الرئة المكتسب',en:'Community-acquired pneumonia'}],['sssi',{ar:'الجلد غير المعقد',en:'Uncomplicated skin'}],['csssi',{ar:'الجلد المعقد',en:'Complicated skin'}],['ciai',{ar:'البطن المعقد',en:'Complicated intra-abdominal'}],['plague',{ar:'الطاعون',en:'Plague'}],['abs',{ar:'التهاب الجيوب الحاد',en:'Acute sinusitis'}],['abecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind:'cap'},text:{ar:'400 ملغ مرة يومياً لمدة 7 إلى 14 يوماً',en:'400 mg once a day for 7 to 14 days'}},
+        {when:{ind:'sssi'},text:{ar:'400 ملغ مرة يومياً لمدة 7 أيام',en:'400 mg once a day for 7 days'}},
+        {when:{ind:'csssi'},text:{ar:'400 ملغ مرة يومياً لمدة 7 إلى 21 يوماً',en:'400 mg once a day for 7 to 21 days'}},
+        {when:{ind:'ciai'},text:{ar:'400 ملغ مرة يومياً لمدة 5 إلى 14 يوماً',en:'400 mg once a day for 5 to 14 days'}},
+        {when:{ind:'plague'},text:{ar:'400 ملغ مرة يومياً لمدة 10 إلى 14 يوماً',en:'400 mg once a day for 10 to 14 days'}},
+        {when:{ind:'abs'},text:{ar:'400 ملغ مرة يومياً لمدة 10 أيام (عند عدم وجود بديل)',en:'400 mg once a day for 10 days (when there is no alternative)'}},
+        {when:{},text:{ar:'400 ملغ مرة يومياً لمدة 5 أيام (عند عدم وجود بديل)',en:'400 mg once a day for 5 days (when there is no alternative)'}}
+      ]}
+    ],
+    notes:{ar:'فموياً أو وريدياً بالجرعة نفسها. لا تعديل كلوي أو كبدي. قبل المغنيسيوم والألومنيوم والحديد والزنك بـ 4 ساعات أو بعدها بـ 8. تحذيرات الأوتار والأعصاب وQT.',en:'By mouth or IV at the same dose. No kidney or liver adjustment. 4 hours before or 8 hours after magnesium, aluminium, iron or zinc. Tendon, nerve and QT warnings.'}
+  },
+
+  oflox: {
+    name:{ar:'أوفلوكساسين',en:'Ofloxacin'},
+    label:'DailyMed, ofloxacin tablets (2026-06-06), Dosage and Administration', srcIds:[94], pedsRef:'Pediatric Use',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['resp',{ar:'القصبات أو الرئة أو الجلد',en:'Bronchitis, pneumonia or skin'}],['gc',{ar:'السيلان غير المعقد',en:'Uncomplicated gonorrhoea'}],['chl',{ar:'الكلاميديا (الإحليل أو عنق الرحم)',en:'Chlamydia (urethra or cervix)'}],['pid',{ar:'التهاب الحوض الحاد',en:'Acute PID'}],['cyst',{ar:'التهاب المثانة (الإشريكية أو الكلبسيلة)',en:'Cystitis (E. coli or Klebsiella)'}],['cyst7',{ar:'التهاب المثانة (جراثيم أخرى)',en:'Cystitis (other organisms)'}],['cuti',{ar:'المسالك المعقدة',en:'Complicated urinary'}],['prost',{ar:'التهاب البروستات',en:'Prostatitis'}]]},
+      {id:'cirr',type:'check',label:{ar:'تليف كبدي شديد',en:'Severe cirrhosis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة',en:'Usual dose'},rules:[
+        {when:{ind:'gc'},text:{ar:'400 ملغ مرة واحدة',en:'400 mg once'}},
+        {when:{ind:'chl'},text:{ar:'300 ملغ كل 12 ساعة لمدة 7 أيام',en:'300 mg every 12 h for 7 days'}},
+        {when:{ind:'pid'},text:{ar:'400 ملغ كل 12 ساعة لمدة 10 إلى 14 يوماً',en:'400 mg every 12 h for 10 to 14 days'}},
+        {when:{ind:'cyst'},text:{ar:'200 ملغ كل 12 ساعة لمدة 3 أيام',en:'200 mg every 12 h for 3 days'}},
+        {when:{ind:'cyst7'},text:{ar:'200 ملغ كل 12 ساعة لمدة 7 أيام',en:'200 mg every 12 h for 7 days'}},
+        {when:{ind:'cuti'},text:{ar:'200 ملغ كل 12 ساعة لمدة 10 أيام',en:'200 mg every 12 h for 10 days'}},
+        {when:{ind:'prost'},text:{ar:'300 ملغ كل 12 ساعة لمدة 6 أسابيع',en:'300 mg every 12 h for 6 weeks'}},
+        {when:{},text:{ar:'400 ملغ كل 12 ساعة لمدة 10 أيام',en:'400 mg every 12 h for 10 days'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},strong:true,rules:[
+        {when:{ind:'gc'},text:{ar:'جرعة واحدة: بلا تعديل',en:'Single dose: no change'}},
+        {when:{crcl:{lt:20}},text:{ar:'جرعة أولى عادية، ثم نصف الجرعة كل 24 ساعة',en:'A normal first dose, then half the dose every 24 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'جرعة أولى عادية، ثم الجرعة المعتادة كل 24 ساعة',en:'A normal first dose, then the usual dose every 24 h'}},
+        {when:{},text:{ar:'الجرعة المعتادة كل 12 ساعة',en:'The usual dose every 12 h'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{cirr:true},text:{ar:'تليف الكبد الشديد: لا يتجاوز 400 ملغ يومياً.',en:'Severe cirrhosis: not over 400 mg a day.'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام أو بدونه. لا مضادات حموضة أو حديد أو زنك خلال ساعتين قبله أو بعده. تحذيرات الأوتار والأعصاب وQT والسكر.',en:'With or without food. No antacids, iron or zinc within 2 hours before or after. Tendon, nerve, QT and blood sugar warnings.'}
+  },
+
+  norflox: {
+    name:{ar:'نورفلوكساسين',en:'Norfloxacin'},
+    label:'French RCP, NORFLOXACINE EG 400 mg (French public medicines database, 2025-02-25), section 4.2', srcIds:[95], pedsRef:'4.3',
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['cyst',{ar:'التهاب المثانة غير المعقد',en:'Uncomplicated cystitis'}],['uti',{ar:'عدوى بولية أخرى أو السيلان',en:'Other urinary infection or gonorrhoea'}],['sbp',{ar:'الوقاية في تليف الكبد',en:'Prevention in cirrhosis'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{crcl:{lte:30}},text:{ar:'لم تُحدد الجرعة عند تصفية 30 أو أقل',en:'Dose not established at clearance 30 or less'},warn:true},
+        {when:{ind:'cyst'},text:{ar:'400 ملغ مرتين يومياً لمدة 3 أيام',en:'400 mg twice a day for 3 days'}},
+        {when:{ind:'sbp'},text:{ar:'400 ملغ مرة يومياً',en:'400 mg once a day'}},
+        {when:{},text:{ar:'400 ملغ مرتين يومياً (800 ملغ يومياً)، والمدة حسب الحالة',en:'400 mg twice a day (800 mg a day), duration by condition'}}
+      ]}
+    ],
+    notes:{ar:'مع كوب كبير من الماء، وليس مع الحليب. ممنوع للأطفال حتى نهاية النمو ومع سوابق التهاب الأوتار بالكينولونات.',en:'With a large glass of water, not with milk. Contraindicated in children until growth ends and with a history of quinolone tendinopathy.'}
+  },
+
+  gemiflox: {
+    name:{ar:'جيميفلوكساسين',en:'Gemifloxacin'},
+    label:'DailyMed, Factive (2016-08-01, last US label), Dosage and Administration, Tables 4 and 5', srcIds:[96], pedsRef:'Pediatric Use',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['abecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],['cap',{ar:'التهاب الرئة (المكورات الرئوية، المستدمية، الميكوبلازما، الكلاميديا)',en:'Pneumonia (pneumococcus, Haemophilus, Mycoplasma, Chlamydophila)'}],['cap7',{ar:'التهاب الرئة (مكورات رئوية متعددة المقاومة، كلبسيلة، موراكسيلا)',en:'Pneumonia (multidrug-resistant pneumococcus, Klebsiella, Moraxella)'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي (دموي أو بريتوني)',en:'On dialysis (haemo or peritoneal)'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'160 ملغ كل 24 ساعة',en:'160 mg every 24 h'}},
+        {when:{crcl:{lte:40}},text:{ar:'160 ملغ كل 24 ساعة',en:'160 mg every 24 h'}},
+        {when:{},text:{ar:'320 ملغ مرة يومياً',en:'320 mg once a day'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'cap7'},text:{ar:'7 أيام',en:'7 days'}},
+        {when:{},text:{ar:'5 أيام',en:'5 days'}}
+      ]}
+    ],
+    notes:{ar:'لا تُتجاوز الجرعة ولا المدة. لا مضادات حموضة أو حديد خلال 3 ساعات قبله أو ساعتين بعده. يطيل QT.',en:'Do not exceed the dose or duration. No antacids or iron within 3 hours before or 2 hours after. Prolongs QT.'}
   }
 };

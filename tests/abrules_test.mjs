@@ -72,7 +72,7 @@ const known = [
   ['cefixime, clearance 40', strong('cefixime', { ind: 'usual', dial: 'none' }, 40), 'The 400 mg tablet is not appropriate (clearance 21 to 59); use another form as in the label table'],
   ['gentamicin serious, 70 kg', strong('genta', { sev: 'serious' }, 90), '70 mg every 8 h (3 mg/kg a day)'],
   ['gentamicin interval, creatinine 2.0', rowEn('genta', { sev: 'serious' }, 40, 'If the kidneys are impaired (label method)', { scr: 2 }), 'the usual dose about every 16 h (serum creatinine × 8), with level monitoring'],
-  ['vancomycin anephric, 70 kg', strong('vanco', { anephric: true }, 5), '1050 mg first (15 mg/kg), then 130 mg every 24 h (1.9 mg/kg), with a level at 24 h'],
+  ['vancomycin anephric, 70 kg', strong('vanco', { anephric: true }, 5), '1050 mg first (15 mg/kg), then 135 mg every 24 h (1.9 mg/kg), with a level at 24 h'],
   ['metronidazole anaerobic, 70 kg', strong('metro', { ind: 'anaer', hep: false, hd: false }, null), '530 mg every 6 h (7.5 mg/kg), at most 4 g a day, for 7 to 10 days'],
   ['amox-clav, clearance 20', strong('amox_clav', { sev: 'severe', hd: false }, 20), '500 or 250 mg every 12 h by severity'],
   ['meropenem-vaborbactam, eGFR 40', strong('mero_vabor', { hd: false }, 90, { egfr: 40 }), '2 g (meropenem 1 + vaborbactam 1) every 8 h'],
@@ -85,6 +85,12 @@ const known = [
   ['aztreonam, clearance 20', rowEn('aztreonam', { ind: 'mod', hd: false }, 20, 'By kidney function'), 'A first dose of 1 or 2 g, then half the dose'],
   ['streptomycin TB daily, 70 kg', strong('strepto', { ind: 'tbd' }, 90), '1000 mg once a day (15 mg/kg, maximum 1 g)'],
   ['telithromycin, clearance 20', strong('telithro', { hep: false, hd: false }, 20), '600 mg once a day'],
+  ['ofloxacin, clearance 15', strong('oflox', { ind: 'resp', cirr: false }, 15), 'A normal first dose, then half the dose every 24 h'],
+  ['ofloxacin, clearance 40', strong('oflox', { ind: 'resp', cirr: false }, 40), 'A normal first dose, then the usual dose every 24 h'],
+  ['gemifloxacin, clearance 40', strong('gemiflox', { ind: 'cap', hd: false }, 40), '160 mg every 24 h'],
+  ['gemifloxacin, clearance 41', strong('gemiflox', { ind: 'cap', hd: false }, 41), '320 mg once a day'],
+  ['eravacycline with an inducer, 70 kg', strong('eravacycline', { hep: false, ind3a: true }, null), '105 mg every 12 h (1.5 mg/kg)'],
+  ['tigecycline Child-Pugh C', strong('tigecycline', { hep: true }, null), '100 mg first, then 25 mg every 12 h'],
 ];
 const eg = vm.runInContext('abEgfr', ctx)(60, 'm', 1.0); // 175 x 60^-0.203 = 76.7
 check(Math.abs(eg - 175 * Math.pow(60, -0.203)) < 1e-9 && Math.round(eg) === 76, 'MDRD eGFR (60-year-old man, creatinine 1.0 = 76)');

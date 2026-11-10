@@ -37,7 +37,7 @@ function abMatch(when,x,ctx){
   return true;
 }
 /* mg per kg tokens → numbers (rounded like a prescription: 10 mg steps from 100 mg, 5 mg steps from 20 mg) */
-const abRound=v=>v>=100?Math.round(v/10)*10:v>=20?Math.round(v/5)*5:Math.round(v*10)/10;
+const abRound=v=>v>=500?Math.round(v/10)*10:v>=20?Math.round(v/5)*5:Math.round(v*10)/10;
 function abFill(t,ctx){
   // {scrx:N} = serum creatinine (mg/dL) × N, e.g. the gentamicin dosing interval in hours (creatinine × 8)
   t=String(t).replace(/\{scrx:([\d.]+)\}/g,(m,n)=>ctx&&ctx.scr>0?String(Math.round(ctx.scr*+n)):'—');
