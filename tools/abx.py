@@ -73,6 +73,27 @@ def ymd(t):
     return '%s-%s-%s' % (t[:4], t[4:6], t[6:8]) if re.fullmatch(r'\d{8}', t) else t
 
 
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+
+def label_date(i):
+    """the label's version date as YYYY-MM-DD (US version date, French «Mis à jour le», UK «11 December 2025»), or ''"""
+    L = label(i)
+    t = (L.get('effective_time') or '').strip()
+    if re.fullmatch(r'\d{8}', t):
+        return ymd(t)
+    m = re.fullmatch(r'(\d{1,2}) ([A-Z][a-z]+) (\d{4})', t)
+    if m and m.group(2) in MONTHS:
+        return '%s-%02d-%02d' % (m.group(3), MONTHS.index(m.group(2)) + 1, int(m.group(1)))
+    m = re.search(r'Mis à jour le : (\d\d)/(\d\d)/(\d{4})', str(L['sections'].get('full_text', '')))
+    if m:
+        return '%s-%s-%s' % (m.group(3), m.group(2), m.group(1))
+    m = re.search(r'Date of revision of the text\s*\\?n?\s*(\d\d)/(\d\d)/(\d{4})', json.dumps(L['sections']))
+    if m:
+        return '%s-%s-%s' % (m.group(3), m.group(2), m.group(1))
+    return ''
+
+
 def source_row(i, n_ar, n_en):
     """the source row of a drug's label (org, title, url, use in both languages, kind)"""
     L = label(i)
@@ -82,11 +103,11 @@ def source_row(i, n_ar, n_en):
         brand = (L.get('brand') or [''])[0]
         if brand.startswith('These highlights') or not brand:
             brand = n_en
-        org = 'U.S. FDA label on DailyMed' + (' (' + who + ')' if who else '') + (', ' + ymd(L.get('effective_time')) if L.get('effective_time') else '')
+        org = 'U.S. FDA label on DailyMed' + (' (' + who + ')' if who else '') + (', ' + label_date(i) if label_date(i) else '')
         title = brand[:110] + ': prescribing information'
     else:
         org = {'UK SmPC': 'UK summary of product characteristics (eMC)', 'EU SmPC (EMA)': 'European Medicines Agency, product information',
-               'French RCP': 'French public medicines database (ANSM), RCP'}[kind] + (', ' + L['effective_time'] if L.get('effective_time') and len(L['effective_time']) < 25 else '')
+               'French RCP': 'French public medicines database (ANSM), RCP'}[kind] + (', ' + label_date(i) if label_date(i) else '')
         title = (L.get('brand') or [n_en])[0][:120]
     return {'id': SRC[i], 'org': org[:200], 'title': title[:200], 'url': L['url'],
             'ar': 'الملصق الرسمي لـ' + n_ar + ': الاستعمالات والجرعات وتعديل الكلى والتداخلات',

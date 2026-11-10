@@ -81,6 +81,11 @@ async function visitor(b, name, w, h) {
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(200);
   await page.selectOption('#intsel', 'cipro'); await page.waitForTimeout(100);
   check((await txt(page, '#ilist')).includes('مضادات الحموضة'), `${tag} interactions: ciprofloxacin shows antacids`);
+  const sref = await page.evaluate(() => { const a = document.querySelector('#ilist a[data-ref]'); return a ? a.dataset.ref + ' ' + a.textContent : ''; });
+  check(!!sref, `${tag} interactions: each one shows its source name and number (${sref})`);
+  if (sref) { await page.click('#ilist a[data-ref]'); await page.waitForTimeout(400);
+    check(await page.evaluate(n => !document.getElementById('sources').hidden && document.getElementById('ref-' + n).classList.contains('hl'), sref.split(' ')[0]), `${tag} tapping the source opens it in the sources list`);
+    await page.evaluate(() => go('interactions')); await page.waitForTimeout(150); }
   await page.selectOption('#intsel', 'cefalex'); await page.waitForTimeout(100);
   check((await txt(page, '#ilist')).includes('لا توجد تداخلات منشورة'), `${tag} interactions: cephalexin says none published`);
   await page.screenshot({ path: path.join(SHOTS, `inter-${name}.png`), fullPage: true });

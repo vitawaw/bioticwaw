@@ -42,3 +42,7 @@ const DRAG=t=>`<button type="button" class="drag" aria-label="${esc(t)}" title="
 const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:1});
 /** source numbers [n] */
 const R=a=>(a||[]).filter(n=>REFS[n]).map(n=>`<a class="ref" href="#" data-ref="${n}" title="${esc(REFS[n][0])}">${n}</a>`).join('');
+/** a source's short name for inline citations: FDA / DailyMed, EMA, eMC (UK), ANSM (France), or the start of its organisation */
+const srcShort=o=>/DailyMed|FDA/i.test(o)?'FDA / DailyMed':/European Medicines|\bEMA\b/.test(o)?'EMA':/eMC|UK summary/i.test(o)?L('eMC (بريطانيا)','eMC (UK)'):/ANSM/.test(o)?L('ANSM (فرنسا)','ANSM (France)'):/WHO|World Health/i.test(o)?L('منظمة الصحة العالمية','WHO'):String(o||'').split(/[,(]/)[0].trim().slice(0,40);
+/** «حسب المصدر: FDA / DailyMed [31]» under any piece of information; each one opens that source in the sources list */
+const SRCS=ids=>{const v=[...new Set(ids||[])].filter(n=>REFS[n]);return v.length?`<span class="srcs">${esc(T('src_by'))} ${v.map(n=>`<a class="ref srcl" href="#" data-ref="${n}" title="${esc(REFS[n][1]||REFS[n][0])}">${esc(srcShort(REFS[n][0]))} <bdi>[${n}]</bdi></a>`).join(L('، ',', '))}</span>`:''};

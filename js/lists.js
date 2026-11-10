@@ -22,7 +22,7 @@ function abPicker(){
   $('intsel').onchange=e=>{ISEL=e.target.value||null;renderInter()};
   const cur=A.find(a=>a.id===ISEL);
   $('ilist').innerHTML=!cur?`<p class="inone">${esc(T('ab_pick_hint'))}</p>`
-    :`<article class="abx-card"><h3>${esc(tx(cur.n))}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
+    :`<article class="abx-card"><h3>${esc(tx(cur.n))}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:cur.r)}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
 }
 function renderInter(){abPicker()}
 const IC={
@@ -111,14 +111,14 @@ function renderAbx(){
   const A=(CFG.ab||[]).filter(a=>a&&a.n);
   if(!A.length){el.innerHTML=`<p class="inone">${esc(T('abx_none'))}</p>`;return}
   const tx=o=>o?(o[LANG]||o.en||o.ar||''):'';
-  const row=(k,v)=>v?`<p><b>${esc(T(k))}:</b> ${esc(v)}</p>`:'';
   el.innerHTML=A.map(a=>{
-    const inter=(a.inter||[]).map(x=>`<li><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))}</li>`).join('');
+    const row=(k,v)=>v?`<p><b>${esc(T(k))}:</b> ${esc(v)} ${SRCS(a.r)}</p>`:'';
+    const inter=(a.inter||[]).map(x=>`<li><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:a.r)}</li>`).join('');
     return `<article class="abxcard"><h3>${esc(tx(a.n))}</h3>`+
       (a.aware?`<p class="hint">${esc(T('abx_aware'))}: ${esc(a.aware)}</p>`:'')+
       row('abx_uses',tx(a.uses))+row('abx_dose',tx(a.dose))+row('abx_renal',tx(a.renal))+row('abx_timing',tx(a.timing))+
       (inter?`<p><b>${esc(T('abx_inter'))}:</b></p><ul>${inter}</ul>`:'')+
-      (a.r&&a.r.length?`<p class="hint">${esc(T('abx_src'))}: ${a.r.map(n=>'['+n+']').join(' ')}</p>`:'')+'</article>';
+      '</article>';
   }).join('');
 }
 
