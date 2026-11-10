@@ -92,9 +92,11 @@ Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is insta
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
 ## Where we are (2026-11-10)
-- **1.6.6 (preview)**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
+- **LIVE = 1.6.6** (he said «انشر» again on 2026-11-10; main fast-forwarded; checked online: 3 sizes ar+en, 0 errors, demo button hidden).
+  LIVE visitors still see «لا توجد حاسبات منشورة بعد» until he approves («اعتماد الكل») and publishes on the main site.
+- **1.6.6**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
   (DB fingerprints LIVE = TEST, advisors expected only, index antibiotic_interactions_drug_idx on BOTH = migration 20261110103536).
-- **LIVE = 1.6.5** (he said «انشر» on 2026-11-10). Logo files for his presentation: `docs/logo/` (PNG + SVG).
+- LIVE was 1.6.5 earlier the same day. Logo files for his presentation: `docs/logo/` (PNG + SVG).
 - The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
   review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».
 - **1.6.5 (preview)**: his «عند الخروج لا يطبق الحفظ» (company logo): it WAS saved + published (checked in the TEST DB); the browser kept
