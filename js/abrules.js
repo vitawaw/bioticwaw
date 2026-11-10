@@ -1432,8 +1432,8 @@ const ABC_RULES = {
 
   strepto: {
     name:{ar:'ستربتومايسين',en:'Streptomycin'},
-    label:'DailyMed, streptomycin for injection (2026-01-21), Dosage and Administration', srcIds:[81], pedsRef:'Dosage and Administration',
-    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['tbd',{ar:'السل، يومياً',en:'Tuberculosis, daily'}],['tbw',{ar:'السل، مرتين أو 3 مرات أسبوعياً',en:'Tuberculosis, two or three times a week'}],['tul',{ar:'التولاريميا',en:'Tularaemia'}],['plague',{ar:'الطاعون',en:'Plague'}],['endo',{ar:'التهاب الشغاف بالعقديات (مع البنسلين)',en:'Streptococcal endocarditis (with penicillin)'}],['other',{ar:'عدوى أخرى',en:'Other infections'}]]}],
+    label:'DailyMed, streptomycin for injection (2026-01-21), Dosage and Administration', srcIds:[81], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['tbd',{ar:'السل، يومياً',en:'Tuberculosis, daily'}],['tbw',{ar:'السل، مرتين أو 3 مرات أسبوعياً',en:'Tuberculosis, two or three times a week'}],['tul',{ar:'التولاريميا',en:'Tularaemia'}],['plague',{ar:'الطاعون',en:'Plague'}],['endo',{ar:'التهاب الشغاف بالعقديات (مع البنسلين)',en:'Streptococcal endocarditis (with penicillin)'}],['other',{ar:'عدوى أخرى',en:'Other infections'}]]},{id:'ckd',type:'check',label:{ar:'ضعف كلوي أو احتباس اليوريا',en:'Kidney impairment or nitrogen retention'}}],
     rows:[
       {k:{ar:'الجرعة (عضلياً)',en:'Dose (IM)'},strong:true,rules:[
         {when:{ind:'tbd'},text:{ar:'{mgkg:15|max:1000} ملغ مرة يومياً (15 ملغ/كغ، حد أقصى 1 غرام)',en:'{mgkg:15|max:1000} mg once a day (15 mg/kg, maximum 1 g)'}},
@@ -1445,7 +1445,7 @@ const ABC_RULES = {
         {when:{},text:{ar:'1 إلى 2 غرام يومياً مقسمة كل 6 إلى 12 ساعة، لا تتجاوز 2 غرام',en:'1 to 2 g a day divided every 6 to 12 h, not over 2 g'}}
       ]},
       {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
-        {when:{crcl:{lt:60}},text:{ar:'ضعف الكلى: جرعات مخفضة (لا يعطي الملصق جدولاً)، مع قياس المستوى؛ خطر السمية العصبية أعلى بكثير.',en:'Kidney impairment: reduced doses (the label gives no table), with levels; the risk of nerve toxicity is much higher.'}},
+        {when:{ckd:true},text:{ar:'ضعف الكلى: جرعات مخفضة (لا يعطي الملصق جدولاً)، مع قياس المستوى؛ خطر السمية العصبية أعلى بكثير.',en:'Kidney impairment: reduced doses (the label gives no table), with levels; the risk of nerve toxicity is much higher.'}},
         {when:{age:{gt:60}},text:{ar:'فوق 60 سنة: جرعة أقل بسبب خطر السمية.',en:'Over 60: a lower dose because of the toxicity risk.'}}
       ]}
     ],
@@ -2035,15 +2035,15 @@ const ABC_RULES = {
 
   ethambutol: {
     name:{ar:'إيثامبوتول',en:'Ethambutol'},
-    label:'DailyMed, ethambutol hydrochloride tablets (2026-05-05), Dosage and Administration', srcIds:[114], pedsRef:'Dosage and Administration',
-    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['first',{ar:'علاج أول',en:'First treatment'}],['re',{ar:'إعادة علاج (أول 60 يوماً)',en:'Retreatment (first 60 days)'}]]}],
+    label:'DailyMed, ethambutol hydrochloride tablets (2026-05-05), Dosage and Administration', srcIds:[114], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['first',{ar:'علاج أول',en:'First treatment'}],['re',{ar:'إعادة علاج (أول 60 يوماً)',en:'Retreatment (first 60 days)'}]]},{id:'ckd',type:'check',label:{ar:'ضعف كلوي',en:'Kidney impairment'}}],
     rows:[
       {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
         {when:{reg:'re'},text:{ar:'{mgkg:25} ملغ مرة يومياً (25 ملغ/كغ) لـ 60 يوماً، ثم 15 ملغ/كغ',en:'{mgkg:25} mg once a day (25 mg/kg) for 60 days, then 15 mg/kg'}},
         {when:{},text:{ar:'{mgkg:15} ملغ مرة يومياً (15 ملغ/كغ)',en:'{mgkg:15} mg once a day (15 mg/kg)'}}
       ]},
       {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
-        {when:{crcl:{lt:50}},text:{ar:'ضعف الكلى: يتراكم؛ الملصق يطلب خفض الجرعة حسب مستواه في الدم دون جدول.',en:'Kidney impairment: it accumulates; the label asks for a lower dose by blood level, without a table.'}},
+        {when:{ckd:true},text:{ar:'ضعف الكلى: يتراكم؛ الملصق يطلب خفض الجرعة حسب مستواه في الدم دون جدول.',en:'Kidney impairment: it accumulates; the label asks for a lower dose by blood level, without a table.'}},
         {when:{age:{lt:13}},text:{ar:'لا يُنصح به تحت 13 سنة.',en:'Not recommended under 13 years.'}}
       ]}
     ],
@@ -2076,5 +2076,154 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'مع الطعام، تحت الإشراف المباشر، مع 3 أدوية فعالة أخرى على الأقل. بحذر في ضعف الكلى الشديد.',en:'With food, directly observed, with at least 3 other effective drugs. Caution in severe kidney impairment.'}
+  },
+
+  delamanid: {
+    name:{ar:'ديلامانيد',en:'Delamanid'},
+    label:'EU SmPC (EMA), Deltyba, sections 4.2 to 4.4', srcIds:[117], pedsRef:'4.2', noRenal:true,
+    inputs:[{id:'alb',type:'check',label:{ar:'ألبومين الدم أقل من 2.8 غ/دل',en:'Serum albumin under 2.8 g/dL'}},{id:'sevr',type:'check',label:{ar:'ضعف كلوي شديد',en:'Severe kidney impairment'}}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{alb:true},text:{ar:'ممنوع (ألبومين أقل من 2.8 غ/دل)',en:'Contraindicated (albumin under 2.8 g/dL)'},warn:true},
+        {when:{sevr:true},text:{ar:'لا يُنصح به في ضعف الكلى الشديد (لا بيانات)',en:'Not recommended in severe kidney impairment (no data)'},warn:true},
+        {when:{},text:{ar:'100 ملغ مرتين يومياً مع الطعام لمدة 24 أسبوعاً',en:'100 mg twice a day with food for 24 weeks'}}
+      ]}
+    ],
+    notes:{ar:'ضمن نظام مركب للسل المقاوم، تحت الإشراف المباشر. تخطيط قلب قبل العلاج وشهرياً. ممنوع مع محفزات CYP3A4 القوية.',en:'Part of a combination for resistant TB, directly observed. ECG before and monthly. Contraindicated with strong CYP3A4 inducers.'}
+  },
+
+  pretomanid: {
+    name:{ar:'بريتومانيد',en:'Pretomanid'},
+    label:'DailyMed, pretomanid tablets (2024-11-15), section 2.2', srcIds:[118], pedsRef:'8.4', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{},text:{ar:'200 ملغ مرة يومياً لمدة 26 أسبوعاً، مع البيداكويلين واللينزوليد فقط',en:'200 mg once a day for 26 weeks, only with bedaquiline and linezolid'}}
+      ]},
+      {k:{ar:'اللينزوليد معه',en:'Linezolid with it'},rules:[
+        {when:{},text:{ar:'600 ملغ مرة يومياً (المفضل)؛ يُخفض إلى 300 ملغ أو يُوقف عند تثبيط النخاع أو اعتلال الأعصاب',en:'600 mg once a day (preferred); lower to 300 mg or pause for marrow suppression or neuropathy'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام، تحت الإشراف المباشر. فحص الكبد قبل البدء وبعد أسبوعين ثم شهرياً. لا كحول.',en:'With food, directly observed. Liver tests before, at 2 weeks, then monthly. No alcohol.'}
+  },
+
+  chloramph: {
+    name:{ar:'كلورامفينيكول (حقن)',en:'Chloramphenicol (injection)'},
+    label:'DailyMed, chloramphenicol sodium succinate for injection (2024-10-10), Dosage and Administration', srcIds:[119], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'high',type:'check',label:{ar:'جراثيم متوسطة المقاومة (جرعة استثنائية)',en:'Moderately resistant organisms (exceptional dose)'}}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{high:true},text:{ar:'حتى {mgkg:25} ملغ كل 6 ساعات (100 ملغ/كغ يومياً)، ثم تُخفض بأسرع وقت',en:'up to {mgkg:25} mg every 6 h (100 mg/kg a day), reduced as soon as possible'}},
+        {when:{},text:{ar:'{mgkg:12.5} ملغ كل 6 ساعات (50 ملغ/كغ يومياً)',en:'{mgkg:12.5} mg every 6 h (50 mg/kg a day)'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'فقر دم لا تنسجي قاتل: فحوص دم أثناء العلاج. ضعف الكبد أو الكلى: تعديل الجرعة وقياس المستوى. حديثو الولادة: المتلازمة الرمادية.',en:'Fatal aplastic anaemia: blood tests during treatment. Liver or kidney impairment: adjust the dose and measure levels. Newborns: grey syndrome.'}}
+      ]}
+    ],
+    notes:{ar:'للعدوى الخطيرة فقط عندما لا تنفع أدوية أقل خطراً. وريدياً.',en:'Only for serious infections when less dangerous drugs will not work. IV.'}
+  },
+
+  colistin: {
+    name:{ar:'كوليستيمثات (كوليستين)',en:'Colistimethate (colistin)'},
+    label:'DailyMed, Coly-Mycin M Parenteral (2026-06-08), Dosage and Administration, Table 1', srcIds:[120], pedsRef:'Dosage and Administration',
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة اليومية (كوليستين قاعدي)',en:'Daily dose (colistin base)'},strong:true,rules:[
+        {when:{crcl:{lt:10}},text:{ar:'لا يعطي الملصق جرعة لتصفية أقل من 10',en:'The label gives no dose for clearance under 10'},warn:true},
+        {when:{crcl:{lt:30}},text:{ar:'{mgkg:1.5@ibw} ملغ كل 36 ساعة (1.5 ملغ/كغ)',en:'{mgkg:1.5@ibw} mg every 36 h (1.5 mg/kg)'}},
+        {when:{crcl:{lt:50}},text:{ar:'{mgkg:2.5@ibw} ملغ يومياً، مرة أو على جرعتين (2.5 ملغ/كغ)',en:'{mgkg:2.5@ibw} mg a day, once or in 2 doses (2.5 mg/kg)'}},
+        {when:{crcl:{lt:80}},text:{ar:'{mgkg:2.5-3.8@ibw} ملغ يومياً على جرعتين (2.5 إلى 3.8 ملغ/كغ)',en:'{mgkg:2.5-3.8@ibw} mg a day in 2 doses (2.5 to 3.8 mg/kg)'}},
+        {when:{},text:{ar:'{mgkg:2.5-5@ibw} ملغ يومياً على 2 إلى 4 جرعات (2.5 إلى 5 ملغ/كغ)',en:'{mgkg:2.5-5@ibw} mg a day in 2 to 4 doses (2.5 to 5 mg/kg)'}}
+      ]}
+    ],
+    notes:{ar:'الجرعة بالوزن المثالي كما يطلب الملصق للسمنة، ولا تتجاوز 5 ملغ/كغ يومياً. قارورة 150 ملغ كوليستين قاعدي. سمية كلوية وعصبية.',en:'Dose on ideal weight, as the label asks for obesity, and not over 5 mg/kg a day. 150 mg colistin base vial. Kidney and nerve toxicity.'}
+  },
+
+  polymyxin_b: {
+    name:{ar:'بوليميكسين ب',en:'Polymyxin B'},
+    label:'DailyMed, polymyxin B for injection (2026-06-22), Dosage and Administration', srcIds:[121], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'ckd',type:'check',label:{ar:'ضعف كلوي',en:'Kidney impairment'}}],
+    rows:[
+      {k:{ar:'الجرعة الوريدية اليومية',en:'Daily IV dose'},strong:true,rules:[
+        {when:{ckd:true},text:{ar:'أقل من {mgkg:15000} وحدة يومياً (تُخفض من 15000 وحدة/كغ نزولاً؛ لا جدول في الملصق)',en:'below {mgkg:15000} units a day (reduce downward from 15,000 units/kg; no table in the label)'},warn:true},
+        {when:{},text:{ar:'{mgkg:15000-25000} وحدة يومياً (15000 إلى 25000 وحدة/كغ)، يمكن على جرعتين كل 12 ساعة',en:'{mgkg:15000-25000} units a day (15,000 to 25,000 units/kg), can be split every 12 h'}}
+      ]}
+    ],
+    notes:{ar:'لا تتجاوز 25000 وحدة/كغ يومياً. تنقيط مستمر في دكستروز 5%. يُوقف عند نقص البول وارتفاع اليوريا. الملصق لا يحدد رقماً للتصفية عند التخفيض.',en:'Not over 25,000 units/kg a day. Continuous drip in 5% dextrose. Stop if urine output falls and urea rises. The label gives no clearance number for the reduction.'}
+  },
+
+  fusidic: {
+    name:{ar:'حمض الفوسيديك (فموي)',en:'Fusidic acid (oral)'},
+    label:'UK SmPC (eMC), Fucidin 250 mg tablets (2023-07-13), section 4.2', srcIds:[122], pedsRef:'4.2', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['skin',{ar:'عدوى الجلد بالعنقوديات',en:'Staphylococcal skin infection'}],['deep',{ar:'عدوى أخرى (العظم، الرئة، الدم، الشغاف…)',en:'Other infections (bone, lung, blood, endocarditis…)'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'deep'},text:{ar:'500 ملغ 3 مرات يومياً (يمكن مضاعفتها في الحالات الشديدة)',en:'500 mg three times a day (may be doubled in severe cases)'}},
+        {when:{},text:{ar:'250 ملغ مرتين يومياً لمدة 5 إلى 10 أيام',en:'250 mg twice a day for 5 to 10 days'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'لا يُجمع مع الستاتينات: يُوقف الستاتين طوال العلاج.',en:'Never with statins: stop the statin for the whole course.'}}
+      ]}
+    ],
+    notes:{ar:'الجرعات بفوسيدات الصوديوم. لا تعديل للكلى أو الغسيل. مراقبة الكبد.',en:'Doses as sodium fusidate. No change for the kidneys or dialysis. Liver monitoring.'}
+  },
+
+  fidaxo: {
+    name:{ar:'فيداكسومايسين',en:'Fidaxomicin'},
+    label:'DailyMed, fidaxomicin tablets (2026-05-22), section 2.2', srcIds:[123], pedsRef:'8.4', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{},text:{ar:'200 ملغ مرتين يومياً لمدة 10 أيام',en:'200 mg twice a day for 10 days'}}
+      ]}
+    ],
+    notes:{ar:'لإسهال المطثية العسيرة. مع الطعام أو بدونه. لا تعديل كلوي.',en:'For C. difficile diarrhoea. With or without food. No kidney adjustment.'}
+  },
+
+  rifaximin: {
+    name:{ar:'ريفاكسيمين',en:'Rifaximin'},
+    label:'DailyMed, Xifaxan (2025-06-25), sections 2.1 to 2.3', srcIds:[124], pedsRef:'8.4', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['td',{ar:'إسهال المسافرين',en:'Travellers diarrhoea'}],['he',{ar:'اعتلال الدماغ الكبدي',en:'Hepatic encephalopathy'}],['ibs',{ar:'القولون العصبي مع الإسهال',en:'IBS with diarrhoea'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind:'he'},text:{ar:'550 ملغ مرتين يومياً',en:'550 mg twice a day'}},
+        {when:{ind:'ibs'},text:{ar:'550 ملغ 3 مرات يومياً لمدة 14 يوماً (يمكن تكراره مرتين)',en:'550 mg three times a day for 14 days (may be repeated twice)'}},
+        {when:{},text:{ar:'200 ملغ 3 مرات يومياً لمدة 3 أيام',en:'200 mg three times a day for 3 days'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام أو بدونه. لا يُستعمل لإسهال مع حمى أو دم في البراز. لم يُدرس في ضعف الكلى.',en:'With or without food. Not for diarrhoea with fever or blood in the stool. Not studied in kidney impairment.'}
+  },
+
+  lefamulin: {
+    name:{ar:'ليفامولين',en:'Lefamulin'},
+    label:'DailyMed, Xenleta (2026-07-22), sections 2.1 and 2.2', srcIds:[125], pedsRef:'8.4', noRenal:true,
+    inputs:[
+      {id:'route',type:'select',label:{ar:'الطريق',en:'Route'},options:[['iv',{ar:'وريدي',en:'IV'}],['po',{ar:'فموي',en:'By mouth'}]]},
+      {id:'hep',type:'select',label:{ar:'الكبد',en:'Liver'},options:[['ok',{ar:'سليم أو ضعف خفيف',en:'Normal or mild impairment'}],['mod',{ar:'ضعف متوسط (Child-Pugh B)',en:'Moderate impairment (Child-Pugh B)'}],['sev',{ar:'ضعف شديد (Child-Pugh C)',en:'Severe impairment (Child-Pugh C)'}]]}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{route:'po',hep:['mod','sev']},text:{ar:'الأقراص لا يُنصح بها في ضعف الكبد المتوسط أو الشديد',en:'Tablets not recommended in moderate or severe liver impairment'},warn:true},
+        {when:{route:'po'},text:{ar:'600 ملغ كل 12 ساعة لمدة 5 أيام',en:'600 mg every 12 h for 5 days'}},
+        {when:{hep:'sev'},text:{ar:'150 ملغ وريدياً خلال 60 دقيقة كل 24 ساعة',en:'150 mg IV over 60 minutes every 24 h'}},
+        {when:{},text:{ar:'150 ملغ وريدياً خلال 60 دقيقة كل 12 ساعة، 5 إلى 7 أيام',en:'150 mg IV over 60 minutes every 12 h, 5 to 7 days'}}
+      ]}
+    ],
+    notes:{ar:'الأقراص قبل الطعام بساعة أو بعده بساعتين. لا تعديل كلوي. يطيل QT. التأكد من عدم الحمل.',en:'Tablets 1 hour before or 2 hours after food. No kidney adjustment. Prolongs QT. Check for pregnancy.'}
+  },
+
+  pristina: {
+    name:{ar:'بريستيناميسين',en:'Pristinamycin'},
+    label:'French RCP, PYOSTACINE 500 mg (French public medicines database, 2026-06-17), section 4.2', srcIds:[126], pedsRef:'4.2', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['sin',{ar:'التهاب الجيوب الفكية الحاد',en:'Acute maxillary sinusitis'}],['aecb',{ar:'تفاقم التهاب القصبات المزمن',en:'Exacerbation of chronic bronchitis'}],['cap',{ar:'التهاب الرئة الخفيف إلى المتوسط',en:'Mild to moderate pneumonia'}],['skin',{ar:'الجلد والأنسجة الرخوة',en:'Skin and soft tissue'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'sin'},text:{ar:'1 غرام مرتين يومياً لمدة 4 أيام',en:'1 g twice a day for 4 days'}},
+        {when:{ind:'aecb'},text:{ar:'1 غرام 3 مرات يومياً لمدة 4 أيام',en:'1 g three times a day for 4 days'}},
+        {when:{ind:'cap'},text:{ar:'1 غرام 3 مرات يومياً لمدة 7 إلى 14 يوماً',en:'1 g three times a day for 7 to 14 days'}},
+        {when:{},text:{ar:'1 غرام مرتين إلى 3 مرات يومياً لمدة 8 إلى 14 يوماً',en:'1 g two to three times a day for 8 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'مع الوجبات. حتى 4 غرامات يومياً في الحالات الشديدة. لا تعديل كلوي. ممنوع مع الكولشيسين.',en:'With meals. Up to 4 g a day in severe cases. No kidney adjustment. Contraindicated with colchicine.'}
   }
 };

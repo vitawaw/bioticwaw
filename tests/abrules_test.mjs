@@ -103,6 +103,10 @@ const known = [
   ['rifapentine latent TB, 70 kg', strong('rifapentine', { ind: 'ltbi' }, null), '900 mg weekly for 12 weeks'],
   ['isoniazid daily adult, 70 kg', strong('isoniazid', { reg: 'daily' }, null), '300 mg once a day (5 mg/kg, up to 300 mg)'],
   ['ethambutol first treatment, 70 kg', strong('ethambutol', { reg: 'first' }, 90), '1050 mg once a day (15 mg/kg)'],
+  ['colistin, clearance 40, ideal 70 kg', strong('colistin', {}, 40), '175 mg a day, once or in 2 doses (2.5 mg/kg)'],
+  ['colistin, clearance 20, ideal 70 kg', strong('colistin', {}, 20), '105 mg every 36 h (1.5 mg/kg)'],
+  ['lefamulin IV, Child-Pugh C', strong('lefamulin', { route: 'iv', hep: 'sev' }, null), '150 mg IV over 60 minutes every 24 h'],
+  ['chloramphenicol, 70 kg', strong('chloramph', { high: false }, null), '880 mg every 6 h (50 mg/kg a day)'],
 ];
 const eg = vm.runInContext('abEgfr', ctx)(60, 'm', 1.0); // 175 x 60^-0.203 = 76.7
 check(Math.abs(eg - 175 * Math.pow(60, -0.203)) < 1e-9 && Math.round(eg) === 76, 'MDRD eGFR (60-year-old man, creatinine 1.0 = 76)');
