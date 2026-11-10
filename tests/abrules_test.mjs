@@ -75,7 +75,19 @@ const known = [
   ['vancomycin anephric, 70 kg', strong('vanco', { anephric: true }, 5), '1050 mg first (15 mg/kg), then 130 mg every 24 h (1.9 mg/kg), with a level at 24 h'],
   ['metronidazole anaerobic, 70 kg', strong('metro', { ind: 'anaer', hep: false, hd: false }, null), '530 mg every 6 h (7.5 mg/kg), at most 4 g a day, for 7 to 10 days'],
   ['amox-clav, clearance 20', strong('amox_clav', { sev: 'severe', hd: false }, 20), '500 or 250 mg every 12 h by severity'],
+  ['meropenem-vaborbactam, eGFR 40', strong('mero_vabor', { hd: false }, 90, { egfr: 40 }), '2 g (meropenem 1 + vaborbactam 1) every 8 h'],
+  ['meropenem-vaborbactam, eGFR 20', strong('mero_vabor', { hd: false }, 90, { egfr: 20 }), '2 g (meropenem 1 + vaborbactam 1) every 12 h'],
+  ['plazomicin, clearance 45, 70 kg', strong('plazomicin', {}, 45), '700 mg every 24 h (10 mg/kg)'],
+  ['plazomicin, clearance 20, 70 kg', strong('plazomicin', {}, 20), '700 mg every 48 h (10 mg/kg)'],
+  ['amikacin every 12 h, 70 kg', strong('amikacin', { reg: 'q12' }, 90), '530 mg every 12 h (7.5 mg/kg; not over 1.5 g a day)'],
+  ['amikacin interval, creatinine 2.0', rowEn('amikacin', { reg: 'q12' }, 40, 'If the kidneys are impaired (label method)', { scr: 2 }), '7.5 mg/kg about every 18 h (serum creatinine × 9), with level monitoring'],
+  ['tobramycin serious, 70 kg', strong('tobra', { sev: 'serious' }, 90), '70 mg every 8 h (3 mg/kg a day)'],
+  ['aztreonam, clearance 20', rowEn('aztreonam', { ind: 'mod', hd: false }, 20, 'By kidney function'), 'A first dose of 1 or 2 g, then half the dose'],
+  ['streptomycin TB daily, 70 kg', strong('strepto', { ind: 'tbd' }, 90), '1000 mg once a day (15 mg/kg, maximum 1 g)'],
+  ['telithromycin, clearance 20', strong('telithro', { hep: false, hd: false }, 20), '600 mg once a day'],
 ];
+const eg = vm.runInContext('abEgfr', ctx)(60, 'm', 1.0); // 175 x 60^-0.203 = 76.7
+check(Math.abs(eg - 175 * Math.pow(60, -0.203)) < 1e-9 && Math.round(eg) === 76, 'MDRD eGFR (60-year-old man, creatinine 1.0 = 76)');
 for (const [name, got, want] of known) check(got === want, 'label value: ' + name + (got === want ? '' : ' -> got "' + got + '"'));
 console.log(`abrules: ${ok} ok, ${fail} failed`);
 process.exit(fail ? 1 : 0);

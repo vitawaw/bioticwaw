@@ -13,6 +13,8 @@ function abWeights(sex,wKg,hCm){
   const adj=wKg>1.2*ibw?ibw+0.4*(wKg-ibw):wKg;
   return {act:wKg,ibw,adj,obese:wKg>1.2*ibw};
 }
+/* MDRD eGFR (mL/min/1.73 m²) = 175 × creatinine^-1.154 × age^-0.203 × 0.742 if female (the race factor is not used) */
+function abEgfr(age,sex,scr){return age>0&&scr>0?175*Math.pow(scr,-1.154)*Math.pow(age,-0.203)*(sex==='f'?0.742:1):null}
 /* Cockcroft-Gault creatinine clearance (mL/min) */
 function abCrCl(age,sex,wKg,hCm,scr){
   if(!(age>=0&&wKg>0&&hCm>0&&scr>0))return null;
@@ -28,6 +30,7 @@ function abMatch(when,x,ctx){
     if(key==='crcl'){if(!abIn(ctx.cr,when.crcl))return false}
     else if(key==='age'){if(!abIn(ctx.age,when.age))return false}
     else if(key==='wt'){if(!abIn(ctx.wt,when.wt))return false}
+    else if(key==='egfr'){if(!abIn(ctx.egfr,when.egfr))return false} // MDRD eGFR (mL/min/1.73 m²), for labels that use it
     else if(Array.isArray(when[key])){if(!when[key].includes(x[key]))return false} // one of several values
     else if(x[key]!==when[key]) return false;
   }
@@ -38,10 +41,11 @@ const abRound=v=>v>=100?Math.round(v/10)*10:v>=20?Math.round(v/5)*5:Math.round(v
 function abFill(t,ctx){
   // {scrx:N} = serum creatinine (mg/dL) × N, e.g. the gentamicin dosing interval in hours (creatinine × 8)
   t=String(t).replace(/\{scrx:([\d.]+)\}/g,(m,n)=>ctx&&ctx.scr>0?String(Math.round(ctx.scr*+n)):'—');
-  return t.replace(/\{mgkg:([\d.]+)(?:-([\d.]+))?(?:@(act|ibw|adj|lean))?(?:\|max:([\d.]+))?\}/g,(m,a,b,basis,max)=>{
+  return t.replace(/\{mgkg:([\d.]+)(?:-([\d.]+))?(?:@(act|ibw|adj|adj25|lean))?(?:\|max:([\d.]+))?\}/g,(m,a,b,basis,max)=>{
     const W=ctx&&ctx.W;if(!W)return '—';
     // lean = an estimate of lean body mass: the ideal weight when the patient is obese, otherwise the actual weight
-    const w=basis==='ibw'?W.ibw:basis==='adj'?W.adj:basis==='lean'?(W.obese?W.ibw:W.act):W.act, cap=v=>max?Math.min(v,+max):v;
+    // adj25 = adjusted weight when actual is 25% or more over ideal (plazomicin label)
+    const w=basis==='ibw'?W.ibw:basis==='adj'?W.adj:basis==='adj25'?(W.act>=1.25*W.ibw?W.ibw+0.4*(W.act-W.ibw):W.act):basis==='lean'?(W.obese?W.ibw:W.act):W.act, cap=v=>max?Math.min(v,+max):v;
     const lo=abRound(cap(+a*w));return b?lo+'–'+abRound(cap(+b*w)):String(lo);
   });
 }
@@ -90,12 +94,14 @@ function abcRun(){
   const cg=c.noRenal?null:abCrCl(age,sex,w,h,scr);
   if(!(age>=0)||!W||(!c.noRenal&&!cg)){out.innerHTML=`<p class="inone">${esc(c.noRenal?L('أدخل العمر والوزن والطول.','Enter age, weight and height.'):L('أدخل العمر والوزن والطول والكرياتينين.','Enter age, weight, height and creatinine.'))}</p>`;return}
   const x={}; c.inputs.forEach(fl=>{const e=g('ab_'+fl.id); x[fl.id]=fl.type==='check'?!!(e&&e.checked):(e?e.value:'')});
-  const r=abEval(c,x,cg?cg.crcl:null,{age,wt:w,W,scr:scr>0?scr:null});
+  const egfr=c.egfr?abEgfr(age,sex==='m'?'m':'f',scr):null;
+  const r=abEval(c,x,cg?cg.crcl:null,{age,wt:w,W,scr:scr>0?scr:null,egfr});
   // children: the calculators are for adults unless the drug carries its own rules for children
   if(age<18&&!c.peds)r.rows.unshift({k:{ar:'تنبيه',en:'Warning'},v:{ar:'هذه الحاسبة للبالغين (18 سنة فأكثر). جرعة الأطفال من الملصق'+(c.pedsRef?' ('+c.pedsRef+')':'')+' ويحددها الطبيب والصيدلي.',en:'This calculator is for adults (18 and over). The dose for children comes from the label'+(c.pedsRef?' ('+c.pedsRef+')':'')+' and is set by the doctor and pharmacist.'},warn:true});
   const rowsH=r.rows.map(rw=>`<div class="abcrow${rw.strong?' strong':''}${rw.warn?' warn':''}"><b>${esc(L(rw.k.ar,rw.k.en))}:</b> ${esc(L(rw.v.ar,rw.v.en))}</div>`).join('');
   const crH=cg?`<p class="hint">${esc(L('تصفية الكرياتينين (Cockcroft-Gault): ','Creatinine clearance (Cockcroft-Gault): '))}<b>${cg.crcl.toFixed(0)} ${esc(L('مل/دقيقة','mL/min'))}</b> · ${esc(cg.obese?L('بالوزن المعدّل ','with the adjusted weight '):L('بالوزن الفعلي ','with the actual weight '))}${cg.weight.toFixed(0)} ${esc(L('كغ','kg'))}</p>`:'';
-  out.innerHTML=`<div class="abcres">${crH}${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)}${cg?' · '+esc(ABC_SRC.cg):''}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`+
+  const egH=egfr?`<p class="hint">${esc(L('معدل الترشيح المقدّر (MDRD، كما يطلب الملصق): ','Estimated GFR (MDRD, as the label asks): '))}<b>${egfr.toFixed(0)} ${esc(L('مل/دقيقة/1.73 م²','mL/min/1.73 m²'))}</b></p>`:'';
+  out.innerHTML=`<div class="abcres">${crH}${egH}${rowsH}<p class="hint">${esc(L(r.notes.ar,r.notes.en))}</p><p class="hint">${esc(L('المصدر: ','Source: '))}${esc(c.label)}${cg?' · '+esc(ABC_SRC.cg):''}</p><p class="hint"><b>${esc(L('هذه الحاسبة للمراجعة المهنية، وتؤكد النتيجة مع الصيدلي والملصق الكامل قبل أي وصفة.','For professional review; confirm the result with the pharmacist and the full label before any prescription.'))}</b></p></div>`+
     `<div class="ract abcact"><button class="btn" type="button" id="abccopy">${esc(T('ab_copy'))}</button><button class="btn" type="button" id="abcprint">${esc(T('ab_print'))}</button></div>`;
   $('abccopy').onclick=abcCopy;$('abcprint').onclick=abcPrint;
 }

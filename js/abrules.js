@@ -1344,5 +1344,198 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'تسريب وريدي خلال 30 دقيقة. يُتجنب الغانسيكلوفير والفالبرويك.',en:'IV infusion over 30 minutes. Avoid ganciclovir and valproic acid.'}
+  },
+
+  aztreonam: {
+    name:{ar:'أزتريونام',en:'Aztreonam'},
+    label:'DailyMed, Azactam (2025-12-15), Dosage and Administration, Tables 2 and 3', srcIds:[77], pedsRef:'Table 3',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['uti',{ar:'المسالك البولية',en:'Urinary tract'}],['mod',{ar:'جهازية متوسطة الشدة',en:'Moderately severe systemic'}],['sev',{ar:'شديدة أو مهددة للحياة أو الزائفة الزنجارية',en:'Severe, life-threatening, or Pseudomonas'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة المعتادة',en:'Usual dose'},strong:true,rules:[
+        {when:{ind:'uti'},text:{ar:'500 ملغ أو 1 غرام كل 8 أو 12 ساعة',en:'500 mg or 1 g every 8 or 12 h'}},
+        {when:{ind:'mod'},text:{ar:'1 أو 2 غرام كل 8 أو 12 ساعة',en:'1 or 2 g every 8 or 12 h'}},
+        {when:{},text:{ar:'2 غرام كل 6 أو 8 ساعات',en:'2 g every 6 or 8 h'}}
+      ]},
+      {k:{ar:'حسب الكلى',en:'By kidney function'},rules:[
+        {when:{hd:true},text:{ar:'الجرعة الأولى المعتادة، ثم ربعها على الفاصل نفسه؛ وفي العدوى الخطيرة ثُمن الجرعة الأولى بعد كل غسيل',en:'The usual first dose, then a quarter of it at the same interval; in serious infection, one eighth of the first dose after each dialysis'}},
+        {when:{crcl:{lt:10}},text:{ar:'الجرعة الأولى المعتادة، ثم ربعها على الفاصل نفسه',en:'The usual first dose, then a quarter of it at the same interval'}},
+        {when:{crcl:{lte:30}},text:{ar:'جرعة أولى 1 أو 2 غرام، ثم نصف الجرعة',en:'A first dose of 1 or 2 g, then half the dose'}},
+        {when:{},text:{ar:'بلا تعديل',en:'No change'}}
+      ]}
+    ],
+    notes:{ar:'الحد الأقصى 8 غرامات يومياً. حدود الملصق بالمل/دقيقة/1.73 م². الوريدي أفضل للجرعات أكثر من 1 غرام.',en:'Maximum 8 g a day. The label limits are in mL/min/1.73 m². IV is preferred for single doses over 1 g.'}
+  },
+
+  mero_vabor: {
+    name:{ar:'ميروبينيم–فابورباكتام',en:'Meropenem–vaborbactam'},
+    label:'DailyMed, Vabomere (2026-02-27), sections 2.1 and 2.2, Table 1', srcIds:[78], pedsRef:'8.4', egfr:true,
+    inputs:[{id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}],
+    rows:[
+      {k:{ar:'الجرعة حسب معدل الترشيح',en:'Dose by eGFR'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'1 غرام كل 12 ساعة، بعد الغسيل',en:'1 g every 12 h, after dialysis'}},
+        {when:{egfr:{lt:15}},text:{ar:'1 غرام (ميروبينيم 0.5 + فابورباكتام 0.5) كل 12 ساعة',en:'1 g (meropenem 0.5 + vaborbactam 0.5) every 12 h'}},
+        {when:{egfr:{lt:30}},text:{ar:'2 غرام (ميروبينيم 1 + فابورباكتام 1) كل 12 ساعة',en:'2 g (meropenem 1 + vaborbactam 1) every 12 h'}},
+        {when:{egfr:{lt:50}},text:{ar:'2 غرام (ميروبينيم 1 + فابورباكتام 1) كل 8 ساعات',en:'2 g (meropenem 1 + vaborbactam 1) every 8 h'}},
+        {when:{},text:{ar:'4 غرامات (ميروبينيم 2 + فابورباكتام 2) كل 8 ساعات',en:'4 g (meropenem 2 + vaborbactam 2) every 8 h'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال 3 ساعات، حتى 14 يوماً. الملصق يستعمل معدل الترشيح (MDRD) لا تصفية كوكروفت-غولت؛ يُراجع يومياً إذا تغيرت الكلى.',en:'IV infusion over 3 hours, for up to 14 days. The label uses eGFR (MDRD), not Cockcroft-Gault; recheck daily if kidney function changes.'}
+  },
+
+  amikacin: {
+    name:{ar:'أميكاسين',en:'Amikacin'},
+    label:'DailyMed, amikacin sulfate injection (2026-07-27), Dosage and Administration', srcIds:[79], pedsRef:'Dosage and Administration',
+    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['q12',{ar:'كل 12 ساعة',en:'Every 12 h'}],['q8',{ar:'كل 8 ساعات',en:'Every 8 h'}],['uuti',{ar:'المسالك البولية غير المعقدة',en:'Uncomplicated urinary infection'}]]}],
+    rows:[
+      {k:{ar:'الجرعة مع كلى سليمة',en:'Dose with normal kidneys'},strong:true,rules:[
+        {when:{reg:'uuti'},text:{ar:'250 ملغ مرتين يومياً',en:'250 mg twice a day'}},
+        {when:{reg:'q8'},text:{ar:'{mgkg:5|max:500} ملغ كل 8 ساعات (5 ملغ/كغ؛ لا تتجاوز 1.5 غرام يومياً)',en:'{mgkg:5|max:500} mg every 8 h (5 mg/kg; not over 1.5 g a day)'}},
+        {when:{},text:{ar:'{mgkg:7.5|max:750} ملغ كل 12 ساعة (7.5 ملغ/كغ؛ لا تتجاوز 1.5 غرام يومياً)',en:'{mgkg:7.5|max:750} mg every 12 h (7.5 mg/kg; not over 1.5 g a day)'}}
+      ]},
+      {k:{ar:'إذا كانت الكلى ضعيفة (طريقة الملصق)',en:'If the kidneys are impaired (label method)'},rules:[
+        {when:{},text:{ar:'جرعة 7.5 ملغ/كغ كل {scrx:9} ساعة تقريباً (كرياتينين الدم × 9)، مع قياس المستوى',en:'7.5 mg/kg about every {scrx:9} h (serum creatinine × 9), with level monitoring'}}
+      ]},
+      {k:{ar:'المراقبة',en:'Monitoring'},rules:[
+        {when:{},text:{ar:'تجنب ذروة أكثر من 35 وقاع أكثر من 10 مكغ/مل. المدة عادة 7 إلى 10 أيام.',en:'Avoid a peak over 35 and a trough over 10 mcg/mL. Usually 7 to 10 days.'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'سمية للأذن والكلى والأعصاب: تجنب الأدوية السامة للكلى ومدرات البول القوية.',en:'Ear, kidney and nerve toxicity: avoid nephrotoxic drugs and potent diuretics.'}}
+      ]}
+    ],
+    notes:{ar:'الوزن قبل العلاج (الفعلي). طريقة الكرياتينين × 9 لا تُستعمل مع الغسيل.',en:'Pre-treatment (actual) weight. The creatinine × 9 method is not for patients on dialysis.'}
+  },
+
+  tobra: {
+    name:{ar:'توبراميسين (حقن)',en:'Tobramycin (injection)'},
+    label:'DailyMed, tobramycin injection (2026-04-13), Dosage and Administration, Table 1', srcIds:[80], pedsRef:'Dosage and Administration',
+    inputs:[{id:'sev',type:'select',label:{ar:'شدة العدوى',en:'Severity'},options:[['serious',{ar:'خطيرة',en:'Serious'}],['life',{ar:'مهددة للحياة',en:'Life-threatening'}]]}],
+    rows:[
+      {k:{ar:'الجرعة مع كلى سليمة',en:'Dose with normal kidneys'},strong:true,rules:[
+        {when:{sev:'life'},text:{ar:'حتى {mgkg:1.66@adj} ملغ كل 8 ساعات (5 ملغ/كغ يومياً)، ثم تُخفض إلى 3 ملغ/كغ يومياً بأسرع وقت',en:'up to {mgkg:1.66@adj} mg every 8 h (5 mg/kg a day), then back to 3 mg/kg a day as soon as possible'}},
+        {when:{},text:{ar:'{mgkg:1@adj} ملغ كل 8 ساعات (3 ملغ/كغ يومياً)',en:'{mgkg:1@adj} mg every 8 h (3 mg/kg a day)'}}
+      ]},
+      {k:{ar:'إذا كانت الكلى ضعيفة (طريقة الملصق)',en:'If the kidneys are impaired (label method)'},rules:[
+        {when:{},text:{ar:'جرعة أولى 1 ملغ/كغ، ثم الجرعة المعتادة كل {scrx:6} ساعة تقريباً (كرياتينين الدم × 6)، مع قياس المستوى',en:'a first dose of 1 mg/kg, then the usual dose about every {scrx:6} h (serum creatinine × 6), with level monitoring'}}
+      ]},
+      {k:{ar:'المراقبة',en:'Monitoring'},rules:[
+        {when:{},text:{ar:'تجنب مستوى أكثر من 12 مكغ/مل لفترة طويلة، وقاع أكثر من 2 مكغ/مل.',en:'Avoid prolonged levels over 12 mcg/mL and a trough over 2 mcg/mL.'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'سمية للأذن والكلى: تجنب الأدوية السامة للكلى أو الأعصاب ومدرات البول القوية.',en:'Ear and kidney toxicity: avoid other nephrotoxic or neurotoxic drugs and potent diuretics.'}}
+      ]}
+    ],
+    notes:{ar:'الوزن: الفعلي، وعند السمنة الوزن المعدّل (المثالي + 40% من الزيادة) كما يطلب الملصق. طريقة الكرياتينين × 6 لا تُستعمل مع الغسيل.',en:'Weight: actual, or the adjusted weight when obese (ideal plus 40% of the excess), as the label asks. The creatinine × 6 method is not for patients on dialysis.'}
+  },
+
+  strepto: {
+    name:{ar:'ستربتومايسين',en:'Streptomycin'},
+    label:'DailyMed, streptomycin for injection (2026-01-21), Dosage and Administration', srcIds:[81], pedsRef:'Dosage and Administration',
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['tbd',{ar:'السل، يومياً',en:'Tuberculosis, daily'}],['tbw',{ar:'السل، مرتين أو 3 مرات أسبوعياً',en:'Tuberculosis, two or three times a week'}],['tul',{ar:'التولاريميا',en:'Tularaemia'}],['plague',{ar:'الطاعون',en:'Plague'}],['endo',{ar:'التهاب الشغاف بالعقديات (مع البنسلين)',en:'Streptococcal endocarditis (with penicillin)'}],['other',{ar:'عدوى أخرى',en:'Other infections'}]]}],
+    rows:[
+      {k:{ar:'الجرعة (عضلياً)',en:'Dose (IM)'},strong:true,rules:[
+        {when:{ind:'tbd'},text:{ar:'{mgkg:15|max:1000} ملغ مرة يومياً (15 ملغ/كغ، حد أقصى 1 غرام)',en:'{mgkg:15|max:1000} mg once a day (15 mg/kg, maximum 1 g)'}},
+        {when:{ind:'tbw'},text:{ar:'{mgkg:25-30|max:1500} ملغ في كل جرعة (25 إلى 30 ملغ/كغ، حد أقصى 1.5 غرام)',en:'{mgkg:25-30|max:1500} mg per dose (25 to 30 mg/kg, maximum 1.5 g)'}},
+        {when:{ind:'tul'},text:{ar:'1 إلى 2 غرام يومياً مقسمة، 7 إلى 14 يوماً',en:'1 to 2 g a day divided, for 7 to 14 days'}},
+        {when:{ind:'plague'},text:{ar:'1 غرام مرتين يومياً، 10 أيام على الأقل',en:'1 g twice a day, for at least 10 days'}},
+        {when:{ind:'endo',age:{gt:60}},text:{ar:'500 ملغ مرتين يومياً لمدة أسبوعين',en:'500 mg twice a day for 2 weeks'}},
+        {when:{ind:'endo'},text:{ar:'1 غرام مرتين يومياً أسبوعاً، ثم 500 ملغ مرتين يومياً أسبوعاً',en:'1 g twice a day for a week, then 500 mg twice a day for a week'}},
+        {when:{},text:{ar:'1 إلى 2 غرام يومياً مقسمة كل 6 إلى 12 ساعة، لا تتجاوز 2 غرام',en:'1 to 2 g a day divided every 6 to 12 h, not over 2 g'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{crcl:{lt:60}},text:{ar:'ضعف الكلى: جرعات مخفضة (لا يعطي الملصق جدولاً)، مع قياس المستوى؛ خطر السمية العصبية أعلى بكثير.',en:'Kidney impairment: reduced doses (the label gives no table), with levels; the risk of nerve toxicity is much higher.'}},
+        {when:{age:{gt:60}},text:{ar:'فوق 60 سنة: جرعة أقل بسبب خطر السمية.',en:'Over 60: a lower dose because of the toxicity risk.'}}
+      ]}
+    ],
+    notes:{ar:'عضلياً فقط. لا يتجاوز المجموع 120 غراماً خلال العلاج إلا عند عدم وجود بديل. سمية للأذن والكلى.',en:'IM only. Not over 120 g in total over the course unless there is no other option. Ear and kidney toxicity.'}
+  },
+
+  plazomicin: {
+    name:{ar:'بلازوميسين',en:'Plazomicin'},
+    label:'DailyMed, Zemdri (2024-12-20), sections 2.1 to 2.3, Tables 1 and 2', srcIds:[82], pedsRef:'8.4',
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة الأولى حسب الكلى',en:'Starting dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:15}},text:{ar:'لا توصية في الملصق (تصفية أقل من 15 أو غسيل)',en:'No recommendation in the label (clearance under 15 or dialysis)'},warn:true},
+        {when:{crcl:{lt:30}},text:{ar:'{mgkg:10@adj25} ملغ كل 48 ساعة (10 ملغ/كغ)',en:'{mgkg:10@adj25} mg every 48 h (10 mg/kg)'}},
+        {when:{crcl:{lt:60}},text:{ar:'{mgkg:10@adj25} ملغ كل 24 ساعة (10 ملغ/كغ)',en:'{mgkg:10@adj25} mg every 24 h (10 mg/kg)'}},
+        {when:{},text:{ar:'{mgkg:15@adj25} ملغ كل 24 ساعة (15 ملغ/كغ)',en:'{mgkg:15@adj25} mg every 24 h (15 mg/kg)'}}
+      ]},
+      {k:{ar:'المراقبة',en:'Monitoring'},rules:[
+        {when:{crcl:{lt:90}},text:{ar:'قياس المستوى: القاع أقل من 3 مكغ/مل؛ التصفية يومياً.',en:'Level monitoring: trough under 3 mcg/mL; clearance every day.'}},
+        {when:{},text:{ar:'التصفية يومياً أثناء العلاج.',en:'Clearance every day during treatment.'}}
+      ]}
+    ],
+    notes:{ar:'تسريب خلال 30 دقيقة، 4 إلى 7 أيام. الوزن الفعلي، أو المعدّل إذا زاد الفعلي على المثالي بـ 25% أو أكثر.',en:'Infusion over 30 minutes, 4 to 7 days. Actual weight, or the adjusted weight when actual is 25% or more over ideal.'}
+  },
+
+  erythro: {
+    name:{ar:'إريثرومايسين (إيثيل سكسينات)',en:'Erythromycin (ethylsuccinate)'},
+    label:'DailyMed, erythromycin ethylsuccinate for oral suspension (2026-04-08), Dosage and Administration', srcIds:[83], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['usual',{ar:'العدوى المعتادة',en:'Usual infections'}],['chl',{ar:'التهاب الإحليل بالكلاميديا أو اليوريابلازما',en:'Urethritis (Chlamydia or Ureaplasma)'}],['ameb',{ar:'الأميبا المعوية',en:'Intestinal amoebiasis'}],['rf',{ar:'الوقاية من الحمى الرثوية',en:'Rheumatic fever prevention'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'chl'},text:{ar:'800 ملغ 3 مرات يومياً لمدة 7 أيام',en:'800 mg three times a day for 7 days'}},
+        {when:{ind:'ameb'},text:{ar:'400 ملغ 4 مرات يومياً لمدة 10 إلى 14 يوماً',en:'400 mg four times a day for 10 to 14 days'}},
+        {when:{ind:'rf'},text:{ar:'400 ملغ مرتين يومياً',en:'400 mg twice a day'}},
+        {when:{},text:{ar:'400 ملغ كل 6 ساعات (حتى 4 غرامات يومياً حسب الشدة)',en:'400 mg every 6 h (up to 4 g a day by severity)'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'ممنوع مع التيرفينادين والأستيميزول والبيموزيد والسيزابريد واللوفاستاتين والسيمفاستاتين والإرغوتامين. يطيل QT.',en:'Contraindicated with terfenadine, astemizole, pimozide, cisapride, lovastatin, simvastatin and ergotamine. Prolongs QT.'}}
+      ]}
+    ],
+    notes:{ar:'الجرعات بالإيثيل سكسينات (400 ملغ منه تقابل نحو 250 ملغ من الإريثرومايسين القاعدي). مع الطعام أو بدونه. لا تعديل كلوي في الملصق.',en:'Doses as ethylsuccinate (400 mg of it is about 250 mg of erythromycin base). With or without food. No kidney adjustment in the label.'}
+  },
+
+  roxithro: {
+    name:{ar:'روكسيثرومايسين',en:'Roxithromycin'},
+    label:'French RCP, RULID 150 mg (French public medicines database, 2026-01-05), sections 4.2 and 4.4', srcIds:[84], pedsRef:'4.2', noRenal:true,
+    inputs:[{id:'hep',type:'select',label:{ar:'الكبد',en:'Liver'},options:[['ok',{ar:'سليم',en:'Normal'}],['mild',{ar:'ضعف خفيف إلى متوسط',en:'Mild to moderate impairment'}],['sev',{ar:'ضعف شديد',en:'Severe impairment'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{hep:'sev'},text:{ar:'لا يُنصح به في ضعف الكبد الشديد',en:'Not recommended in severe liver impairment'},warn:true},
+        {when:{hep:'mild'},text:{ar:'150 ملغ مرتين يومياً بحذر، مع مراقبة الكبد وربما خفض الجرعة',en:'150 mg twice a day with caution, with liver tests and perhaps a lower dose'}},
+        {when:{},text:{ar:'150 ملغ مرتين يومياً (300 ملغ يومياً)',en:'150 mg twice a day (300 mg a day)'}}
+      ]}
+    ],
+    notes:{ar:'يفضل قبل الوجبات. التهاب اللوزتين 10 أيام. لا تعديل للكلى ولا لكبار السن. ممنوع مع الإرغوتامين والكولشيسين والسيزابريد.',en:'Preferably before meals. Tonsillitis 10 days. No change for the kidneys or the elderly. Contraindicated with ergotamine, colchicine and cisapride.'}
+  },
+
+  josamycin: {
+    name:{ar:'جوزاميسين',en:'Josamycin'},
+    label:'French RCP, JOSACINE 500 mg (French public medicines database, 2024-05-14), section 4.2', srcIds:[85], pedsRef:'4.2', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['usual',{ar:'العدوى المعتادة',en:'Usual infections'}],['ton',{ar:'التهاب اللوزتين',en:'Tonsillitis'}]]}],
+    rows:[
+      {k:{ar:'الجرعة (البالغون والأطفال فوق 40 كغ)',en:'Dose (adults and children over 40 kg)'},strong:true,rules:[
+        {when:{wt:{lt:40}},text:{ar:'هذا الشكل (500 ملغ) لمن هم فوق 6 سنوات و40 كغ فقط',en:'This form (500 mg) is only for over 6 years and 40 kg'},warn:true},
+        {when:{ind:'ton'},text:{ar:'1 غرام مرتين يومياً لمدة 5 أيام',en:'1 g twice a day for 5 days'}},
+        {when:{},text:{ar:'1 إلى 2 غرام يومياً على جرعتين، حسب الوزن والشدة',en:'1 to 2 g a day in two doses, by weight and severity'}}
+      ]}
+    ],
+    notes:{ar:'فموياً صباحاً ومساءً. ضعف الكبد: لا يُنصح به. ممنوع مع الإرغوتامين والبيموزيد والإيفابرادين والكولشيسين.',en:'By mouth, morning and evening. Liver impairment: not recommended. Contraindicated with ergotamine, pimozide, ivabradine and colchicine.'}
+  },
+
+  telithro: {
+    name:{ar:'تيليثرومايسين',en:'Telithromycin'},
+    label:'DailyMed, Ketek (2012-05-02, last US label), Dosage and Administration', srcIds:[86], pedsRef:'Pediatric Use',
+    inputs:[
+      {id:'hep',type:'check',label:{ar:'ضعف كبدي أيضاً',en:'Liver impairment as well'}},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{hd:true,hep:true},text:{ar:'400 ملغ مرة يومياً، بعد الغسيل في أيامه',en:'400 mg once a day, after dialysis on dialysis days'}},
+        {when:{hd:true},text:{ar:'600 ملغ مرة يومياً، بعد الغسيل في أيامه',en:'600 mg once a day, after dialysis on dialysis days'}},
+        {when:{crcl:{lt:30},hep:true},text:{ar:'400 ملغ مرة يومياً',en:'400 mg once a day'}},
+        {when:{crcl:{lt:30}},text:{ar:'600 ملغ مرة يومياً',en:'600 mg once a day'}},
+        {when:{},text:{ar:'800 ملغ مرة يومياً، 7 إلى 10 أيام',en:'800 mg once a day, for 7 to 10 days'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'ممنوع في الوهن العضلي الوبيل ومع السيزابريد والبيموزيد. خطر أذى كبدي شديد. لم يعد يُسوَّق في الولايات المتحدة.',en:'Contraindicated in myasthenia gravis and with cisapride and pimozide. Risk of severe liver injury. No longer marketed in the United States.'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام أو بدونه. لا تعديل في ضعف الكبد وحده.',en:'With or without food. No change for liver impairment alone.'}
   }
 };
