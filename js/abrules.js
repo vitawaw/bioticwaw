@@ -1922,5 +1922,159 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'حقن خلال دقيقتين أو تسريب 30 دقيقة. قياس CPK أسبوعياً. لا يُستعمل لالتهاب الرئة. بالوزن الفعلي.',en:'Injection over 2 minutes or 30-minute infusion. Check CPK weekly. Not for pneumonia. Actual weight.'}
+  },
+
+  dalba: {
+    name:{ar:'دالبافانسين',en:'Dalbavancin'},
+    label:'DailyMed, dalbavancin for injection (2026-07-28), sections 2.1 to 2.3', srcIds:[107], pedsRef:'2.2',
+    inputs:[{id:'hd',type:'check',label:{ar:'غسيل كلوي دموي منتظم',en:'On regular haemodialysis'}}],
+    rows:[
+      {k:{ar:'الجرعة الواحدة',en:'Single dose'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'1500 ملغ مرة واحدة',en:'1500 mg once'}},
+        {when:{crcl:{lt:30}},text:{ar:'1125 ملغ مرة واحدة',en:'1125 mg once'}},
+        {when:{},text:{ar:'1500 ملغ مرة واحدة',en:'1500 mg once'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال 30 دقيقة.',en:'IV infusion over 30 minutes.'}
+  },
+
+  orita: {
+    name:{ar:'أوريتافانسين',en:'Oritavancin'},
+    label:'DailyMed, Kimyrsa (2025-12-18), section 2.2', srcIds:[108], pedsRef:'8.4', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة الواحدة',en:'Single dose'},strong:true,rules:[
+        {when:{},text:{ar:'1200 ملغ مرة واحدة وريدياً خلال ساعة (Kimyrsa)',en:'1200 mg once IV over 1 hour (Kimyrsa)'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'لا هيبارين وريدي غير مجزأ 5 أيام بعده (aPTT كاذب). منتج Orbactiv يُحضّر ويُسرّب بشكل مختلف.',en:'No IV unfractionated heparin for 5 days after (false aPTT). Orbactiv is prepared and infused differently.'}}
+      ]}
+    ],
+    notes:{ar:'لا تعديل في ضعف الكلى الخفيف أو المتوسط؛ الشديد لم يُدرس.',en:'No change for mild or moderate kidney impairment; severe not studied.'}
+  },
+
+  tedizolid: {
+    name:{ar:'تيديزوليد',en:'Tedizolid'},
+    label:'DailyMed, Sivextro (2026-02-27), section 2.2', srcIds:[109], pedsRef:'2.3', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{},text:{ar:'200 ملغ مرة يومياً لمدة 6 أيام (فموياً أو وريدياً خلال ساعة)',en:'200 mg once a day for 6 days (by mouth or IV over 1 hour)'}}
+      ]}
+    ],
+    notes:{ar:'لا تعديل للكلى أو الغسيل. الأقراص مع الطعام أو بدونه. انتبه للأدوية السيروتونينية.',en:'No change for the kidneys or dialysis. Tablets with or without food. Watch serotonergic drugs.'}
+  },
+
+  rifampin: {
+    name:{ar:'ريفامبين',en:'Rifampin'},
+    label:'DailyMed, rifampin capsules (2026-02-11), Dosage and Administration', srcIds:[110], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['tb',{ar:'السل',en:'Tuberculosis'}],['mening',{ar:'حامل المكورات السحائية',en:'Meningococcal carrier'}]]}],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'mening'},text:{ar:'600 ملغ مرتين يومياً لمدة يومين',en:'600 mg twice a day for 2 days'}},
+        {when:{},text:{ar:'{mgkg:10|max:600} ملغ مرة يومياً (10 ملغ/كغ، حد أقصى 600 ملغ)',en:'{mgkg:10|max:600} mg once a day (10 mg/kg, maximum 600 mg)'}}
+      ]}
+    ],
+    notes:{ar:'قبل الطعام بساعة أو بعده بساعتين. لا تعديل كلوي حتى 600 ملغ يومياً. محفز قوي للإنزيمات: راجع كل أدوية المريض.',en:'1 hour before or 2 hours after food. No kidney change up to 600 mg a day. Strong enzyme inducer: review every medicine the patient takes.'}
+  },
+
+  rifabutin: {
+    name:{ar:'ريفابوتين',en:'Rifabutin'},
+    label:'DailyMed, rifabutin capsules (2026-07-20), Dosage and Administration', srcIds:[111], pedsRef:'Pediatric Use',
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{crcl:{lt:30}},text:{ar:'300 ملغ مرة يومياً؛ يُفكر في خفضها 50% إذا شُك بالسمية',en:'300 mg once a day; consider halving it if toxicity is suspected'}},
+        {when:{},text:{ar:'300 ملغ مرة يومياً (أو 150 ملغ مرتين مع الطعام عند الغثيان)',en:'300 mg once a day (or 150 mg twice with food if nauseated)'}}
+      ]}
+    ],
+    notes:{ar:'قد تلزم جرعة أقل مع الكلاريثرومايسين أو الفلوكونازول (خطر التهاب العنبية).',en:'A lower dose may be needed with clarithromycin or fluconazole (risk of uveitis).'}
+  },
+
+  rifapentine: {
+    name:{ar:'ريفابنتين',en:'Rifapentine'},
+    label:'DailyMed, rifapentine tablets (2026-06-04), sections 2.1 and 2.2, Table 1', srcIds:[112], pedsRef:'2.2', noRenal:true,
+    inputs:[{id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['ltbi',{ar:'السل الكامن (12 أسبوعاً مع الإيزونيازيد)',en:'Latent TB (12 weeks with isoniazid)'}],['tb',{ar:'السل الرئوي الفعال',en:'Active pulmonary TB'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind:'tb'},text:{ar:'600 ملغ مرتين أسبوعياً شهرين، ثم 600 ملغ أسبوعياً 4 أشهر',en:'600 mg twice a week for 2 months, then 600 mg weekly for 4 months'}},
+        {when:{wt:{lt:10}},text:{ar:'لا جرعة في الجدول لأقل من 10 كغ',en:'No dose in the table under 10 kg'},warn:true},
+        {when:{wt:{lte:14}},text:{ar:'300 ملغ أسبوعياً لمدة 12 أسبوعاً',en:'300 mg weekly for 12 weeks'}},
+        {when:{wt:{lte:25}},text:{ar:'450 ملغ أسبوعياً لمدة 12 أسبوعاً',en:'450 mg weekly for 12 weeks'}},
+        {when:{wt:{lte:32}},text:{ar:'600 ملغ أسبوعياً لمدة 12 أسبوعاً',en:'600 mg weekly for 12 weeks'}},
+        {when:{wt:{lte:50}},text:{ar:'750 ملغ أسبوعياً لمدة 12 أسبوعاً',en:'750 mg weekly for 12 weeks'}},
+        {when:{},text:{ar:'900 ملغ أسبوعياً لمدة 12 أسبوعاً',en:'900 mg weekly for 12 weeks'}}
+      ]},
+      {k:{ar:'الإيزونيازيد معه (السل الكامن)',en:'Isoniazid with it (latent TB)'},rules:[
+        {when:{ind:'tb'},text:{ar:'حسب النظام المستعمل',en:'By the regimen used'}},
+        {when:{age:{lt:12}},text:{ar:'{mgkg:25|max:900} ملغ أسبوعياً (25 ملغ/كغ، حد أقصى 900 ملغ)',en:'{mgkg:25|max:900} mg weekly (25 mg/kg, maximum 900 mg)'}},
+        {when:{},text:{ar:'{mgkg:15|max:900} ملغ أسبوعياً (15 ملغ/كغ، حد أقصى 900 ملغ)',en:'{mgkg:15|max:900} mg weekly (15 mg/kg, maximum 900 mg)'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام، تحت الإشراف المباشر. 72 ساعة على الأقل بين جرعتي المرحلة الأولى.',en:'With food, directly observed. At least 72 hours between the two weekly doses in the first phase.'},
+    peds:true
+  },
+
+  isoniazid: {
+    name:{ar:'إيزونيازيد',en:'Isoniazid'},
+    label:'DailyMed, isoniazid tablets (2025-12-02), Dosage and Administration', srcIds:[113], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['daily',{ar:'علاج يومي',en:'Daily treatment'}],['int',{ar:'مرتين أو 3 مرات أسبوعياً',en:'Two or three times a week'}],['prev',{ar:'الوقاية (السل الكامن)',en:'Prevention (latent TB)'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{reg:'prev',age:{lt:18}},text:{ar:'{mgkg:10|max:300} ملغ مرة يومياً (10 ملغ/كغ، حتى 300 ملغ)',en:'{mgkg:10|max:300} mg once a day (10 mg/kg, up to 300 mg)'}},
+        {when:{reg:'prev'},text:{ar:'300 ملغ مرة يومياً',en:'300 mg once a day'}},
+        {when:{reg:'int',age:{lt:18}},text:{ar:'{mgkg:20-40|max:900} ملغ في كل جرعة (20 إلى 40 ملغ/كغ، حتى 900 ملغ)',en:'{mgkg:20-40|max:900} mg per dose (20 to 40 mg/kg, up to 900 mg)'}},
+        {when:{reg:'int'},text:{ar:'{mgkg:15|max:900} ملغ في كل جرعة (15 ملغ/كغ، حتى 900 ملغ)',en:'{mgkg:15|max:900} mg per dose (15 mg/kg, up to 900 mg)'}},
+        {when:{age:{lt:18}},text:{ar:'{mgkg:10-15|max:300} ملغ مرة يومياً (10 إلى 15 ملغ/كغ، حتى 300 ملغ)',en:'{mgkg:10-15|max:300} mg once a day (10 to 15 mg/kg, up to 300 mg)'}},
+        {when:{},text:{ar:'{mgkg:5|max:300} ملغ مرة يومياً (5 ملغ/كغ، حتى 300 ملغ)',en:'{mgkg:5|max:300} mg once a day (5 mg/kg, up to 300 mg)'}}
+      ]}
+    ],
+    notes:{ar:'على معدة فارغة. فيتامين B6 لمن لديه قابلية للاعتلال العصبي. مراقبة الكبد، ولا كحول.',en:'On an empty stomach. Vitamin B6 for those prone to neuropathy. Liver monitoring, no alcohol.'},
+    peds:true
+  },
+
+  ethambutol: {
+    name:{ar:'إيثامبوتول',en:'Ethambutol'},
+    label:'DailyMed, ethambutol hydrochloride tablets (2026-05-05), Dosage and Administration', srcIds:[114], pedsRef:'Dosage and Administration',
+    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['first',{ar:'علاج أول',en:'First treatment'}],['re',{ar:'إعادة علاج (أول 60 يوماً)',en:'Retreatment (first 60 days)'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{reg:'re'},text:{ar:'{mgkg:25} ملغ مرة يومياً (25 ملغ/كغ) لـ 60 يوماً، ثم 15 ملغ/كغ',en:'{mgkg:25} mg once a day (25 mg/kg) for 60 days, then 15 mg/kg'}},
+        {when:{},text:{ar:'{mgkg:15} ملغ مرة يومياً (15 ملغ/كغ)',en:'{mgkg:15} mg once a day (15 mg/kg)'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{crcl:{lt:50}},text:{ar:'ضعف الكلى: يتراكم؛ الملصق يطلب خفض الجرعة حسب مستواه في الدم دون جدول.',en:'Kidney impairment: it accumulates; the label asks for a lower dose by blood level, without a table.'}},
+        {when:{age:{lt:13}},text:{ar:'لا يُنصح به تحت 13 سنة.',en:'Not recommended under 13 years.'}}
+      ]}
+    ],
+    notes:{ar:'فحص النظر قبل العلاج وأثناءه (شهرياً مع 25 ملغ/كغ). مع الطعام أو بدونه.',en:'Eye checks before and during treatment (monthly at 25 mg/kg). With or without food.'}
+  },
+
+  pza: {
+    name:{ar:'بيرازيناميد',en:'Pyrazinamide'},
+    label:'DailyMed, pyrazinamide tablets (2026-03-02), Dosage and Administration', srcIds:[115], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'reg',type:'select',label:{ar:'النظام',en:'Regimen'},options:[['daily',{ar:'يومي',en:'Daily'}],['biw',{ar:'مرتين أسبوعياً',en:'Twice a week'}]]}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{reg:'biw'},text:{ar:'{mgkg:50-70@lean} ملغ مرتين أسبوعياً (50 إلى 70 ملغ/كغ بالوزن الخالي من الدهون)',en:'{mgkg:50-70@lean} mg twice a week (50 to 70 mg/kg on lean body weight)'}},
+        {when:{},text:{ar:'{mgkg:15-30|max:2000} ملغ مرة يومياً (15 إلى 30 ملغ/كغ؛ CDC حتى 2 غرام، والملصق حتى 3 غرامات)',en:'{mgkg:15-30|max:2000} mg once a day (15 to 30 mg/kg; CDC up to 2 g, the label up to 3 g)'}}
+      ]}
+    ],
+    notes:{ar:'أول شهرين من العلاج مع أدوية أخرى. فحص الكبد وحمض اليوريك قبل البدء. ممنوع في أذى الكبد الشديد والنقرس الحاد.',en:'First 2 months of treatment with other drugs. Liver tests and uric acid before starting. Contraindicated in severe liver damage and acute gout.'}
+  },
+
+  bedaquiline: {
+    name:{ar:'بيداكويلين',en:'Bedaquiline'},
+    label:'DailyMed, Sirturo (2025-10-17), section 2.3', srcIds:[116], pedsRef:'2.4', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{},text:{ar:'400 ملغ مرة يومياً لأسبوعين، ثم 200 ملغ 3 مرات أسبوعياً (48 ساعة على الأقل بينها) لـ 22 أسبوعاً',en:'400 mg once a day for 2 weeks, then 200 mg three times a week (at least 48 hours apart) for 22 weeks'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'يطيل QT: تخطيط قلب قبل العلاج وأثناءه؛ يُوقف إذا تجاوز QTc ‏500 ms. لا يُجمع مع محفزات CYP3A4.',en:'Prolongs QT: ECG before and during treatment; stop if QTc goes over 500 ms. Not with CYP3A4 inducers.'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام، تحت الإشراف المباشر، مع 3 أدوية فعالة أخرى على الأقل. بحذر في ضعف الكلى الشديد.',en:'With food, directly observed, with at least 3 other effective drugs. Caution in severe kidney impairment.'}
   }
 };

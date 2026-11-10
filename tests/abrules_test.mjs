@@ -97,6 +97,12 @@ const known = [
   ['trimethoprim, clearance 20', strong('tmp', {}, 20), '50 mg every 12 h'],
   ['teicoplanin maintenance, clearance 50, 70 kg', rowEn('teico', { ind: 'std' }, 50, 'Maintenance (from day 4, by kidney function)'), 'Half: 420 mg every other day, or 210 mg daily'],
   ['daptomycin bacteraemia, clearance 20, 70 kg', strong('dapto', { ind: 'bact', hd: false }, 20), '420 mg every 48 h (6 mg/kg)'],
+  ['dalbavancin, clearance 20', strong('dalba', { hd: false }, 20), '1125 mg once'],
+  ['dalbavancin, clearance 20 on dialysis', strong('dalba', { hd: true }, 20), '1500 mg once'],
+  ['rifampin TB, 70 kg', strong('rifampin', { ind: 'tb' }, null), '600 mg once a day (10 mg/kg, maximum 600 mg)'],
+  ['rifapentine latent TB, 70 kg', strong('rifapentine', { ind: 'ltbi' }, null), '900 mg weekly for 12 weeks'],
+  ['isoniazid daily adult, 70 kg', strong('isoniazid', { reg: 'daily' }, null), '300 mg once a day (5 mg/kg, up to 300 mg)'],
+  ['ethambutol first treatment, 70 kg', strong('ethambutol', { reg: 'first' }, 90), '1050 mg once a day (15 mg/kg)'],
 ];
 const eg = vm.runInContext('abEgfr', ctx)(60, 'm', 1.0); // 175 x 60^-0.203 = 76.7
 check(Math.abs(eg - 175 * Math.pow(60, -0.203)) < 1e-9 && Math.round(eg) === 76, 'MDRD eGFR (60-year-old man, creatinine 1.0 = 76)');
