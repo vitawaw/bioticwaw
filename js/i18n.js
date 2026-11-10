@@ -113,7 +113,7 @@ lf_org:['الجهة','organisation'],lf_title:['العنوان','title'],lf_url:
 
 
 
-age:['العمر (سنة، 0 للرضيع)','Age (years, 0 = infant)'],sex:['الجنس والحالة','Sex and pregnancy status'],
+age:['العمر (سنة، 0 للرضيع)','Age (years, 0 = infant)'],sex:['الجنس','Sex'],
 sx_m:['ذكر','Male'],sx_f:['أنثى','Female'],
 wt:['الوزن (كغم)','Weight (kg)'],ht:['الطول (سم)','Height (cm)'],
 
