@@ -1115,5 +1115,234 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'في العدوى الشديدة التي تحتاج 6 غرام يومياً مع القصور الكلوي، يمكن زيادة جرعة الجدول 50% أو تقريب الفواصل.',en:'In severe infection that would need 6 g a day, the table dose may be increased by 50% or given more often.'}
+  },
+  cefepime: {
+    name:{ar:'سيفيبيم',en:'Cefepime'},
+    label:'DailyMed, cefepime injection (2026-06-25), sections 2.1 and 2.3, Tables 1 and 2', srcIds:[67], pedsRef:'2.2',
+    inputs:[
+      {id:'reg',type:'select',label:{ar:'الجرعة المعتادة (حسب العدوى)',en:'Usual regimen (by infection)'},options:[
+        ['a',{ar:'500 ملغ كل 12 ساعة (المسالك الخفيفة)',en:'500 mg every 12 h (mild urinary)'}],
+        ['b',{ar:'1 غرام كل 12 ساعة (المسالك، الرئة)',en:'1 g every 12 h (urinary, pneumonia)'}],
+        ['c',{ar:'2 غرام كل 12 ساعة (المسالك الشديدة، الجلد، الرئة)',en:'2 g every 12 h (severe urinary, skin, pneumonia)'}],
+        ['d',{ar:'2 غرام كل 8 ساعات (نقص العدلات مع الحمى، الزائفة، البطن)',en:'2 g every 8 h (febrile neutropenia, Pseudomonas, abdominal)'}]]},
+      {id:'dial',type:'select',label:{ar:'الغسيل الكلوي',en:'Dialysis'},options:[['none',{ar:'لا',en:'None'}],['hd',{ar:'غسيل دموي',en:'Haemodialysis'}],['capd',{ar:'غسيل بريتوني مستمر',en:'Continuous peritoneal dialysis'}]]}
+    ],
+    rows:[
+      {k:{ar:'الصيانة حسب الكلى (جدول 2)',en:'Maintenance by kidney function (Table 2)'},strong:true,rules:[
+        {when:{dial:'hd',reg:['a','b','c']},text:{ar:'1 غرام في اليوم الأول ثم 500 ملغ كل 24 ساعة، بعد الغسيل',en:'1 g on day 1, then 500 mg every 24 h, after dialysis'}},
+        {when:{dial:'hd'},text:{ar:'1 غرام كل 24 ساعة، بعد الغسيل',en:'1 g every 24 h, after dialysis'}},
+        {when:{dial:'capd',reg:'a'},text:{ar:'500 ملغ كل 48 ساعة',en:'500 mg every 48 h'}},
+        {when:{dial:'capd',reg:'b'},text:{ar:'1 غرام كل 48 ساعة',en:'1 g every 48 h'}},
+        {when:{dial:'capd'},text:{ar:'2 غرام كل 48 ساعة',en:'2 g every 48 h'}},
+        {when:{crcl:{lt:11},reg:['a','b']},text:{ar:'250 ملغ كل 24 ساعة',en:'250 mg every 24 h'}},
+        {when:{crcl:{lt:11},reg:'c'},text:{ar:'500 ملغ كل 24 ساعة',en:'500 mg every 24 h'}},
+        {when:{crcl:{lt:11}},text:{ar:'1 غرام كل 24 ساعة',en:'1 g every 24 h'}},
+        {when:{crcl:{lt:30},reg:['a','b']},text:{ar:'500 ملغ كل 24 ساعة',en:'500 mg every 24 h'}},
+        {when:{crcl:{lt:30},reg:'c'},text:{ar:'1 غرام كل 24 ساعة',en:'1 g every 24 h'}},
+        {when:{crcl:{lt:30}},text:{ar:'2 غرام كل 24 ساعة',en:'2 g every 24 h'}},
+        {when:{crcl:{lte:60},reg:'a'},text:{ar:'500 ملغ كل 24 ساعة',en:'500 mg every 24 h'}},
+        {when:{crcl:{lte:60},reg:'b'},text:{ar:'1 غرام كل 24 ساعة',en:'1 g every 24 h'}},
+        {when:{crcl:{lte:60},reg:'c'},text:{ar:'2 غرام كل 24 ساعة',en:'2 g every 24 h'}},
+        {when:{crcl:{lte:60}},text:{ar:'2 غرام كل 12 ساعة',en:'2 g every 12 h'}},
+        {when:{},text:{ar:'لا تعديل (تصفية أكثر من 60)',en:'No change (clearance over 60)'}}
+      ]},
+      {k:{ar:'الجرعة الأولى',en:'First dose'},rules:[
+        {when:{dial:'hd'},text:{ar:'كما في الصف أعلاه',en:'As in the row above'}},
+        {when:{},text:{ar:'كالجرعة المعتادة، ثم الصيانة',en:'The usual dose, then maintenance'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال 30 دقيقة. يوم الغسيل يُعطى بعده، وفي الوقت نفسه كل يوم.',en:'IV over 30 minutes. On dialysis days give it after dialysis, at the same time each day.'}
+  },
+
+  ceftaroline: {
+    name:{ar:'سيفتارولين فوساميل',en:'Ceftaroline fosamil'},
+    label:'DailyMed, ceftaroline fosamil for injection (2026-05-29), sections 2.1 and 2.3', srcIds:[68], pedsRef:'2.2',
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['skin',{ar:'عدوى الجلد الحادة',en:'Acute skin infection'}],['cap',{ar:'التهاب الرئة المجتمعي',en:'Community pneumonia'}]]}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:15}},text:{ar:'200 ملغ كل 12 ساعة (الفشل النهائي ومنه الغسيل)',en:'200 mg every 12 h (end-stage, including dialysis)'}},
+        {when:{crcl:{lte:30}},text:{ar:'300 ملغ كل 12 ساعة',en:'300 mg every 12 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'400 ملغ كل 12 ساعة',en:'400 mg every 12 h'}},
+        {when:{},text:{ar:'600 ملغ كل 12 ساعة',en:'600 mg every 12 h'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'cap'},text:{ar:'5 إلى 7 أيام',en:'5 to 7 days'}},
+        {when:{},text:{ar:'5 إلى 14 يوماً',en:'5 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال 5 إلى 60 دقيقة.',en:'IV infusion over 5 to 60 minutes.'}
+  },
+
+  ceftobiprole: {
+    name:{ar:'سيفتوبيبرول',en:'Ceftobiprole'},
+    label:'DailyMed, Zevtera (2026-10-13), sections 2.1 and 2.3, Table 3', srcIds:[69], pedsRef:'2.2',
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['sab',{ar:'تجرثم الدم بالعنقودية الذهبية',en:'S. aureus bacteraemia'}],['other',{ar:'الجلد الحادة أو الرئة المجتمعي',en:'Acute skin or community pneumonia'}]]}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{gt:150}},text:{ar:'667 ملغ كل 6 ساعات (تصفية أكثر من 150)',en:'667 mg every 6 h (clearance over 150)'}},
+        {when:{crcl:{lt:15}},text:{ar:'333 ملغ كل 24 ساعة (يوم الغسيل: بعده)',en:'333 mg every 24 h (dialysis days: after it)'}},
+        {when:{crcl:{lt:30},ind:'sab'},text:{ar:'333 ملغ كل 8 ساعات في الأيام 1 إلى 8، ثم كل 12 ساعة',en:'333 mg every 8 h on days 1 to 8, then every 12 h'}},
+        {when:{crcl:{lt:30}},text:{ar:'333 ملغ كل 12 ساعة',en:'333 mg every 12 h'}},
+        {when:{crcl:{lt:50},ind:'sab'},text:{ar:'667 ملغ كل 8 ساعات في الأيام 1 إلى 8، ثم كل 12 ساعة',en:'667 mg every 8 h on days 1 to 8, then every 12 h'}},
+        {when:{crcl:{lt:50}},text:{ar:'667 ملغ كل 12 ساعة',en:'667 mg every 12 h'}},
+        {when:{ind:'sab'},text:{ar:'667 ملغ كل 6 ساعات في الأيام 1 إلى 8، ثم كل 8 ساعات',en:'667 mg every 6 h on days 1 to 8, then every 8 h'}},
+        {when:{},text:{ar:'667 ملغ كل 8 ساعات',en:'667 mg every 8 h'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'sab'},text:{ar:'حتى 42 يوماً',en:'Up to 42 days'}},
+        {when:{},text:{ar:'5 إلى 14 يوماً',en:'5 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال ساعتين بتركيز 2.67 ملغ/مل.',en:'IV infusion over 2 hours at 2.67 mg/mL.'}
+  },
+
+  cefiderocol: {
+    name:{ar:'سيفيديروكول',en:'Cefiderocol'},
+    label:'DailyMed, Fetroja (2026-02-24), sections 2.1 and 2.2, Table 1', srcIds:[70], pedsRef:'1',
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{gte:120}},text:{ar:'2 غرام كل 6 ساعات',en:'2 g every 6 h'}},
+        {when:{crcl:{gte:60}},text:{ar:'2 غرام كل 8 ساعات',en:'2 g every 8 h'}},
+        {when:{crcl:{gte:30}},text:{ar:'1.5 غرام كل 8 ساعات',en:'1.5 g every 8 h'}},
+        {when:{crcl:{gte:15}},text:{ar:'1 غرام كل 8 ساعات',en:'1 g every 8 h'}},
+        {when:{},text:{ar:'0.75 غرام كل 12 ساعة (مع الغسيل: بعده مباشرة)',en:'0.75 g every 12 h (on dialysis: right after it)'}}
+      ]},
+      {k:{ar:'طريقة الإعطاء',en:'How to give'},rules:[
+        {when:{},text:{ar:'تسريب وريدي خلال 3 ساعات، لـ7 إلى 14 يوماً.',en:'IV infusion over 3 hours, for 7 to 14 days.'}}
+      ]}
+    ],
+    notes:{ar:'للبالغين فقط. الغسيل المستمر (CRRT): الجرعة حسب معدل التدفق في الملصق.',en:'Adults only. Continuous renal replacement (CRRT): dose by effluent flow in the label.'}
+  },
+
+  ceftolo_tazo: {
+    name:{ar:'سيفتولوزان–تازوباكتام',en:'Ceftolozane–tazobactam'},
+    label:'DailyMed, Zerbaxa (2026-05-12), sections 2.1 and 2.3, Tables 1 and 3', srcIds:[71], pedsRef:'2.2',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['ciai',{ar:'البطن المعقدة (مع الميترونيدازول)',en:'Complicated intra-abdominal (with metronidazole)'}],['cuti',{ar:'المسالك المعقدة أو الحويضة',en:'Complicated urinary or pyelonephritis'}],['hap',{ar:'التهاب الرئة في المستشفى أو على جهاز التنفس',en:'Hospital or ventilator pneumonia'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي متقطع',en:'Intermittent haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة كل 8 ساعات حسب الكلى',en:'Dose every 8 h by kidney function'},strong:true,rules:[
+        {when:{hd:true,ind:'hap'},text:{ar:'تحميل 2.25 غرام، ثم 450 ملغ كل 8 ساعات (بعد الغسيل)',en:'2.25 g loading, then 450 mg every 8 h (after dialysis)'}},
+        {when:{hd:true},text:{ar:'تحميل 750 ملغ، ثم 150 ملغ كل 8 ساعات (بعد الغسيل)',en:'750 mg loading, then 150 mg every 8 h (after dialysis)'}},
+        {when:{crcl:{lt:15}},text:{ar:'الجرعة غير محددة في الملصق (أقل من 15 بلا غسيل)',en:'Dose not established in the label (under 15 without dialysis)'},warn:true},
+        {when:{crcl:{lt:30},ind:'hap'},text:{ar:'750 ملغ',en:'750 mg'}},
+        {when:{crcl:{lt:30}},text:{ar:'375 ملغ',en:'375 mg'}},
+        {when:{crcl:{lte:50},ind:'hap'},text:{ar:'1.5 غرام',en:'1.5 g'}},
+        {when:{crcl:{lte:50}},text:{ar:'750 ملغ',en:'750 mg'}},
+        {when:{ind:'hap'},text:{ar:'3 غرام',en:'3 g'}},
+        {when:{},text:{ar:'1.5 غرام',en:'1.5 g'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'ciai'},text:{ar:'4 إلى 14 يوماً',en:'4 to 14 days'}},
+        {when:{ind:'cuti'},text:{ar:'7 أيام',en:'7 days'}},
+        {when:{},text:{ar:'8 إلى 14 يوماً',en:'8 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال ساعة. مع تغيّر وظيفة الكلى تُحسب التصفية يومياً على الأقل.',en:'IV infusion over 1 hour. With changing kidney function, check clearance at least daily.'}
+  },
+
+  ceftaz_avi: {
+    name:{ar:'سيفتازيديم–أفيباكتام',en:'Ceftazidime–avibactam'},
+    label:'DailyMed, Avycaz (2025-04-30), sections 2.1 and 2.3, Tables 1 and 3', srcIds:[72], pedsRef:'2.2',
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['ciai',{ar:'البطن المعقدة (مع الميترونيدازول)',en:'Complicated intra-abdominal (with metronidazole)'}],['cuti',{ar:'المسالك المعقدة أو الحويضة',en:'Complicated urinary or pyelonephritis'}],['hap',{ar:'التهاب الرئة في المستشفى أو على جهاز التنفس',en:'Hospital or ventilator pneumonia'}]]}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{lte:5}},text:{ar:'0.94 غرام كل 48 ساعة',en:'0.94 g every 48 h'}},
+        {when:{crcl:{lte:15}},text:{ar:'0.94 غرام كل 24 ساعة',en:'0.94 g every 24 h'}},
+        {when:{crcl:{lte:30}},text:{ar:'0.94 غرام كل 12 ساعة',en:'0.94 g every 12 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'1.25 غرام كل 8 ساعات',en:'1.25 g every 8 h'}},
+        {when:{},text:{ar:'2.5 غرام كل 8 ساعات',en:'2.5 g every 8 h'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'ciai'},text:{ar:'5 إلى 14 يوماً',en:'5 to 14 days'}},
+        {when:{},text:{ar:'7 إلى 14 يوماً',en:'7 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال ساعتين. يوم الغسيل يُعطى بعده.',en:'IV infusion over 2 hours. On dialysis days give it after dialysis.'}
+  },
+
+  imi_cila: {
+    name:{ar:'إيميبينيم–سيلاستاتين',en:'Imipenem–cilastatin'},
+    label:'DailyMed, imipenem and cilastatin for injection (2025-01-16), sections 2.1 and 2.3, Tables 1 and 3', srcIds:[73], pedsRef:'2.2',
+    inputs:[{id:'reg',type:'select',label:{ar:'الجرعة المعتادة',en:'Usual regimen'},options:[
+      ['a',{ar:'500 ملغ كل 6 ساعات (حساسة)',en:'500 mg every 6 h (susceptible)'}],['b',{ar:'1000 ملغ كل 8 ساعات (حساسة)',en:'1000 mg every 8 h (susceptible)'}],['c',{ar:'1000 ملغ كل 6 ساعات (متوسطة الحساسية)',en:'1000 mg every 6 h (intermediate)'}]]}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى (جدول 3)',en:'Dose by kidney function (Table 3)'},strong:true,rules:[
+        {when:{crcl:{lt:15}},text:{ar:'لا يُعطى إلا إذا بدأ الغسيل خلال 48 ساعة',en:'Not unless dialysis starts within 48 h'},warn:true},
+        {when:{crcl:{lt:30},reg:'a'},text:{ar:'200 ملغ كل 6 ساعات',en:'200 mg every 6 h'}},
+        {when:{crcl:{lt:30}},text:{ar:'500 ملغ كل 12 ساعة',en:'500 mg every 12 h'}},
+        {when:{crcl:{lt:60},reg:'a'},text:{ar:'300 ملغ كل 6 ساعات',en:'300 mg every 6 h'}},
+        {when:{crcl:{lt:60},reg:'b'},text:{ar:'500 ملغ كل 8 ساعات',en:'500 mg every 8 h'}},
+        {when:{crcl:{lt:60}},text:{ar:'500 ملغ كل 6 ساعات',en:'500 mg every 6 h'}},
+        {when:{crcl:{lt:90},reg:'a'},text:{ar:'400 ملغ كل 6 ساعات',en:'400 mg every 6 h'}},
+        {when:{crcl:{lt:90},reg:'b'},text:{ar:'500 ملغ كل 6 ساعات',en:'500 mg every 6 h'}},
+        {when:{crcl:{lt:90}},text:{ar:'750 ملغ كل 8 ساعات',en:'750 mg every 8 h'}},
+        {when:{reg:'a'},text:{ar:'500 ملغ كل 6 ساعات',en:'500 mg every 6 h'}},
+        {when:{reg:'b'},text:{ar:'1000 ملغ كل 8 ساعات',en:'1000 mg every 8 h'}},
+        {when:{},text:{ar:'1000 ملغ كل 6 ساعات',en:'1000 mg every 6 h'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,opt:true,rules:[
+        {when:{crcl:{lt:30}},text:{ar:'التصفية 15 إلى 29: خطر نوبات صرع أعلى.',en:'Clearance 15 to 29: higher seizure risk.'}}
+      ]}
+    ],
+    notes:{ar:'الجرعات بالإيميبينيم. 500 ملغ أو أقل خلال 20 إلى 30 دقيقة، والأكثر خلال 40 إلى 60 دقيقة.',en:'Doses as imipenem. 500 mg or less over 20 to 30 minutes, more over 40 to 60 minutes.'}
+  },
+
+  meropenem: {
+    name:{ar:'ميروبينيم',en:'Meropenem'},
+    label:'DailyMed, meropenem for injection (2026-08-26), sections 2.1 and 2.2', srcIds:[74], pedsRef:'2.3',
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['skin',{ar:'الجلد المعقد',en:'Complicated skin'}],['skinp',{ar:'الجلد المعقد بالزائفة الزنجارية',en:'Complicated skin, Pseudomonas'}],['ciai',{ar:'البطن',en:'Intra-abdominal'}]]}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:10},ind:'skin'},text:{ar:'250 ملغ كل 24 ساعة (نصف الجرعة)',en:'250 mg every 24 h (half dose)'}},
+        {when:{crcl:{lt:10}},text:{ar:'500 ملغ كل 24 ساعة (نصف الجرعة)',en:'500 mg every 24 h (half dose)'}},
+        {when:{crcl:{lte:25},ind:'skin'},text:{ar:'250 ملغ كل 12 ساعة (نصف الجرعة)',en:'250 mg every 12 h (half dose)'}},
+        {when:{crcl:{lte:25}},text:{ar:'500 ملغ كل 12 ساعة (نصف الجرعة)',en:'500 mg every 12 h (half dose)'}},
+        {when:{crcl:{lte:50},ind:'skin'},text:{ar:'500 ملغ كل 12 ساعة',en:'500 mg every 12 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'1 غرام كل 12 ساعة',en:'1 g every 12 h'}},
+        {when:{ind:'skin'},text:{ar:'500 ملغ كل 8 ساعات',en:'500 mg every 8 h'}},
+        {when:{},text:{ar:'1 غرام كل 8 ساعات',en:'1 g every 8 h'}}
+      ]}
+    ],
+    notes:{ar:'تسريب خلال 15 إلى 30 دقيقة أو حقن بطيء خلال 3 إلى 5 دقائق. لا يُجمع مع الفالبرويك عموماً.',en:'Infusion over 15 to 30 minutes, or bolus over 3 to 5 minutes. Generally not with valproic acid.'}
+  },
+
+  ertapenem: {
+    name:{ar:'إرتابينيم',en:'Ertapenem'},
+    label:'DailyMed, ertapenem for injection (2026-03-02), sections 2.2 to 2.5', srcIds:[75], pedsRef:'2.2',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['treat',{ar:'علاج',en:'Treatment'}],['proph',{ar:'وقاية في جراحة القولون',en:'Colorectal surgery prophylaxis'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind:'proph'},text:{ar:'1 غرام مرة واحدة قبل الجراحة بساعة',en:'1 g once, 1 hour before surgery'}},
+        {when:{crcl:{lte:30}},text:{ar:'500 ملغ مرة يومياً',en:'500 mg once a day'}},
+        {when:{},text:{ar:'1 غرام مرة يومياً',en:'1 g once a day'}}
+      ]},
+      {k:{ar:'الغسيل',en:'Dialysis'},opt:true,rules:[
+        {when:{hd:true},text:{ar:'إذا أُعطي خلال 6 ساعات قبل الغسيل: 150 ملغ إضافية بعده.',en:'If given within 6 h before dialysis: an extra 150 mg after it.'}}
+      ]}
+    ],
+    notes:{ar:'وريدي خلال 30 دقيقة (حتى 14 يوماً) أو عضلي (حتى 7 أيام). لا يُخلط مع أدوية أخرى أو الدكستروز.',en:'IV over 30 minutes (up to 14 days) or IM (up to 7 days). Do not mix with other drugs or dextrose.'}
+  },
+
+  imi_rele: {
+    name:{ar:'إيميبينيم–سيلاستاتين–ريليباكتام',en:'Imipenem–cilastatin–relebactam'},
+    label:'DailyMed, Recarbrio (2025-12-09), sections 2.1 and 2.3, Table 2', srcIds:[76], pedsRef:'2.2',
+    inputs:[{id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'0.5 غرام كل 6 ساعات، بعد الغسيل',en:'0.5 g every 6 h, after dialysis'}},
+        {when:{crcl:{lt:15}},text:{ar:'لا يُعطى إلا إذا بدأ الغسيل خلال 48 ساعة',en:'Not unless dialysis starts within 48 h'},warn:true},
+        {when:{crcl:{lt:30}},text:{ar:'0.5 غرام كل 6 ساعات',en:'0.5 g every 6 h'}},
+        {when:{crcl:{lt:60}},text:{ar:'0.75 غرام كل 6 ساعات',en:'0.75 g every 6 h'}},
+        {when:{crcl:{lt:90}},text:{ar:'1 غرام كل 6 ساعات',en:'1 g every 6 h'}},
+        {when:{},text:{ar:'1.25 غرام كل 6 ساعات',en:'1.25 g every 6 h'}}
+      ]}
+    ],
+    notes:{ar:'تسريب وريدي خلال 30 دقيقة. يُتجنب الغانسيكلوفير والفالبرويك.',en:'IV infusion over 30 minutes. Avoid ganciclovir and valproic acid.'}
   }
 };
