@@ -1,4 +1,4 @@
-// BIOTICWAW 1.5.0 · end-to-end test of the antibiotic site (Node + Playwright, no Python needed).
+// BIOTICWAW · end-to-end test of the antibiotic site (Node + Playwright, no Python needed).
 // Visitors on phone / iPad / computer (Arabic and English) and the owner's flow (login, approve, edit, publish),
 // against a fake Supabase (tests/fake_supabase.js + tests/seed_state.json). Nothing real is touched.
 // Run: node tests/e2e_flow.cjs   (needs the playwright package; exit 1 on any failure)

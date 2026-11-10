@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.5.0';
+const APP_VERSION='1.6.0';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -107,6 +107,4 @@ const EMAILF=()=>CFG.contact.email||'';
 const PHONEF=()=>(CFG.contact.phone||'').trim();
 /** WhatsApp chat link for the contact phone (digits only, international format). */
 const waLink=(text='')=>{const d=PHONEF().replace(/\D/g,'');return d?`https://wa.me/${d}${text?'?text='+encodeURIComponent(text):''}`:''};
-/** Link to send us a message: email if there is one, otherwise WhatsApp to the phone. */
-const msgLink=(subj,body='')=>EMAILF()?mailto(subj,body):waLink(subj+(body?'\n'+body:''));
 const mailto=(subj,body='')=>`mailto:${encodeURIComponent(EMAILF()).replace('%40','@')}?subject=${encodeURIComponent(subj)}${body?'&body='+encodeURIComponent(body):''}`;

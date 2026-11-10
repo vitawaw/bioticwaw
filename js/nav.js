@@ -19,9 +19,6 @@ const ICO={
   team:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2.2.6 3.5 2.8 3.5 6"/></svg>',
   site:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.5 0 2-1 2-2s-1-1.5-1-2.5 1-1.5 2-1.5h2a4 4 0 0 0 4-4c0-4.5-4-8-9-8z"/></svg>'
 };
-const TOOLS=[]; // 1.19 (test): the vitamin and supplement tools were removed
-/** the line under a tool's name on the tools page (1.14.0: never the same words as the name) */
-const TOOLSUB={};
 const tabIco=p=>{const s=(p==='meds'||p==='links')&&$(p)?$(p).querySelector('.hi svg'):$('t-'+p)&&$('t-'+p).querySelector('svg');return s?s.outerHTML:ICO.info};
 /** true when the signed-in account may edit this part: 'nut' | 'inter' | 'refs' | 'text' */
 const CAN=k=>typeof OWN!=='undefined'&&OWN.on&&(OWN.local||OWN.role==='owner'||(k!=='text'&&!!(OWN.perms&&OWN.perms[k]))); // texts and pages: owner only
@@ -67,9 +64,7 @@ document.addEventListener('click',e=>{
 // Phones and tablets: the tab bar at the bottom holds the four sections and ☰ «Menu», which opens a full page
 // (account card, shortcuts, settings, log out). Wide screens (≥1024px): the same menu is a fixed side menu.
 const WIDE=()=>matchMedia('(min-width:1024px)').matches;
-const pickNut=k=>openNut(k);
 const SECTIONS=['calc','tools','interactions','sources','roadmap','meds']; // 1.14.1: meds/sch/labs are sections too (owner: bar, order, names)
-const SECTOOL={}; // sections that are a tool's own page (none left)
 const SECKEY0={calc:'tab_calc',tools:'tab_tools',interactions:'tab_int',sources:'tab_src',roadmap:'tab_rm',notif:'nt_t',meds:'mm_t',links:'lk_t',};
 const SECKEY=SECKEY0;
 /* ===================== main sections (owner, 1.12.0): order everywhere, the bar (≤4), hidden ones, names, colors =====================
@@ -118,103 +113,6 @@ async function editNavText(p){
 /* «your shortcuts»: the last pages and tools this visitor opened (this device only) */
 let RECENT=[];try{RECENT=JSON.parse(localStorage.getItem('vw-recent')||'[]').filter(x=>typeof x==='string').slice(0,8)}catch(e){}
 function rememberRecent(k){if(k==='p:menu'||k==='p:notif')return;RECENT=[k,...RECENT.filter(x=>x!==k)].slice(0,8);try{localStorage.setItem('vw-recent',JSON.stringify(RECENT))}catch(e){}if(k[0]==='t')renderMenu()}
-/* the tools page: rectangles like the vitamins; each opens its own working page (#tool-pill…) with «‹ Tools» */
-/** a tool the owner hid is gone everywhere: tools page, search, result buttons, menu, reminders (id = 'tool-labs', or its kind 'labs') */
-const toolHidden=k=>{const id=k.startsWith('tool-')?k:(TOOLS.find(t=>TOOLKIND[t[0]]===k)||[''])[0];return !(SHOWALL()&&EDITING())&&((CFG.tools&&CFG.tools.hide)||[]).includes(id)}; // 1.17.2 the owner too, unless «تعديل وترتيب» is on
-/** the tools in the owner's order; hidden ones only for the team while editing */
-function toolList(){
-  const c=CFG.tools||{},ids=TOOLS.map(t=>t[0]),order=[...new Set([...(c.order||[]).filter(x=>ids.includes(x)),...ids])],hide=c.hide||[];
-  return order.map(id=>TOOLS.find(t=>t[0]===id)).filter(t=>!hide.includes(t[0])||(SHOWALL()&&EDITING()));
-}
-const toolName=t=>{const n=CFG.tools&&CFG.tools.names&&CFG.tools.names[t[0]];return (n&&(LANG==='ar'?n.ar:(n.en||n.ar)))||T(t[1])};
-/* 1.16.0 «أدوات المتابعة»: the owner chooses what is in it — tools, any section, any information page (also pages added
-   later) — with «+ إضافة», removes an item with its ✎ and orders them with ⋮⋮. Saved in CFG.tools.follow. */
-const FOLLOW0=[];
-/** 1.16.2 the team's own pages: one list for the menu («الأقسام») and the follow-up tools' «+ إضافة», so a team page added later
-    appears in both by itself. Shown only to the signed-in team (and «فحص المصادر» only to whoever edits sources). */
-const TEAMX=()=>{const own=typeof OWN!=='undefined'&&OWN.on&&!OWN.preview;return [
-  ...(own?[{k:'log',name:T('lg_t'),ico:ICO.history,page:'roadmap',f:()=>openLog()}]:[]),
-  ...(own&&ISOWNER()?[{k:'stats',name:T('st_t'),ico:ICO.chart,page:'tools',f:()=>go('stats')}]:[]),
-  ...(own&&CAN('refs')?[{k:'links',name:T('lk_t'),ico:tabIco('links'),page:'sources',f:()=>go('links')}]:[])]};
-const FOLLOW=()=>Array.isArray(CFG.tools&&CFG.tools.follow)?CFG.tools.follow:FOLLOW0;
-const fKey=k=>k.startsWith('p:')&&SECTOOL[k.slice(2)]?SECTOOL[k.slice(2)]:k; // a section that is a tool (schedule, lab results…) is that tool
-/** what a follow-up key shows: {name, icon, colours page, hidden} or null when it no longer exists */
-function fItem(k){
-  if(k.startsWith('tool-')){const t=TOOLS.find(x=>x[0]===k);return t?{tool:t}:null}
-  if(k.startsWith('p:')){const p=k.slice(2);if(!SECKEY[p])return null;return {name:T(SECKEY[p]),ico:tabIco(p),page:p,off:navHidden(p)||mgOff('p-'+p)}}
-  if(k.startsWith('pg:')){const pg=allPages().find(x=>x.id===k.slice(3));if(!pg)return null;return {name:tx2(pg.t),ico:ICO.page,off:!!pg.hidden}}
-  if(k.startsWith('x:')){const x=TEAMX().find(y=>y.k===k.slice(2));return x?{name:x.name,ico:x.ico,page:x.page}:null} // visitors: not shown
-  return null;
-}
-function renderToolsGrid(){
-  if(!$('tgrid'))return;
-  const own=ISOWNER()&&EDITING(),hide=(CFG.tools&&CFG.tools.hide)||[],fol=FOLLOW();
-  const tic=id=>{const sv=$(id)&&$(id).querySelector('.ttl-ic svg');return sv?sv.outerHTML:ICO.info};
-  const toolTile=t=>{const off=hide.includes(t[0]),b=`<button type="button" data-tv="${t[0]}"><i class="tico" aria-hidden="true">${tic(t[0])}</i><span>${esc(toolName(t))}</span><small>${esc(T(toolSubKey(t)))}</small>${SHOWALL()&&off?`<em class="hidb">${T('o_hiddenb')}</em>`:''}</button>`;
-    return own?`<div class="pkw tkw${off?' off':''}" data-sid="${t[0]}">${b}<div class="pka">${DRAG(T('o_drag'))}${EPEN(`data-tled="${t[0]}"`)}</div></div>`:b};
-  const main=toolList().filter(t=>!fol.includes(t[0]));
-  const fl=fol.map(k=>{const it=fItem(k);if(!it)return '';
-    if(it.tool)return toolHidden(k)?'':toolTile(it.tool); // 1.17.2 hidden: shown to the team only in «تعديل وترتيب»
-    if(it.off&&!SHOWALL())return '';
-    const b=`<button type="button" data-fgo="${esc(k)}"${it.page?` style="${colorVars(it.page)}"`:''}><i class="tico" aria-hidden="true">${it.ico}</i><span>${esc(it.name)}</span>${SHOWALL()&&it.off?`<em class="hidb">${T('o_hiddenb')}</em>`:''}</button>`;
-    return own?`<div class="pkw tkw" data-sid="${esc(k)}">${b}<div class="pka">${DRAG(T('o_drag'))}${EPEN(`data-fed="${esc(k)}"`)}</div></div>`:b}).join('');
-  const add=own?`<button type="button" class="tadd" data-fadd="1">${PLUS}<span>${esc(T('fl_add'))}</span></button>`:'';
-  $('tgrid').innerHTML=`<div class="picker tgmain">${main.map(toolTile).join('')}</div>`+
-    (fl||add?`<h3 class="pkh tgh">${esc(T('tg_follow'))}</h3><div class="picker tgfol">${fl}${add}</div>`:'')+
-    (own?`<p class="hint tlhint">${T('o_tile_hint')} ${T('fl_hint')}</p>`:'');
-  if(own){
-    sortable($('tgrid').querySelector('.tgmain'),'.tkw',ids=>{if(!ISOWNER())return;CFG.tools={...CFG.tools,order:ids};changed()});
-    sortable($('tgrid').querySelector('.tgfol'),'.tkw',ids=>{if(!ISOWNER())return;CFG.tools={...CFG.tools,follow:ids};changed()});
-  }
-  toolSearch();
-}
-function folSet(list){CFG.tools={order:[],hide:[],names:{},...CFG.tools,follow:[...new Set(list)]};changed()}
-/** «+ إضافة» in the follow-up tools: every section, every information page and every tool not yet there */
-function openFollowAdd(){
-  if(!ISOWNER())return;openSheet(T('fl_add_t'),'',{key:'foladd'});drawFollowAdd();
-}
-function drawFollowAdd(){
-  if(!SHEET||SHEET.key!=='foladd')return;
-  const fol=FOLLOW(),has=k=>fol.includes(fKey(k)),row=(k,name,ico,page)=>`<button type="button" class="mi" data-fpick="${esc(k)}"${has(k)?' disabled':''}><span class="di"${page?` style="${colorVars(page)}"`:''}>${ico}</span><span class="mt">${esc(name)}${has(k)?`<small>${esc(T('fl_in'))}</small>`:''}</span></button>`;
-  const secs=NAV().order.filter(p=>p!=='tools'),pages=allPages(),tools=TOOLS.filter(t=>!secs.some(p=>SECTOOL[p]===t[0]));
-  $('sheet-b').innerHTML=`<p class="hint">${esc(T('fl_add_i'))}</p><h4 class="lkh4">${esc(T('mn_short'))}</h4><div class="ml">${secs.map(p=>row('p:'+p,T(SECKEY[p]),tabIco(p),p)).join('')}</div>`+
-    `<h4 class="lkh4">${esc(T('fl_pages'))}</h4><div class="ml">${pages.map(pg=>row('pg:'+pg.id,tx2(pg.t)+(pg.hidden?' · '+T('pg_hidden'):''),ICO.page)).join('')}</div>`+
-    `<h4 class="lkh4">${esc(T('tab_tools'))}</h4><div class="ml">${tools.map(t=>row(t[0],toolName(t),ICO.info)).join('')}</div>`+
-    (TEAMX().length?`<h4 class="lkh4">${esc(T('fl_team'))}</h4><div class="ml">${TEAMX().map(x=>row('x:'+x.k,x.name,x.ico,x.page)).join('')}</div>`:'');
-}
-document.addEventListener('click',e=>{
-  const g=e.target.closest('[data-fgo]');if(g){e.preventDefault();const k=g.dataset.fgo;if(k.startsWith('p:'))go(k.slice(2));else if(k.startsWith('pg:'))openPage(k.slice(3));else if(k.startsWith('x:')){const x=TEAMX().find(y=>y.k===k.slice(2));if(x)x.f()}return}
-  if(e.target.closest('[data-fadd]')){e.preventDefault();openFollowAdd();return}
-  const pk=e.target.closest('[data-fpick]');if(pk&&ISOWNER()){e.preventDefault();folSet([...FOLLOW(),fKey(pk.dataset.fpick)]);toast(T('fl_added'));drawFollowAdd();return}
-  const fe=e.target.closest('[data-fed]');if(fe&&ISOWNER()){e.preventDefault();e.stopPropagation();editFollow(fe.dataset.fed)}
-});
-/** ✎ on a section or page in the follow-up tools: open it, or take it out of the follow-up tools */
-async function editFollow(k){
-  const it=fItem(k);
-  const r=await dialog({title:it?it.name:k,info:T('fl_ed_i'),buttons:[{label:T('fl_remove'),action:'rm',danger:1},{label:T('o_cancel'),action:'cancel'},{label:T('fl_open'),action:'open',pri:1}]});
-  if(r.action==='rm'){folSet(FOLLOW().filter(x=>x!==k));toast(T('fl_removed'))}
-  if(r.action==='open'){if(k.startsWith('p:'))go(k.slice(2));else if(k.startsWith('pg:'))openPage(k.slice(3));else{const x=TEAMX().find(y=>'x:'+y.k===k);if(x)x.f()}}
-}
-const toolSubKey=t=>TOOLSUB[t[0]]||t[2];
-/** the search box above the tools keeps only the tools whose name matches */
-function toolSearch(){const q=normAr($('tsearch')&&$('tsearch').value).trim();document.querySelectorAll('#tgrid [data-tv],#tgrid [data-fgo]').forEach(b=>{(b.closest('.tkw')||b).hidden=!!q&&!normAr(b.textContent).includes(q)});document.querySelectorAll('#tgrid .tgh').forEach(h=>{h.hidden=!!q})}
-/** 1.16.0 ✎ on a tool (owner): Arabic and English name, description, hide/show — one floating window */
-async function editTool(id){
-  const c=CFG.tools={order:[],hide:[],names:{},...CFG.tools};
-  const t=TOOLS.find(x=>x[0]===id);if(!t)return;const n=c.names[t[0]]||{ar:I18N[t[1]][0],en:I18N[t[1]][1]},dk=toolSubKey(t),d=CFG.text[dk]||{ar:I18N[dk][0],en:I18N[dk][1]},off=c.hide.includes(id);
-  const inF=FOLLOW().includes(id);
-  const r=await dialog({title:toolName(t),fields:[{label:T('nv_name'),value:n.ar},{label:T('nv_name_en'),value:n.en||'',ltr:1},{label:T('ed_desc'),value:d.ar},{label:T('ed_desc_en'),value:d.en||'',ltr:1}],buttons:[{label:T(inF?'fl_remove':'fl_to'),action:'fol'},...EDB({hidden:off,del:false,reset:true})]});
-  if(r.action==='fol'){folSet(inF?FOLLOW().filter(x=>x!==id):[...FOLLOW(),id]);return}
-  if(r.action==='hide'){c.hide=off?c.hide.filter(x=>x!==id):[...c.hide,id];changed();return}
-  if(r.action==='reset'){const nm={...c.names};delete nm[t[0]];c.names=nm;delete CFG.text[dk];changed();return}
-  if(r.action!=='ok')return;
-  const ar=r.values[0].trim(),en=r.values[1].trim();c.names={...c.names,[t[0]]:{ar:ar||I18N[t[1]][0],en:en||I18N[t[1]][1]}};
-  const da=r.values[2].trim()||I18N[dk][0],de=r.values[3].trim()||I18N[dk][1];if(da===I18N[dk][0]&&de===I18N[dk][1])delete CFG.text[dk];else CFG.text[dk]={ar:da,en:de};
-  changed();
-}
-document.addEventListener('click',e=>{const ed=e.target.closest('[data-tled]');if(!ed||!ISOWNER())return;e.preventDefault();e.stopPropagation();editTool(ed.dataset.tled)});
-function openToolPage(id){closeSheet(false);TOOLFROM=cur==='tools'?'':(location.hash||'#'+cur);if(location.hash!=='#'+id)location.hash=id;else show('tools',id);window.scrollTo(0,0)}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-tv]');if(!b)return;e.preventDefault();openToolPage(b.dataset.tv)});
 /* computers: ☰ shows or hides the side menu (remembered on this device) */
 function toggleSide(on){
   on=on==null?document.body.classList.contains('noside'):on;
@@ -231,7 +129,6 @@ function renderNav(){
   $('hnotif').setAttribute('aria-label',T('nt_t'));$('hnotif').classList.toggle('on',!!(SHEET&&SHEET.key==='notif'));
   document.body.classList.toggle('team',typeof OWN!=='undefined'&&OWN.on);
   if(SHEET&&SHEET.key==='notif')renderNotif();
-  renderToolsGrid();$('cvname').textContent=kname(K);
   $('hsearch').setAttribute('aria-label',T('gs_t'));
   document.querySelectorAll('.tab[data-p]').forEach(t=>{const lb=t.querySelector('.full,[data-t]');if(lb)t.title=lb.textContent}); // computers show icons only: the name appears on hover
   if(WIDE())$('t-menu').setAttribute('aria-selected',!document.body.classList.contains('noside'));
@@ -240,8 +137,6 @@ function renderNav(){
 // older names (owner bar «awaiting review ›», tests)
 /** 🔔 opens in a floating window over the page you are on */
 function openNotif(){if(SHEET&&SHEET.key==='notif')return;if(typeof renderAbAdmin==='function')renderAbAdmin();openSheet(T('nt_t'),$('notifbox'),{key:'notif',onClose:()=>renderNav()});renderNotif(true);renderNav()}
-const openNav=openNotif;
-const openMore=openNav,closeNav=()=>{},closeMore=()=>{};
 
 let INSTALL=null;
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL=e});
@@ -324,16 +219,12 @@ matchMedia('(min-width:1024px)').addEventListener('change',()=>{if(WIDE()&&cur==
 function gsResults(q){
   const n=normAr(q);if(n.length<2)return '';
   const terms=iTerms(n),hit=t=>{const h=normAr(t);return terms.some(x=>h.includes(x))};
-  const calc=KEYS.slice(1).filter(k=>hit(kname(k)+' '+(I18N['h_'+k]?I18N['h_'+k].join(' '):''))).slice(0,6);
-  const tools=TOOLS.filter(t=>!toolHidden(t[0])&&hit(T(t[1])+' '+T(t[2]))).slice(0,6);
-  const inter=INTER.filter(x=>x[7]&&!x[8]&&hit([x[1][0],x[1][1],x[2][0],x[2][1],x[3][0],x[3][1]].join(' ')));
+  const tx=o=>o?(o[LANG]||o.en||o.ar||''):'',ab=(CFG.ab||[]).filter(a=>a&&a.n&&hit([a.n.ar||'',a.n.en||'',tx(a.cls)].join(' '))).slice(0,8);
   const refs=Object.entries(REFS).filter(([i,x])=>!x[6]&&hit(x[0]+' '+x[1]+' '+x[3]+' '+x[4])).slice(0,6);
   const pages=visiblePages().filter(p=>hit(tx2(p.t)+' '+tx2(p.b))).slice(0,4);
   const sec=(t,items)=>items?`<h3 class="gsh">${esc(t)}</h3><div class="gsl">${items}</div>`:'';
   const it=(attr,label,sub)=>`<button type="button" class="gsi" ${attr}><b>${esc(label)}</b>${sub?`<small>${esc(sub)}</small>`:''}</button>`;
-  const h=sec(T('gs_calc'),calc.map(k=>it(`data-gocalc="${esc(k)}"`,kname(k),I18N['h_'+k]?T('h_'+k):'')).join(''))+
-    sec(T('gs_tools'),tools.map(t=>it(`data-tool="${TOOLKIND[t[0]]}"`,T(t[2]),'')).join(''))+
-    sec(T('tab_int')+(inter.length?` (${inter.length})`:''),inter.slice(0,6).map(x=>it(`data-gsint="${esc(q)}"`,L(x[1][0],x[1][1])+' + '+L(x[2][0],x[2][1]),L(x[3][0],x[3][1]))).join(''))+
+  const h=sec(T('med_t'),ab.map(a=>it(`data-gsab="${esc(a.id)}"`,tx(a.n),tx(a.cls))).join(''))+
     sec(T('tab_src'),refs.map(([i,x])=>it(`data-ref="${i}"`,i+'. '+x[0],x[1])).join(''))+
     sec(T('nv_info'),pages.map(p=>it(`data-gspage="${esc(p.id)}"`,tx2(p.t),'')).join(''));
   return h||`<p class="inone">${T('gs_none')}</p>`;
@@ -342,8 +233,8 @@ function openSearch(){
   openSheet(T('gs_t'),`<div class="nsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" id="gsq" dir="auto" autocomplete="off" placeholder="${esc(T('gs_ph'))}"></div><div id="gsr" aria-live="polite"></div>`,{key:'search'});
   const q=$('gsq');q.addEventListener('input',()=>{$('gsr').innerHTML=gsResults(q.value)});setTimeout(()=>q.focus(),50);
   $('gsr').addEventListener('click',e=>{
-    if(e.target.closest('[data-gocalc],[data-tool],[data-ref]'))closeSheet(false); // the global handlers open the item
-    const gi=e.target.closest('[data-gsint]');if(gi){closeSheet(false);IF='all';ISRC=null;$('isearch').value=gi.dataset.gsint;renderInter();go('interactions')}
+    if(e.target.closest('[data-ref]'))closeSheet(false); // the global handler opens the source
+    const ga=e.target.closest('[data-gsab]');if(ga){closeSheet(false);ISEL=ga.dataset.gsab;go('interactions');renderInter()}
     const gp=e.target.closest('[data-gspage]');if(gp){closeSheet(false);openPage(gp.dataset.gspage)}
   });
 }

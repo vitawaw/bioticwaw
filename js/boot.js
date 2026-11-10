@@ -6,7 +6,7 @@
 function frameDraft(){try{const d=JSON.parse(localStorage.getItem('vw-frame')||'null');if(d&&typeof d==='object'){CFG=mergeCfg(DEFAULT_CFG,d);buildData();refreshAll()}}catch(e){}}
 let startLang='ar',startPage='calc',welcomeSeen=false;
 try{
-  const s=localStorage.getItem('vw-k');buildData();if(s&&Object.prototype.hasOwnProperty.call(F,s))K=s; // 1.17.1 only a real calculator name (not e.g. «constructor»)
+  buildData();localStorage.removeItem('vw-k');localStorage.removeItem('vw-meds'); // old vitamin-era keys
   startLang=localStorage.getItem('vw-lang')||'ar';startPage=localStorage.getItem('vw-p')||'calc';
   localStorage.removeItem('vw-mode'); // 1.15.0: there is no patient mode any more
   welcomeSeen=!!localStorage.getItem('vw-welcome');
@@ -14,8 +14,6 @@ try{
 }catch(e){}
 if(PAGES.includes(location.hash.slice(1)))startPage=location.hash.slice(1);
 $('welcome').hidden=welcomeSeen;
-showFor();
-document.querySelectorAll('#picker button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===K));
 applyColors();
 setLang(startLang);
 show(startPage);
@@ -23,5 +21,5 @@ show(startPage);
 document.body.classList.toggle('demo',typeof IS_PREVIEW!=='undefined'&&IS_PREVIEW);
 
 if(FRAME){$('welcome').hidden=true;loadPublished().finally(frameDraft)}
-else{loadPublished();const h0=location.hash;routeSpecial();if(!/^#(owner|join)|type=recovery|error_code=otp_expired/.test(h0))resumeSession()} // 1.17.1 also on #tool-… / #v-… / #info-… (it was skipped there)
+else{loadPublished();const h0=location.hash;routeSpecial();if(!/^#(owner|join)|type=recovery|error_code=otp_expired/.test(h0))resumeSession()} // also on #info-…
 if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}

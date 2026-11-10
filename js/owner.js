@@ -244,7 +244,7 @@ document.addEventListener('click',e=>{
 },true);
 
 
-const ensureRefs=()=>{if(!Array.isArray(CFG.refs))CFG.refs=defRefList()};
+const ensureRefs=()=>{if(!Array.isArray(CFG.refs))CFG.refs=[]};
 async function confirmDel(info){const q=await dialog({title:T('o_delq2'),info:info||'',buttons:[{label:T('o_back'),action:'cancel'},{label:T('o_yesdel'),action:'ok',pri:1,danger:1}]});return q.action==='ok'}
 const RTYPES=()=>[['',T('o_rt_auto')],...['g','o','d','s','c','x'].map(k=>[k,T('rt_'+k)])];
 async function editRef(id){
@@ -265,9 +265,9 @@ async function editRef(id){
 }
 async function delRef(id){
   ensureRefs();
-  const uses=[...(CFG.inter||[]).filter(x=>(x.r||[]).includes(id)).map(x=>tx2(x.a)+' + '+tx2(x.b)),...NCUST().filter(c=>(c.r||[]).includes(id)).map(c=>tx2(c.n)),...BUILTIN.filter(k=>(DEF_REFGROUP[k]||[]).includes(id)).map(k=>T('n_'+k))];
+  const tx=o=>o?(o[LANG]||o.en||o.ar||''):'',uses=(CFG.ab||[]).filter(a=>a&&a.n&&((a.r||[]).includes(id)||(a.inter||[]).some(i=>(i.r||[]).includes(id)))).map(a=>tx(a.n));
   if(!(await confirmDel(uses.length?T('o_rused')+' '+uses.join(L('، ',', ')):'')))return;
-  CFG.refs=CFG.refs.filter(x=>x.id!==id);if(Array.isArray(CFG.inter))CFG.inter.forEach(x=>{x.r=(x.r||[]).filter(n=>n!==id)});NCUST().forEach(c=>{c.r=(c.r||[]).filter(n=>n!==id)});changed();
+  CFG.refs=CFG.refs.filter(x=>x.id!==id);changed();
 }
 /** hide/show: the owner's choice is final; a pharmacist's waits for the owner's review */
 function toggleHidden(o){if(!o)return;o.hidden=!o.hidden;if(!CANAPPROVE())o.rv=false;changed()}
@@ -307,30 +307,19 @@ function pubItems(){
 const pubNew=()=>pubItems().filter(n=>!SEEN.includes(n.key));
 function pubSeen(){const k=pubItems().map(n=>n.key);if(k.every(x=>SEEN.includes(x)))return;SEEN=[...new Set([...SEEN,...k])].slice(-200);try{localStorage.setItem('vw-seen',JSON.stringify(SEEN))}catch(e){}}
 function pubNotifHTML(){
-  const it=pubItems(),isNew=n=>!SEEN.includes(n.key),labs=it.filter(n=>n.kind==='lab'),feats=it.filter(n=>n.kind==='feat');
-  let h=`<h3 class="nsec">${T('nn_rem')}</h3>`;
-  h+=labs.length?labs.map(n=>`<div class="ncard${isNew(n)?' unread':''}">${nico('edit')}<div class="nb"><div class="nh"><b>${esc(L(n.t[1],n.t[2]))}</b> · <span class="nby">${esc(T('nn_last'))} <bdi>${esc(n.last.d)}</bdi></span></div>
-    <div class="nl">${esc(T('nn_lab'))}</div>${toolHidden('labs')?'':`<div class="filters"><button type="button" class="btn" data-tool="labs">${esc(T('lb_t'))}</button></div>`}</div></div>`).join('')
-    :`<p class="inone">${T('nn_nolab')}</p>`;
+  const it=pubItems(),isNew=n=>!SEEN.includes(n.key),feats=it.filter(n=>n.kind==='feat');
+  let h='';
   if(feats.length)h+=`<h3 class="nsec">${T('nn_new')}</h3>`+feats.map(n=>`<div class="ncard${isNew(n)?' unread':''}">${nico('new')}<div class="nb"><div class="nh"><b>${esc(tx2(n.x.t))}</b></div><div class="nl">${esc(tx2(n.x.d))}</div>
     ${GO[n.x.go]?`<div class="filters"><button type="button" class="btn pri" data-rmgo="${esc(n.x.go)}">${T('rm_try')}</button></div>`:''}</div></div>`).join('');
-  return h;
+  return h||`<p class="inone">${T('nt_none')}</p>`;
 }
 const NKIND={r:'tab_src',i:'tab_int',n:'ad_vit',x:'nt_texts_k'};
-/** what a pharmacist's texts proposal changes: page texts and info pages (titles) */
-/** the medicines a pharmacist's proposal adds, renames or hides (compared with the owner's list) */
-function medChanges(tm){
-  if(!tm||!Array.isArray(tm.medcat))return[];
-  const was=Object.fromEntries(medBase().map(m=>[m.en,JSON.stringify(m)]));
-  return tm.medcat.filter(m=>was[m.en]!==JSON.stringify({en:m.en,ar:m.ar||[],hide:!!m.hide}));
-}
 function textChanges(tm){
   const out=[],cur=CFG.text||{},pg=CFG.pages||[],np=tm.pages||[];
   const tx=Object.keys({...cur,...(tm.text||{})}).filter(k=>JSON.stringify(cur[k]||null)!==JSON.stringify((tm.text||{})[k]||null));
   if(tx.length)out.push(T('nt_tx_n').replace('{n}',tx.length));
   const ch=np.filter(p=>JSON.stringify(pg.find(x=>x.id===p.id)||null)!==JSON.stringify(p)).length+pg.filter(p=>!np.some(x=>x.id===p.id)).length;
   if(ch)out.push(T('nt_pg_n').replace('{n}',ch));
-  const mc=medChanges(tm);if(mc.length)out.push(T('nt_med_n').replace('{n}',mc.length));
   return out;
 }
 const NICO={new:'<path d="M12 5v14M5 12h14"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',del:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',approved:'<path d="M5 12l5 5 9-10"/>',rejected:'<path d="M6 6l12 12M18 6L6 18"/>'};
@@ -415,11 +404,8 @@ function viewItem(n){
   if(n.t==='x'){const tm=OWN.team||{},cur=CFG.text||{},nt=tm.text||{};
     const rows=Object.keys({...cur,...nt}).filter(k=>JSON.stringify(cur[k]||null)!==JSON.stringify(nt[k]||null)).map(k=>`<div class="ncard"><div class="nb"><div class="nh">${esc(T('nt_was'))} ${esc((cur[k]&&cur[k].ar)||(I18N[k]||[''])[0])}</div><div class="nl">${esc((nt[k]&&nt[k].ar)||(I18N[k]||[''])[0])}</div></div></div>`);
     const pg=(tm.pages||[]).filter(p=>JSON.stringify((CFG.pages||[]).find(x=>x.id===p.id)||null)!==JSON.stringify(p)).map(p=>`<div class="ncard"><div class="nb"><div class="nh">${esc(T('ad_pages'))}</div><div class="nl">${esc(tx2(p.t))}</div><div class="nw">${esc(tx2(p.b)).slice(0,300)}</div></div></div>`);
-    const md=medChanges(tm).map(m=>`<div class="ncard"><div class="nb"><div class="nh">${esc(T('mm_t'))}${m.hide?' · '+esc(T('pg_hidden')):''}</div><div class="nl">${esc(m.en)}</div><div class="nw">${esc((m.ar||[]).join('، '))}</div></div></div>`);
-    openSheet(T('nt_texts'),rows.concat(pg,md).join('')||`<p class="inone">${T('nt_none')}</p>`);return}
-  if(n.t==='r'){SF='all';RTF='all';renderRefs();go('sources');setTimeout(()=>{const el=$('ref-'+n.id);if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}},80);return}
-  if(n.t==='i'){IF='all';$('isearch').value='';renderInter();go('interactions');setTimeout(()=>{const el=document.querySelector(`#ilist [data-act][data-kind="i"][data-id="${n.idx}"]`);if(el)el.closest('.icard').scrollIntoView({block:'center'})},80);return}
-  pickNut(n.id);setTimeout(()=>{const el=document.querySelector(`#nadm [data-kind="n"][data-id="${n.id}"]`);if(el)el.scrollIntoView({block:'center'})},80);
+    openSheet(T('nt_texts'),rows.concat(pg).join('')||`<p class="inone">${T('nt_none')}</p>`);return}
+  if(n.t==='r'){RTF='all';renderRefs();go('sources');setTimeout(()=>{const el=$('ref-'+n.id);if(el){el.scrollIntoView({block:'center'});el.classList.add('hl')}},80);return}
 }
 /** decide on one change: saved in the database at once (unsaved edits are saved first) */
 async function decide(n,accept,quiet){
@@ -464,24 +450,6 @@ async function decideAll(list){
   if(OWN.local){changed();renderNotif();toast(T('o_approved'))}else await reloadContent('o_approved');
   });
 }
-function toggleBuiltin(k){
-  CFG.nut=CFG.nut||{hide:[],custom:[]};const h=CFG.nut.hide;const j=h.indexOf(k);
-  if(j>=0)h.splice(j,1);else{if(KEYS.length<=2){toast(T('o_nlast'));return}h.push(k)}
-  changed();
-}
-/** 1.16.0 ✎ on a built-in vitamin (owner): its Arabic and English name and description, hide/show; the dose rules stay in the code */
-async function editBuiltin(k){
-  if(!ISOWNER()){toast(T('o_onlyowner'));return}
-  const keys=['n_'+k,'h_'+k],cur=x=>CFG.text[x]||{ar:I18N[x][0],en:I18N[x][1]},off=NHIDE().includes(k);
-  const r=await dialog({title:kname(k),info:T('ed_builtin_i'),fields:[{label:T('nv_name'),value:cur(keys[0]).ar},{label:T('nv_name_en'),value:cur(keys[0]).en,ltr:1},{label:T('ed_desc'),value:cur(keys[1]).ar},{label:T('ed_desc_en'),value:cur(keys[1]).en,ltr:1}],
-    buttons:EDB({hidden:off,del:false,reset:true})});
-  if(r.action==='hide')return toggleBuiltin(k);
-  if(r.action==='reset'){keys.forEach(x=>delete CFG.text[x]);changed();return}
-  if(r.action!=='ok')return;
-  keys.forEach((x,i)=>{const d=I18N[x],ar=r.values[2*i].trim()||d[0],en=r.values[2*i+1].trim()||d[1];if(ar===d[0]&&en===d[1])delete CFG.text[x];else CFG.text[x]={ar,en}});changed();
-}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-nedit]');if(!b||!OWN.on)return;e.preventDefault();e.stopPropagation();editBuiltin(b.dataset.nedit)},true);
-const UNITTXT={mg:{ar:'ملغ',en:'mg'},mcg:{ar:'ميكروغرام',en:'mcg'},g:{ar:'غرام',en:'g'},iu:{ar:'وحدة دولية',en:'IU'}};
 /* the same buttons on every item (actBtns in content.js): approve, edit, hide/show, delete */
 document.addEventListener('click',e=>{if(OWN.on&&e.target.closest('[data-gonotif]')){e.preventDefault();e.stopPropagation();openNotif()}},true);
 document.addEventListener('click',e=>{
@@ -492,7 +460,7 @@ document.addEventListener('click',e=>{
   const F={r:{edit:()=>editRef(+id),hide:()=>hideRef(+id),del:()=>delRef(+id)},m:{edit:()=>editFeature(+id),hide:()=>hideFeature(+id),del:()=>delFeature(+id)}}[k];
   if(F&&F[a])F[a]();
 },true);
-// «add» buttons and the built-in vitamins' hide/show (item buttons are handled above)
+// «add» buttons (item buttons are handled above)
 document.addEventListener('click',e=>{
   if(!OWN.on)return;const t=e.target.closest('#radd');if(!t)return; // add a source (1.5.0: the vitamin and supplement buttons are gone)
   e.preventDefault();e.stopPropagation();
@@ -598,7 +566,7 @@ async function afterLogin(){
   startOwner({local:false,role:m.role,draft:draftFor(dr&&dr.data,m.role),content:ct});
   if(m.role==='owner')teamLoad().then(()=>renderNav());else loadNotes();
   if(WANT){const [p,v]=WANT;WANT=null;if(location.hash==='#'+p)show(p,v)} // 1.17.1 the team page the reload asked for
-  wantVit(); // 1.17.1 a vitamin that only the team's content has
+  wantPage(); // an info page that only the team's content has
 }
 function applyContent(ct){ct=clean(ct);CFG.refs=ct.refs||[];CFG.inter=ct.inter||[];CFG.nut={hide:(ct.nut&&ct.nut.hide)||[],custom:(ct.nut&&ct.nut.custom)||[]};OWN.nextRef=ct.next_ref||30;OWN.del=ct.del||null;OWN.parts=partsOf()}
 const settingsOf=c=>({contact:c.contact,colors:c.colors,text:c.text,roadmap:c.roadmap,pages:c.pages||DEFAULT_CFG.pages,nutOrder:c.nutOrder||[],brand:c.brand||DEFAULT_CFG.brand,review:c.review||DEFAULT_CFG.review,menus:c.menus||DEFAULT_CFG.menus,tools:c.tools||DEFAULT_CFG.tools,medcat:c.medcat||null,look:c.look||DEFAULT_CFG.look});
@@ -652,11 +620,8 @@ function pubList(){
     a.forEach((x,k)=>{if(!b.has(k))W('add',lab(x),go(x));else if(st(x)!==st(b.get(k)))W('chg',lab(x),go(x))});
     b.forEach((x,k)=>{if(!a.has(k))W('del',lab(x),null)})};
   const norm=(x,f)=>{const y={};f.forEach(k=>{if(x[k]!==undefined&&!(k==='g'&&!(x.g&&x.g.d)))y[k]=x[k]});return y};
-  const RF=['id','org','title','url','ar','en','kind'],IF=['k','a','b','d','sev','r','g'],NF=['id','n','h','uk','rows','plan','note','r'];
+  const RF=['id','org','title','url','ar','en','kind'];
   cmp([...(CFG.refs||[]),...(d.refs||[])].map(ok).filter(live).map(x=>norm(x,RF)),(P.refs||[]).map(x=>norm(x,RF)),x=>x.id,x=>`${x.id}. ${x.org}`,x=>()=>{go('sources');setTimeout(()=>{const e=$('ref-'+x.id);if(e)e.scrollIntoView({block:'center'})},250)});
-  cmp([...(CFG.inter||[]),...(d.inter||[])].map(ok).filter(live).map(x=>norm(x,IF)),(P.inter||[]).map(x=>norm(x,IF)),x=>x.k+'|'+((x.b&&(x.b.en||x.b.ar))||''),x=>`${kname(x.k)} + ${tx2(x.b)}`,()=>()=>go('interactions'));
-  cmp([...NCUST(),...(d.nut||[])].map(ok).filter(live).map(x=>norm(x,NF)),((P.nut&&P.nut.custom)||[]).map(x=>norm(x,NF)),x=>x.id,x=>tx2(x.n),x=>()=>{go('calc');if(typeof openNut==='function')openNut(x.id)});
-  if(st(NHIDE())!==st((P.nut&&P.nut.hide)||[]))W('chg',T('pb_nhide'),()=>go('calc'));
   const S=k=>st(CFG[k])!==st(P[k]??DEFAULT_CFG[k]);
   if(S('text')){const a=CFG.text||{},b=P.text||{};[...new Set([...Object.keys(a),...Object.keys(b)])].filter(k=>st(a[k])!==st(b[k])&&I18N[k]).forEach(k=>W(a[k]?(b[k]?'chg':'add'):'del',`«${T(k).slice(0,50)}»`,null))}
   if(S('pages')){const a=CFG.pages||[],b=P.pages||DEFAULT_CFG.pages;cmp(a,b,x=>x.id,x=>T('pb_page')+' «'+tx2(x.t)+'»',x=>()=>openPage(x.id))}
@@ -843,7 +808,7 @@ async function logout(){
 $('o-save').addEventListener('click',saveDraft);$('o-publish').addEventListener('click',publish);
 $('o-pvexit').addEventListener('click',()=>setPreview(false));
 // page texts are edited only after «✎ النصوص» is switched on (the page stays calm otherwise)
-$('o-texts').addEventListener('click',()=>{document.body.classList.toggle('textedit');refreshAll();if(typeof renderMedCat==='function')renderMedCat();ownerBar()});
+$('o-texts').addEventListener('click',()=>{document.body.classList.toggle('textedit');refreshAll();ownerBar()});
 addEventListener('resize',()=>{if(OWN.on)ownerBar()});$('o-preview').addEventListener('click',()=>setPreview(true));$('o-undo').addEventListener('click',undoLast);$('o-sizes').addEventListener('click',openSizes);$('o-discard').addEventListener('click',discard);
 addEventListener('beforeunload',e=>{if(OWN.on&&dirty()){e.preventDefault();e.returnValue=''}});
 

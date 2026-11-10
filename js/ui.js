@@ -1,23 +1,20 @@
 /* BIOTICWAW · js/ui.js
-   Page behaviour: tabs/navigation, welcome card, patient card, theme, examples,
-   language switch (setLang), event wiring, colors and refreshAll().
+   Page behaviour: tabs/navigation, welcome card, theme, language switch (setLang), event wiring, colors and refreshAll().
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== navigation ===================== */
 const PAGES=['calc','interactions','sources','notif','team','menu','abx','roadmap']; // 1.2.0: calculator, interactions, medicines (abx), sources; the rest was removed
-let cur='calc',CALCV=false,TOOLV=''; // CALCV: the chosen vitamin's page (patient data + result) instead of the list of vitamins
+let cur='calc';
 /** 1.17.1 after a reload the saved session is restored a moment after the first page is drawn: a team-only page asked for in
     the address (pharmacists, visit dashboard, link check, a section hidden from visitors) waits for it instead of jumping away */
 let WANT=null;
 const HASSESSION=()=>{try{return Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){return false}};
 function show(p,view){
   if(p==='notif'){if(typeof openNotif==='function')setTimeout(openNotif,0);p=cur&&cur!=='notif'?cur:'calc'} // 🔔 is a floating window, not a page
-  if(typeof SECTOOL!=='undefined'&&SECTOOL[p]){view=SECTOOL[p];p='tools'} // the schedule and lab results sections are tool pages
-  if(p==='tools'&&view&&typeof toolHidden==='function'&&toolHidden(view))view=''; // 1.17.2 a hidden tool's address opens the tools list
   const asked=p,askedView=view;
   if(!PAGES.includes(p)||(p==='menu'&&WIDE())||(p==='team'&&!ISOWNER())||(navHidden(p)&&!SHOWALL()))p='calc'; // a section the owner hid is not shown // wide screens show the menu at the side
   if(asked!==p&&asked!=='notif'&&asked!=='menu'&&typeof OWN!=='undefined'&&!OWN.on&&HASSESSION())WANT=[asked,askedView];
   else if(asked===p)WANT=null;
-  cur=p;CALCV=p==='calc'&&view==='v';$('calc').classList.toggle('cv',CALCV);TOOLV='';if(TOOLV)$('tback').querySelector('span').textContent=typeof TOOLFROM!=='undefined'&&TOOLFROM&&TOOLFROM!=='#tools'?L('رجوع','Back'):T('tab_tools');document.querySelectorAll('#tools>section[id^="tool-"]').forEach(x=>x.classList.toggle('on',x.id===TOOLV));if(CALCV)$('cvname').textContent=kname(K);if(typeof rememberRecent==='function')rememberRecent('p:'+p);
+  cur=p;
   PAGES.forEach(x=>{$(x).hidden=x!==p;const t=$('t-'+x);if(t){t.setAttribute('aria-selected',x===p);t.tabIndex=x===p?0:-1}});
   // a section that is a tool's page (schedule, lab results) is the selected tab while its tool is open
   if(p==='team'&&typeof openTeamPage==='function')openTeamPage();
@@ -25,12 +22,12 @@ function show(p,view){
   if(p==='abx'&&typeof renderAbAdmin==='function')renderAbAdmin();
   if(p==='roadmap'&&typeof renderRoadmap==='function')renderRoadmap();
   sharedParts(p);
-  if(typeof rememberRecent==='function')rememberRecent(TOOLV?'t:'+TOOLKIND[TOOLV]:'p:'+p);
+  if(typeof rememberRecent==='function')rememberRecent('p:'+p);
   if(p!=='sources'){$('back').hidden=true;document.querySelectorAll('ol.refs li.hl').forEach(l=>l.classList.remove('hl'))}
   if(p!=='menu'&&p!=='notif')try{localStorage.setItem('vw-p',p)}catch(e){}
   if(p==='notif'&&typeof renderNotif==='function')renderNotif(true);
   if(p==='sources'&&typeof linksAuto==='function'&&typeof OWN!=='undefined'&&OWN.on&&CAN('refs'))linksAuto(); // the link check runs by itself once a week
-  updateBar();if(typeof renderNav==='function')renderNav();
+  if(typeof renderNav==='function')renderNav();
 }
 /** «my medicines» and the link check have their own pages (1.13.0) and still appear where they were:
    the same elements move to the page that is open, so there is one list and one check */
@@ -39,16 +36,14 @@ function sharedParts(p){
   if(false){put('reflist',$('linksb'));if(typeof renderRefs==='function')renderRefs();if(typeof linksAuto==='function'&&OWN.on)linksAuto()}
   else if(p==='sources'&&$('reflist').parentNode.id==='linksb'){home('reflist');if(typeof renderRefs==='function')renderRefs()}
 }
-function go(p){if(typeof SECTOOL!=='undefined'&&SECTOOL[p])p=SECTOOL[p];if(location.hash!=='#'+p)location.hash=p;else if(/^tool-/.test(p))show('tools',p);else show(p);window.scrollTo(0,0)}
+function go(p){if(location.hash!=='#'+p)location.hash=p;else show(p);window.scrollTo(0,0)}
 window.addEventListener('hashchange',()=>{if(routeSpecial())return;show(location.hash.slice(1));window.scrollTo(0,0)});
 /* links that open something instead of a tab: #owner (sign in), #join=<email> (invited pharmacist), #info-<page> (info page) */
 function routeSpecial(){
   let h=location.hash.slice(1);try{h=decodeURIComponent(h)}catch(e){}
   if(/(^|&)(type=recovery|error_code=otp_expired)(&|$)/.test(h)){recoverPassword();return true} // the link from the «forgot password» e-mail
-  if(h.startsWith('v-')){const k=h.slice(2);if(!KEYS.includes(k)&&/^[a-z0-9_]{1,30}$/.test(k))WANTV=k;if(KEYS.includes(k)&&k!=='all'&&k!==K){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply()}show('calc','v');window.scrollTo(0,0);return true} // one vitamin's page
   if(h==='owner'){openOwner();return true}
   if(h==='join'||h.startsWith('join=')){const [em,k]=h.slice(5).split('&k=');openOwner({join:em||'',key:k||''});return true}
-  if(h.startsWith('c=')){history.replaceState(null,'',location.pathname+location.search+'#calc');loadShared(h.slice(2));return true}
   if(h.startsWith('info-')){const id=h.slice(5);if(!allPages().some(x=>x.id===id)&&/^[a-z0-9_-]{1,40}$/.test(id))WANTPG=id;else openPage(id);return true} // the page keeps #info-<id> while it is open (1.17.1: a reload opens it again)
   return false;
 }
@@ -61,91 +56,33 @@ document.querySelectorAll('.tab[data-p]').forEach(t=>{
   });
 });
 document.addEventListener('click',e=>{
-  const ex=e.target.closest('[data-ex]');if(ex){e.preventDefault();fillExample();return}
   const gi=e.target.closest('[data-goint]');if(gi){e.preventDefault();IF=gi.dataset.goint;renderInter();go('interactions');return}
   const sr=e.target.closest('[data-isrc]');if(sr){e.preventDefault();ISRC=+sr.dataset.isrc;IF='all';renderInter();go('interactions');return}
   if(e.target.closest('[data-clrsrc]')){e.preventDefault();ISRC=null;renderInter();return}
-  if(e.target.closest('[data-share]')){e.preventDefault();shareResult();return}
-  if(e.target.closest('[data-report]')){e.preventDefault();openReport();return}
   if(e.target.closest('[data-goabx]')){e.preventDefault();go('abx');return}
   const rg=e.target.closest('[data-rmgo]');if(rg){e.preventDefault();const f=GO[rg.dataset.rmgo];if(f)f();return}
-  const dm=e.target.closest('[data-delmed]');if(dm){e.preventDefault();MEDS.splice(+dm.dataset.delmed,1);saveMeds();renderInter();return}
   const a=e.target.closest('[data-ref]');if(!a)return;e.preventDefault();
-  const back=cur;SF='all';RTF='all';renderRefs();go('sources');
+  const back=cur;RTF='all';renderRefs();go('sources');
   $('back').hidden=back==='sources';$('back').dataset.to=back;
   const li=$('ref-'+a.dataset.ref);if(li){li.classList.add('hl');setTimeout(()=>li.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}),30)}
 });
 $('back').addEventListener('click',()=>{const to=$('back').dataset.to||'calc';go(to);if(to==='calc'&&innerWidth<900)setTimeout(()=>$('resbox').scrollIntoView({block:'start'}),30)});
 $('filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;IF=b.dataset.f;ISRC=null;renderInter()});
-$('sfilters').addEventListener('click',e=>{const b=e.target.closest('[data-sf]');if(!b)return;SF=b.dataset.sf;renderRefs()});
 $('rtfilters').addEventListener('click',e=>{const b=e.target.closest('[data-rtf]');if(!b)return;RTF=b.dataset.rtf;renderRefs()});
 
-/* mobile result bar */
-let resVisible=false;
-if('IntersectionObserver' in window){new IntersectionObserver(es=>{resVisible=es[0].isIntersecting;updateBar()},{threshold:.15}).observe($('resbox'))}
-function updateBar(){const s=cur==='calc'&&CALCV&&!resVisible&&innerWidth<900&&!!LAST;$('rbar').hidden=!s;document.body.classList.toggle('has-bar',s)}
-window.addEventListener('resize',updateBar);
-const toRes=()=>{const y=$('resbox').getBoundingClientRect().top+scrollY-110;window.scrollTo({top:y,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})};
-$('rbar').addEventListener('click',toRes);$('rbar').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toRes()}});
 
 /* ===================== mode, welcome, text size ===================== */
 function closeWelcome(){$('welcome').hidden=true;try{localStorage.setItem('vw-welcome','1')}catch(e){}}
 $('wclose').addEventListener('click',closeWelcome);
 
-/* ===================== patient card ===================== */
-const MARKSVG=document.querySelector('.logo .mk svg').innerHTML;
-let lastFocus=null;
-function cardText(){
-  const strip=plain;
-  const r=LAST,name=document.querySelector('#picker [aria-pressed="true"] span').textContent;
-  const lines=['BIOTICWAW · '+name,strip(r.pt||r.title)];
-  (r.notes||[]).filter(n=>n.u).forEach(n=>lines.push('⚠ '+strip(n.t)));
-  (r.plan||[]).forEach((x,i)=>lines.push((i+1)+'. '+strip(x.h)+(x.d?': '+strip(x.d):'')));
-  if(srcLine())lines.push('',srcLine());
-  lines.push('',T('pc_f'));return lines.join('\n');
-}
-function openCard(){
-  if(!LAST)return;const r=LAST,strip=x=>String(x||'').replace(/<[^>]+>/g,'');
-  const name=document.querySelector('#picker [aria-pressed="true"] span').textContent;
-  const d=new Date().toLocaleDateString(LANG==='ar'?'ar-IQ-u-nu-latn':'en-GB',{year:'numeric',month:'long',day:'numeric'});
-  const urgent=(r.notes||[]).filter(n=>n.u);
-  $('pcard').setAttribute('dir',LANG==='ar'?'rtl':'ltr');
-  $('pcard').innerHTML=`<div class="pc-h"><div class="pc-logo"><svg viewBox="0 0 64 64" aria-hidden="true">${MARKSVG}</svg><span>BIOTIC<em>WAW</em></span></div><div class="pc-date">${d}</div></div>
-   <div class="pc-b"><div class="pc-k" id="pc-title">${name} · ${strip(r.badge)}</div><p class="pc-main">${strip(r.pt||r.title)}</p>
-   ${urgent.map(n=>`<div class="pc-alert">${strip(n.t)}</div>`).join('')}
-   ${(r.plan&&r.plan.length)?`<div class="pc-k">${T('pc_plan')}</div><ol class="pc-plan">${r.plan.map(x=>`<li><b>${strip(x.h)}</b>${x.d?' — '+strip(x.d):''}</li>`).join('')}</ol>`:''}</div>
-   ${srcLine()?`<div class="pc-src">${esc(srcLine())}</div>`:''}<div class="pc-f">${T('pc_f')}${REV().name?'<br>'+T('rev')+' '+REV().name+(REV().date?' · '+REV().date:''):''}<br>${T('pc_shot')}</div>`;
-  $('pc-wa').href='https://wa.me/?text='+encodeURIComponent(cardText());
-  lastFocus=document.activeElement;$('ov').hidden=false;$('pc-close').focus();document.body.style.overflow='hidden';
-}
-function closeCard(){$('ov').hidden=true;document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
-$('pc-close').addEventListener('click',closeCard);
-$('ov').addEventListener('click',e=>{if(e.target===$('ov')||e.target.classList.contains('ovw'))closeCard()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('ov').hidden){e.stopImmediatePropagation();closeCard()}});
-$('pc-copy').addEventListener('click',()=>{const t=cardText(),b=$('pc-copy'),done=()=>{b.textContent=T('copied');setTimeout(()=>b.textContent=T('pc_cp'),1600)};try{navigator.clipboard.writeText(t).then(done).catch(()=>fallback(t,done))}catch(e){fallback(t,done)}});
-document.addEventListener('click',e=>{if(e.target.closest('[data-card]')){e.preventDefault();openCard()}});
 
+const MARKSVG=document.querySelector('.logo .mk svg').innerHTML; // the logo mark, reused by the footer
 function themeIcon(){if(typeof renderMenu==='function')renderMenu()}
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',themeIcon);
 
-/* ===================== examples / clear ===================== */
-const NUMS=['age','wt','ht','dlab','b12v','ab12','hb','fer','cadiet','mgv','mon'];
-const EX={d:{age:45,sex:'f',wt:68,ht:162,dlab:14},b12:{age:55,sex:'f',b12v:160},fol:{age:28,sex:'f',folg:'plan'},fe:{age:30,sex:'f',wt:60,feg:'ida'},ca:{age:60,sex:'f',cadiet:400},mg:{age:50,sex:'m',mgv:1.4},c:{age:30,sex:'m',czg:'rda'},zn:{age:30,sex:'m',czg:'rda'},preg:{age:28,tri:'t2',hb:10.2},inf:{mon:5,wt:7,feed:'bf'},vac:{mon:18,vag:'prev'},bar:{age:35,sex:'f',bsp:'sg'},thi:{age:45,sex:'m',thg:'alc'}};
-function fillExample(){
-  const e=EX[K];
-  
-  Object.entries(e).forEach(([k,v])=>{$(k).value=v});
-  syncSex();F[K]();
-}
-$('example').addEventListener('click',fillExample);
-$('clear').addEventListener('click',()=>{NUMS.forEach(id=>{$(id).value='';$(id).classList.remove('bad');const er=$('e-'+id);if(er)er.hidden=true});['mal','med','ckd','neuro','mgsx','smk','infl','pre','ntd','lowca','veg'].forEach(id=>$(id).checked=false);syncSex();F[K]();($('age').offsetParent?$('age'):$('mon')).focus()});
+/* ===================== clear ===================== */
+$('clear').addEventListener('click',()=>{['age','wt','ht','abscr'].forEach(id=>{const e=$(id);if(e)e.value=''});$('res').innerHTML=''});
 
-/* hide pregnancy options for young ages */
-function syncSex(){
-  const a=parseFloat($('age').value),young=!isNaN(a)&&a<12;
-  ['p','l'].forEach(v=>{const o=$('sex').querySelector(`option[value="${v}"]`);o.hidden=young;o.disabled=young});
-  if(young&&['p','l'].includes($('sex').value))$('sex').value='f';
-}
 
 /* ===================== language ===================== */
 function setLang(l){
@@ -158,57 +95,15 @@ function setLang(l){
   document.querySelectorAll('[aria-label="unit"],[aria-label="الوحدة"]').forEach(el=>el.setAttribute('aria-label',l==='ar'?'الوحدة':'unit'));
   document.querySelectorAll('.x,[aria-label="close"],[aria-label="إغلاق"]').forEach(el=>{if(el.getAttribute('aria-label'))el.setAttribute('aria-label',l==='ar'?'إغلاق':'Close')});
   {const md=document.querySelector('meta[name=description]');if(md)md.content=l==='ar'?'معلومات المضادات الحيوية: الجرعات والتداخلات والمصادر الطبية':'Antibiotic information: doses, interactions and medical sources'}
-  NUMS.forEach(id=>{const er=$('e-'+id);if(er&&!er.hidden)val(id)});
   try{localStorage.setItem('vw-lang',l)}catch(e){}
-  $('pc-wa').textContent=T('pc_wa');$('pc-copy').textContent=T('pc_cp');$('pc-close').textContent=T('pc_x');themeIcon();
+  themeIcon();
   renderInter();renderRefs();renderContact();renderNav();
-  if(typeof OWN!=='undefined'&&OWN.on){decorate();ownerBar()}if(typeof installBar==='function')installBar();F[K]();
+  if(typeof OWN!=='undefined'&&OWN.on){decorate();ownerBar()}if(typeof installBar==='function')installBar();
 }
 
-/* ===================== share a result by link =====================
-   The link carries only the values typed in the calculator (in the part after #, which is never sent to any server);
-   nothing is stored. Opening it fills the calculator and shows the same result. */
-const b64u={enc:s=>btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''),
-  dec:s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)))};
-function shareLink(){
-  const f={};
-  FORMIDS.forEach(id=>{const el=$(id);if(!el||el.closest('[hidden]'))return;
-    if(el.type==='checkbox'){if(el.checked)f[id]=1}else if(el.value!=='')f[id]=el.value});
-  return location.origin+location.pathname+'#c='+b64u.enc(JSON.stringify({k:K,f}));
-}
-async function shareResult(){
-  const url=shareLink(),title='BIOTICWAW · '+document.querySelector('#picker [aria-pressed="true"] span').textContent;
-  try{if(navigator.share){await navigator.share({title,url});return}}catch(e){if(e&&e.name==='AbortError')return}
-  const done=()=>toast(T('sh_rcopied'));try{await navigator.clipboard.writeText(url);done()}catch(e){fallback(url,done)}
-}
-function loadShared(code){
-  let o=null;try{o=JSON.parse(b64u.dec(code))}catch(e){}
-  if(!o||typeof o!=='object'||typeof o.k!=='string'||!Object.prototype.hasOwnProperty.call(F,o.k)||!o.f||typeof o.f!=='object'){show('calc');return} // 1.17.1 a changed link cannot pick a non-calculator
-  K=o.k;FORMIDS.forEach(id=>{const el=$(id);if(!el)return;const v=o.f[id];
-    if(el.type==='checkbox')el.checked=v===1;
-    else if(el.tagName==='SELECT'){if(v!=null&&[...el.options].some(x=>x.value===String(v)))el.value=String(v)}
-    else el.value=v!=null&&isFinite(parseFloat(v))?String(parseFloat(v)):''});
-  syncSex();apply();show('calc','v');
-}
 
-/* ===================== wiring ===================== */
-const F=new Proxy({},{get:(t,k)=>t[k]||(()=>{})}); // 1.19 (test): no built-in calculators; custom ones are not computed here
-function apply(){
-  showFor();
-  document.querySelectorAll('#picker button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===K));
-  F[K]();
-}
-$('nsearch').addEventListener('input',filterNuts);
 $('isearch').addEventListener('input',renderInter);
 $('ssearch').addEventListener('input',renderRefs);
-// «أدويتي»: only medicines the site knows can be added (picked from the suggestions; Enter takes the first one)
-/** open a vitamin: its page with the patient data and the result (‹ back to the list) */
-function openNut(k){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply();if(location.hash!=='#v-'+k)location.hash='v-'+k;else show('calc','v');window.scrollTo(0,0)}
-$('picker').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;openNut(b.dataset.k)});
-$('cbackb').addEventListener('click',()=>go('calc'));
-const FORMIDS=['age','sex'];
-FORMIDS
-  .filter(i=>$(i)).forEach(i=>{$(i).addEventListener('input',()=>{if(i==='age')syncSex();F[K]()});$(i).addEventListener('change',()=>{if(i==='age')syncSex();F[K]()})});
 
 /* ===================== colors ===================== */
 const LOOKF={tajawal:'Tajawal,Cairo,"Segoe UI",Tahoma,sans-serif',cairo:'Cairo,Tajawal,"Segoe UI",Tahoma,sans-serif',system:'system-ui,-apple-system,"Segoe UI","Noto Sans Arabic",Tahoma,sans-serif'};
@@ -223,15 +118,11 @@ function applyColors(){
   Object.entries(CFG.colors).forEach(([p,c])=>{const el=$(p),t=$('t-'+p);if(t)t.style.setProperty('--ti',c[1]);if(!el)return;el.style.setProperty('--pc',c[0]);el.style.setProperty('--pc2',c[1])});
   [['meds','meds'],['links','sources'],['stats','tools']].forEach(([p,q])=>{const c=CFG.colors[q]||CFG.colors.interactions,el=$(p);if(c&&el){el.style.setProperty('--pc',c[0]);el.style.setProperty('--pc2',c[1])}}); // own pages take the colours of their section
 }
-function refreshAll(){if(typeof abcInit==='function')abcInit();applyColors();setLang(LANG);decorate();wantVit()}
-/** 1.17.1 #v-<id> of a vitamin that is not loaded yet (published content still on its way, or a team member's new vitamin
-    before the session is back): opened as soon as it exists, instead of staying on another vitamin */
-let WANTV='',WANTPG='';
-function wantVit(){
-  if(WANTPG&&location.hash==='#info-'+WANTPG&&allPages().some(x=>x.id===WANTPG)){const id=WANTPG;WANTPG='';openPage(id)} // an owner's own page arrives with the content
-  if(!WANTV||location.hash!=='#v-'+WANTV){WANTV='';return}
-  if(!KEYS.includes(WANTV))return;
-  const k=WANTV;WANTV='';if(k!==K){K=k;try{localStorage.setItem('vw-k',K)}catch(e){}apply()}show('calc','v');
+function refreshAll(){if(typeof abcInit==='function')abcInit();applyColors();setLang(LANG);decorate();wantPage()}
+/** 1.17.1 an owner's own info page in the address (#info-<id>) that arrives with the content opens as soon as it exists */
+let WANTPG='';
+function wantPage(){
+  if(WANTPG&&location.hash==='#info-'+WANTPG&&allPages().some(x=>x.id===WANTPG)){const id=WANTPG;WANTPG='';openPage(id)}
 }
 
 
