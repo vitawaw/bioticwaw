@@ -95,6 +95,9 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
 ## Where we are (2026-11-10)
 - The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
   review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».
+- **1.6.5 (preview)**: his «عند الخروج لا يطبق الحفظ» (company logo): it WAS saved + published (checked in the TEST DB); the browser kept
+  the old /api/content up to 10 min (max-age 60 + stale-while-revalidate 600). Worker now `Cache-Control: public, no-cache` (ETag → 304) and
+  CACHE_SECONDS 10, so a publish shows within seconds everywhere.
 - **1.6.4 (preview)**: «بيانات تجريبية» `#abdemo` (ui.js; TEST site only: CSS body:not(.demo) hides it — his wish): sample patient 65 y F 60 kg 160 cm SCr 1.3 → dose.
 - **1.6.3 (preview)**: `SRCS(ids)` / `srcShort()` (util.js): «حسب المصدر: FDA / DailyMed [n]» next to every interaction, drug line and calculator
   result, links `data-ref` → sources list (highlight). `tools/abx.py label_date()` fixed source names (ANSM/eMC dates; TEST updated).

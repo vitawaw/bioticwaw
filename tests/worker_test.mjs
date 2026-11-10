@@ -17,7 +17,7 @@ const ok = (c, m) => { if (!c) { console.error('FAIL', m); process.exit(1); } co
 let r = await get('/api/content');
 ok(r.status === 200 && (await r.text()) === pub, 'first request returns published content');
 const etag = r.headers.get('ETag');
-ok(/max-age=60/.test(r.headers.get('Cache-Control')), 'cache header set');
+ok(/no-cache/.test(r.headers.get('Cache-Control')), 'cache header: the browser revalidates every time (a publish shows at once)');
 for (let i = 0; i < 50; i++) await get('/api/content');
 ok(calls === 1, '50 more requests -> still 1 Supabase call (memory cache)');
 r = await get('/api/content', { 'If-None-Match': etag });

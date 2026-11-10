@@ -17,7 +17,7 @@
  * Settings come from wrangler.jsonc "vars": SUPABASE_URL and SUPABASE_ANON_KEY (public key,
  * the database is protected by row level security).
  */
-const CACHE_SECONDS = 60;
+const CACHE_SECONDS = 10; // a publish reaches every visitor within seconds (the browser always revalidates, see below)
 const RETRY_SECONDS = 30; // when Supabase fails, wait this long before trying again (visitors get the last good copy)
 let memo = null;     // { body, etag, at } kept in this isolate's memory
 let loading = null;  // the Supabase request in progress, shared by everyone who arrives meanwhile
@@ -60,7 +60,8 @@ async function content(request, env, ctx) {
   }
   const headers = {
     'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': `public, max-age=${CACHE_SECONDS}, stale-while-revalidate=600`,
+    // no-cache: the browser keeps its copy but asks every time (a cheap 304 when nothing changed), so a new publish shows at once
+    'Cache-Control': 'public, no-cache',
     ETag: entry.etag,
     'X-Content-Type-Options': 'nosniff',
   };
