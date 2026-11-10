@@ -63,7 +63,7 @@ function decorate(){
   // break the click: those texts are changed from Menu → Site appearance → «Edit every text in the app»)
   if(CAN('text'))[...new Set([...EDITABLE,...[...document.querySelectorAll('[data-t]')].map(e=>e.dataset.t).filter(TXOK)])].forEach(k=>document.querySelectorAll(`[data-t="${k}"]`).forEach(el=>{
     if(el.closest('.tabs'))return; // section names: Menu → Management → Arrange the menus
-    if(!EDITABLE.includes(k)&&el.closest('button,a,label,select,option,summary,#picker,#sheet,#dlg,.obar,#obar'))return;
+    if(!EDITABLE.includes(k)&&el.closest('button,a,select,option,summary,#sheet,#dlg,.obar,#obar'))return; // labels too: the ✎ is a button, it does not click the field
     el.setAttribute('data-ed','');
     const b=document.createElement('button');b.type='button';b.className='edp';b.innerHTML=PEN;b.title=T('o_edit');b.dataset.edtext=k;
     el.after(b);
@@ -121,8 +121,9 @@ async function editText(k){
   if(r.action==='reset'){delete CFG.text[k];changed()}
   if(SHEET&&SHEET.key==='texts')drawTexts();
 }
-/** every interface text: search what you see, tap to reword it (Arabic and English) */
+/** every interface text: search what you see, tap to reword it (Arabic and English) — also button and menu labels */
 let TXQ='';
+function openTexts(){if(!CAN('text'))return;openSheet(T('tx_all'),'',{key:'texts'});drawTexts()}
 function drawTexts(){
   if(!SHEET||SHEET.key!=='texts')return;
   const q=normAr(TXQ),keys=Object.keys(I18N).filter(k=>TXOK(k)||EDITABLE.includes(k)),hit=k=>{const t=CFG.text[k]||{};return normAr([I18N[k][0],I18N[k][1],t.ar||'',t.en||''].join(' ')).includes(q)};
@@ -808,7 +809,7 @@ async function logout(){
 $('o-save').addEventListener('click',saveDraft);$('o-publish').addEventListener('click',publish);
 $('o-pvexit').addEventListener('click',()=>setPreview(false));
 // page texts are edited only after «✎ النصوص» is switched on (the page stays calm otherwise)
-$('o-texts').addEventListener('click',()=>{document.body.classList.toggle('textedit');refreshAll();ownerBar()});
+$('o-texts').addEventListener('click',()=>{document.body.classList.toggle('textedit');refreshAll();ownerBar();if(cur==='abx'&&typeof renderAbAdmin==='function')renderAbAdmin()});
 addEventListener('resize',()=>{if(OWN.on)ownerBar()});$('o-preview').addEventListener('click',()=>setPreview(true));$('o-undo').addEventListener('click',undoLast);$('o-sizes').addEventListener('click',openSizes);$('o-discard').addEventListener('click',discard);
 addEventListener('beforeunload',e=>{if(OWN.on&&dirty()){e.preventDefault();e.returnValue=''}});
 

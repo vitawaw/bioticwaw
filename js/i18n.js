@@ -173,7 +173,7 @@ nt_restore_i:['يبقى العنصر ظاهراً للزوار ويُلغى طل
 nt_mine:['قرارات المالك على تغييراتك','The owner\'s decisions on your changes'],nt_wait:['بانتظار موافقة المالك','Waiting for the owner'],nt_nowait:['لا شيء بانتظار الموافقة','Nothing is waiting'],nt_ok:['اعتُمد','Approved'],nt_no:['رُفض','Rejected'],o_hiddenb:['مخفي عن الزوار','Hidden from visitors'],o_delq2:['حذف هذا العنصر؟','Delete this item?'],o_rtype:['نوع المصدر','Source type'],o_rt_auto:['تلقائي (حسب الجهة)','Automatic (from the publisher)'],
 o_ruse_en:['ماذا يُستخدم منه (English)','What it is used for (English)'],
 o_ftitle_en:['العنوان (English)','Title (English)'],o_fdesc_en:['الوصف (English)','Description (English)'],mn_short:['الأقسام','Sections'],
-nv_info:['معلومات','Information'],nv_admin:['الإدارة','Management'],
+tx_all:['كل نصوص الموقع (بحث)','All texts of the site (search)'],ab_edit_hint:['لتعديل مضاد أو إخفائه اضغط «تعديل وترتيب» في الشريط العلوي.','To edit or hide an antibiotic, press «Edit and arrange» in the top bar.'],mg_admin:['إدارة الموقع','Site management'],mg_texts:['تعديل النصوص (✎ على كل نص)','Edit texts (✎ on every text)'],nv_info:['معلومات','Information'],nv_admin:['الإدارة','Management'],
 mr_lang:['اللغة','Language'],mr_theme:['المظهر','Appearance'],
 mr_share:['مشاركة التطبيق','Share the app'],mr_install:['تثبيت على الهاتف','Install on phone'],
 mr_wa:['واتساب','WhatsApp'],mr_mail:['البريد','Email'],mr_call:['اتصال','Call'],

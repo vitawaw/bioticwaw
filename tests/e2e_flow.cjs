@@ -61,8 +61,11 @@ async function visitor(b, name, w, h) {
   // calculator: only published antibiotics are offered
   const opts = await page.evaluate(() => [...document.querySelectorAll('#abcsel option')].map(o => o.value));
   check(JSON.stringify(opts) === JSON.stringify(['', 'cefalex', 'cipro']) || JSON.stringify(opts) === JSON.stringify(['', 'cipro', 'cefalex']), `${tag} calculator lists only the published drugs (${opts.join(',')})`);
+  check(await page.evaluate(() => document.getElementById('s-data').hidden && document.getElementById('resbox').hidden), `${tag} patient data and result stay hidden until a drug is chosen`);
+  await page.selectOption('#abcsel', 'cipro');
+  check(await page.isVisible('#s-data'), `${tag} patient data appears after choosing a drug`);
   await page.fill('#age', '45'); await page.selectOption('#sex', 'm'); await page.fill('#wt', '80'); await page.fill('#ht', '175');
-  await page.selectOption('#abcsel', 'cipro'); await page.fill('#abscr', '1.2'); await page.selectOption('#ab_ind', 'urinary'); await page.click('#abcgo');
+  await page.fill('#abscr', '1.2'); await page.selectOption('#ab_ind', 'urinary'); await page.click('#abcgo');
   const res = await txt(page, '#res');
   check(/\b88\b/.test(res), `${tag} ciprofloxacin: creatinine clearance 88 mL/min`);
   check(res.includes('الجرعة المعتادة'), `${tag} ciprofloxacin: usual dose above 50 mL/min`);
@@ -119,6 +122,14 @@ async function owner(b, name, w, h) {
   check(await page.isVisible('#obar'), `${tag} owner bar visible`);
   await page.evaluate(MISSWATCH);
 
+  // the owner's tools in the menu: arrange the menus and the bottom bar, every text, logos
+  const adm = await page.evaluate(() => [...document.querySelectorAll((WIDE() ? '#side-b' : '#menu-b') + ' .mi')].map(b => b.textContent));
+  check(['تعديل وترتيب القوائم', 'كل نصوص الموقع', 'الشعارات'].every(t => adm.some(x => x.includes(t))), `${tag} menu has the owner's tools (arrange menus, all texts, logos)`);
+  await page.evaluate(() => { const n = NAV(); n.bar = [...n.bar, 'abx']; navSave(n); closeSheet(false); }); await page.waitForTimeout(150);
+  check(await page.evaluate(() => !document.getElementById('t-abx').classList.contains('offbar')), `${tag} «الأدوية» can be put in the bottom bar`);
+  await page.evaluate(() => { const n = NAV(); n.bar = n.bar.filter(x => x !== 'abx'); navSave(n); closeSheet(false); });
+  await page.evaluate(() => go('abx')); await page.waitForTimeout(150);
+  check(await page.evaluate(() => getComputedStyle(document.querySelector('#abx .hero')).backgroundImage !== 'none' || getComputedStyle(document.querySelector('#abx .hero')).backgroundColor !== 'rgba(0, 0, 0, 0)'), `${tag} the antibiotics page banner has its colours`);
   // bug fixed in 1.5.0: with a saved draft the owner still sees the published antibiotics
   await page.evaluate(() => go('interactions')); await page.waitForTimeout(200);
   const n = await page.evaluate(() => document.querySelectorAll('#intsel option').length - 1);
@@ -137,7 +148,9 @@ async function owner(b, name, w, h) {
   check(await page.evaluate(() => __calls.some(c => c[0] === 'rpc' && c[1] === 'antibiotic_approve')), `${tag} approve calls antibiotic_approve`);
   await page.evaluate(() => { if (typeof closeSheet === 'function') closeSheet(false); go('abx'); }); await page.waitForTimeout(800);
 
-  // the antibiotic editor has Save, Cancel and ×
+  // the antibiotic editor has Save, Cancel and × (its buttons show in «تعديل وترتيب» mode)
+  check(await page.locator('[data-abedit]').count() === 0, `${tag} drug edit buttons hidden outside edit mode`);
+  await page.click('#o-texts'); await page.waitForTimeout(800);
   const ed = page.locator('[data-abedit="cefalex"]');
   check(await ed.count() >= 1, `${tag} editor button on cephalexin`);
   if (await ed.count()) {

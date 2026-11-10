@@ -62,7 +62,7 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 
 ## Where things are (no build step; plain scripts loaded in order by `index.html`)
 - Sections: الحاسبة `#calc`, التداخلات `#interactions`, الأدوية `#abx`, المصادر `#sources`, القادم `#roadmap`, + menu `#menu`
-  (`menuHTML()` in `js/nav.js`: the five sections, «سجل الإجراءات» and logout for the owner, «دخول المالك» for visitors).
+  (`menuHTML()` in `js/nav.js`: the five sections in the owner's order, owner «إدارة الموقع», info pages, sign in / out).
 - Calculator: `js/abrules.js` = `ABC_RULES` (per drug: inputs, ordered rows of `{when, text}` rules; the first matching rule wins;
   `when` keys = input ids or `crcl:{gt,gte,lt,lte}`); `js/abcalc.js` = engine (`abCrCl` Cockcroft-Gault with ideal/adjusted
   weight, `abMatch`, `abEval`), page (`abcInit` dropdown `#abcsel` of PUBLISHED drugs only; the owner also sees unpublished
@@ -95,6 +95,9 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
 ## Where we are (2026-11-10)
 - The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
   review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».
+- **1.6.2 (preview)**: his notes: patient data + result hidden until a drug is chosen (abcOpen); #abx hero icon + colours (CFG.colors.abx);
+  owner drug rows only in edit mode; `menuHTML()` = sections in NAV() order + owner «إدارة الموقع» (openNavManager, textedit, openTexts,
+  editBrand, editLook, openLog) + info pages for everyone; SECTIONS = calc, interactions, sources, abx, roadmap (tabs #t-abx #t-roadmap, offbar by default).
 - **1.6.1 (preview)**: his «راجع و افحص و نضف»: calculator citations = saved label + date + source id (xcheck 0 problems), privacy page
   rewritten, last supplement-list code and stale files removed, `docs/antibiotics/LIST.md`.
 - **1.6.0 (preview)**: 100 antibiotics in `docs/antibiotics/batch1..10.json` from the saved labels (`labels/`, US first, then eMC / EMA /

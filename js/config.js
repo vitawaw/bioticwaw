@@ -3,7 +3,7 @@
    clean() for every piece of data that comes from outside, mergeCfg() and the cached published copy.
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /* ===================== Medical review (fill in to show the stamp) ===================== */
-const APP_VERSION='1.6.1';
+const APP_VERSION='1.6.2';
 /* the medical review stamp is set by the owner (menu → site → «ختم المراجعة الطبية») and published with the settings: CFG.review */
 
 /* ===================== Supabase connection (fill after creating the project) ===================== */
@@ -18,9 +18,9 @@ const SB=IS_PREVIEW?SB_TEST:SB_LIVE; // public anon keys only (data is protected
 const DEFAULT_CFG={
   contact:{email:'',phone:''},
   refs:null,inter:null,nut:{hide:[],custom:[]},
-  colors:{calc:['#0B2E5C','#12A37A'],tools:['#00167a','#075BFF'],interactions:['#7a2e00','#d9731f'],sources:['#0a4a2c','#17915a'],roadmap:['#3a1678','#7c4dff'],meds:['#7a2e00','#d9731f'],sch:['#00167a','#075BFF'],labs:['#00167a','#075BFF'],ul:['#00167a','#075BFF']},
+  colors:{calc:['#0B2E5C','#12A37A'],abx:['#0a4a5c','#1592a8'],tools:['#00167a','#075BFF'],interactions:['#7a2e00','#d9731f'],sources:['#0a4a2c','#17915a'],roadmap:['#3a1678','#7c4dff'],meds:['#7a2e00','#d9731f'],sch:['#00167a','#075BFF'],labs:['#00167a','#075BFF'],ul:['#00167a','#075BFF']},
   /* owner only (1.12.0): main sections — order everywhere, the four in the bottom bar (and the top bar on computers), hidden ones */
-  menus:{order:['calc','interactions','abx','sources'],bar:['calc','interactions','abx','sources'],hide:[]}, // 1.2.0: the structure: calculator, interactions, medicines, sources
+  menus:{order:['calc','interactions','sources','abx','roadmap'],bar:['calc','interactions','sources'],hide:[]}, // 1.2.0: the structure: calculator, interactions, medicines, sources
   /* owner only (1.12.0): the tools page — order, hidden tools, names {id:{ar,en}} */
   tools:{order:[],hide:[],names:{}},
   text:{},

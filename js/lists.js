@@ -134,9 +134,9 @@ async function renderAbAdmin(){
   window.ABPEND=data.filter(a=>!a.reviewed&&!a.deleted);
   if(typeof renderNotifPending==='function')renderNotifPending();
   el.innerHTML=`<button class="oadd otop" type="button" data-abadd="1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>${esc(T('ab_addbtn'))}</span></button>`+
-    (data.length?data.map(a=>`<div class="abrow"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b> ${a.hidden?`<span class="hidb bh">${esc(T('o_hiddenb'))}</span>`:''} `+
+    (data.length&&EDITING()?'<div class="olist abolist">'+data.map(a=>`<div class="orow abrow${a.hidden?' off':''}"><span class="nvn">${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}${a.reviewed?'':` · <small class="pend">${esc(T('o_pending'))}</small>`}${a.hidden?` · <small>${esc(T('o_hiddenb'))}</small>`:''}</span>`+
       `<button type="button" class="btn" data-abedit="${esc(a.id)}">${esc(T('ab_edit'))}</button> `+
-      `<button type="button" class="btn" data-abhide="${esc(a.id)}" data-v="${a.hidden?'0':'1'}">${esc(T(a.hidden?'ab_hidden_off':'ab_hidden_on'))}</button></div>`).join(''):'');
+      `<button type="button" class="btn" data-abhide="${esc(a.id)}" data-v="${a.hidden?'0':'1'}">${esc(T(a.hidden?'ab_hidden_off':'ab_hidden_on'))}</button></div>`).join('')+'</div>':(data.length?`<p class="hint">${esc(T('ab_edit_hint'))}</p>`:''));
 }
 async function abEdit(id){
   const o=id?(window.ABLIST||[]).find(x=>x.id===id):null,isNew=!o;

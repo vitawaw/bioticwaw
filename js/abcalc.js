@@ -65,19 +65,21 @@ function abcInit(){
   // shown only for antibiotics that are approved and published (CFG.ab); the owner also sees the unpublished ones, marked
   const pub=new Set((CFG.ab||[]).map(x=>x.id)), own=typeof OWN!=='undefined'&&OWN.on;
   const keys=Object.keys(ABC_RULES).filter(k=>pub.has(k)||own);
-  if(!keys.length){pk.innerHTML=`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;return}
+  if(!keys.length){pk.innerHTML=`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;ABC_SEL=null;abcOpen();return}
   const cur=ABC_SEL&&keys.includes(ABC_SEL)?ABC_SEL:'';
   pk.innerHTML=`<div class="f"><label class="l" for="abcsel">${esc(L('اختر المضاد الحيوي','Choose the antibiotic'))}</label><select id="abcsel">`+
     `<option value="">${esc(L('— اختر دواءً —','— Choose a drug —'))}</option>`+
     keys.map(k=>`<option value="${k}"${k===cur?' selected':''}>${esc(L(ABC_RULES[k].name.ar,ABC_RULES[k].name.en))}${pub.has(k)?'':' ('+esc(L('غير منشور','not published'))+')'}</option>`).join('')+
     `</select></div>`;
   document.getElementById('abcsel').onchange=e=>{ABC_SEL=e.target.value||null;abcOpen();};
-  if(ABC_SEL) abcOpen();
+  abcOpen();
 }
 let ABC_SEL=null;
 function abcOpen(){
   const f=document.getElementById('abcfields'), c=ABC_RULES[ABC_SEL];
   const res=document.getElementById('res'); if(res)res.innerHTML='';
+  // the patient data and the result appear only after a drug is chosen
+  const sd=document.getElementById('s-data'),rb=document.getElementById('resbox');if(sd)sd.hidden=!c;if(rb)rb.hidden=!c;
   if(!f)return;
   if(!c){f.hidden=true;f.innerHTML='';return}
   const common=c.noRenal?'':`<div class="f"><label class="l" for="abscr">${esc(L('الكرياتينين في الدم (مل/دل)','Serum creatinine (mg/dL)'))}</label><input type="number" id="abscr" min="0.2" max="15" step="0.1" inputmode="decimal" placeholder="${esc(L('مثال: 1.1','e.g. 1.1'))}"></div>`;

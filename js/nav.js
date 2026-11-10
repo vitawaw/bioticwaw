@@ -64,12 +64,12 @@ document.addEventListener('click',e=>{
 // Phones and tablets: the tab bar at the bottom holds the four sections and ☰ «Menu», which opens a full page
 // (account card, shortcuts, settings, log out). Wide screens (≥1024px): the same menu is a fixed side menu.
 const WIDE=()=>matchMedia('(min-width:1024px)').matches;
-const SECTIONS=['calc','tools','interactions','sources','roadmap','meds']; // 1.14.1: meds/sch/labs are sections too (owner: bar, order, names)
-const SECKEY0={calc:'tab_calc',tools:'tab_tools',interactions:'tab_int',sources:'tab_src',roadmap:'tab_rm',notif:'nt_t',meds:'mm_t',links:'lk_t',};
+const SECTIONS=['calc','interactions','sources','abx','roadmap']; // the five sections: order, bottom bar, hide and names are set by the owner
+const SECKEY0={calc:'tab_calc',interactions:'tab_int',sources:'tab_src',abx:'med_t',roadmap:'up_t',notif:'nt_t',links:'lk_t'};
 const SECKEY=SECKEY0;
 /* ===================== main sections (owner, 1.12.0): order everywhere, the bar (≤4), hidden ones, names, colors =====================
    CFG.menus = {order, bar, hide}. The calculator cannot be hidden; 🔔 and ☰ are always there. */
-const HEROKEY={calc:['hc_t','hc_l'],tools:['ht_t','ht_l'],interactions:['ti_t','hi_l'],sources:['ts_t','hs_l'],roadmap:['rm_t','rm_l']};
+const HEROKEY={calc:['hc_t','hc_l'],interactions:['ti_t','hi_l'],sources:['ts_t','hs_l'],abx:['abx_h']};
 function NAV(){
   const n=CFG.menus||{},ok=x=>SECTIONS.includes(x);
   const order=[...new Set([...(n.order||[]).filter(ok),...SECTIONS])];
@@ -188,18 +188,21 @@ function mgSortable(){
 }
 /** The menu: on the «Menu» page (r='m', Facebook style: account card, shortcut tiles, lists) and in the side menu (r='d', lists). */
 function menuHTML(r){
-  // 1.3.0: the menu keeps only: calculator, interactions, sources, actions (owner), upcoming, and sign in / out
-  const own=typeof OWN!=='undefined'&&OWN.on;
-  const items=[
-    {label:T('tab_calc'),f:()=>go('calc')},
-    {label:T('tab_int'),f:()=>go('interactions')},
-    {label:T('tab_src'),f:()=>go('sources')},
-    ...(own?[{label:T('lg_t'),f:()=>openLog()}]:[]),
-    {label:T('med_t'),f:()=>go('abx')},
-    {label:T('up_t'),f:()=>go('roadmap')},
-    own?{label:T('nav_logout'),f:()=>logout()}:{label:T('nav_login'),f:()=>openOwner()},
-  ];
-  return '<div class="mlist">'+items.map(c=>`<button type="button" class="mi" data-na="${r}${ACT[r].push(c.f)-1}"><span class="mt">${esc(c.label)}</span></button>`).join('')+'</div>';
+  // the sections in the owner's order (hidden ones only for the team), the owner's tools, the information pages, sign in / out
+  const own=typeof OWN!=='undefined'&&OWN.on,owner=own&&ISOWNER()&&!OWN.preview,n=NAV();
+  const item=(label,f,ico)=>`<button type="button" class="mi" data-na="${r}${ACT[r].push(f)-1}">${ico?`<span class="di">${ico}</span>`:''}<span class="mt">${esc(label)}</span></button>`;
+  const secs=n.order.filter(p=>!n.hide.includes(p)||SHOWALL()).map(p=>item(T(SECKEY[p])+(n.hide.includes(p)?' · '+T('pg_hidden'):''),()=>go(p),tabIco(p))).join('');
+  const admin=owner?`<h3 class="nsec">${esc(T('mg_admin'))}</h3><div class="mlist">`+[
+    item(T('nv_order'),()=>openNavManager(),ICO.menu),
+    item(T('mg_texts'),()=>{if(!document.body.classList.contains('textedit'))$('o-texts').click();go('calc')},ICO.page),
+    item(T('tx_all'),()=>openTexts(),ICO.page),
+    item(T('br_t'),()=>editBrand(),ICO.image),
+    item(T('lk_win'),()=>editLook(),ICO.site),
+    item(T('lg_t'),()=>openLog(),ICO.history)].join('')+'</div>':(own?`<div class="mlist">${item(T('lg_t'),()=>openLog(),ICO.history)}</div>`:'');
+  const pages=visiblePages().filter(p=>p.id!=='suggest');
+  const info=pages.length?`<h3 class="nsec">${esc(T('nv_info'))}</h3><div class="mlist">`+pages.map(p=>item(tx2(p.t)+(p.hidden?' · '+T('pg_hidden'):''),()=>openPage(p.id),ICO.page)).join('')+'</div>':'';
+  const acc=`<div class="mlist">${own?item(T('nav_logout'),()=>logout()):item(T('nav_login'),()=>openOwner())}</div>`;
+  return `<div class="mlist">${secs}</div>`+admin+info+acc;
 }
 /* folding lists stay open or closed when the menu is redrawn */
 /* one folding list open at a time: opening one closes the one that was open (its items show under it) */
