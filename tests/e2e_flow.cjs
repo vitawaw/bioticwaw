@@ -124,6 +124,10 @@ async function owner(b, name, w, h) {
   const n = await page.evaluate(() => document.querySelectorAll('#intsel option').length - 1);
   check(n === 2, `${tag} interactions: the owner sees the ${n} published antibiotics`);
 
+  // «اعتماد الكل» appears when more than one antibiotic waits (two made-up waiting drugs, shown only)
+  const allBtn = await page.evaluate(() => { const keep = window.ABPEND; window.ABPEND = [{ id: 'x1', n: { ar: 'أ', en: 'A' } }, { id: 'x2', n: { ar: 'ب', en: 'B' } }];
+    const h = abPendHTML(); window.ABPEND = keep; return /data-aball/.test(h) && /\(2\)/.test(h); });
+  check(allBtn, `${tag} 🔔 «اعتماد الكل (2)» when two antibiotics wait`);
   // 🔔 approve the waiting antibiotic (amoxicillin)
   await page.evaluate(() => go('abx')); await page.waitForTimeout(800);
   await page.evaluate(() => openNotif()); await page.waitForTimeout(400);

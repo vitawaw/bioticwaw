@@ -193,11 +193,22 @@ function renderRoadmap(){
 function abPendHTML(){
   const P=window.ABPEND||[];
   if(!P.length)return '';
-  return `<h3 class="nsec">${esc(T('abx_pend_t'))}</h3><p class="hint">${esc(T('abx_pend_h'))}</p>`+
+  return `<h3 class="nsec">${esc(T('abx_pend_t'))} (${P.length})</h3><p class="hint">${esc(T('abx_pend_h'))}</p>`+
+    (P.length>1?`<div class="filters"><button type="button" class="btn pri" data-aball="1">${esc(T('abx_all_btn').replace('{n}',P.length))}</button></div>`:'')+
     P.map(a=>`<div class="ncard unread"><div class="nb"><div class="nh"><b>${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}</b></div>`+
       `<div class="filters"><button type="button" class="btn pri" data-abok="${esc(a.id)}">${esc(T('abx_ok_btn'))}</button></div></div></div>`).join('');
 }
 function renderNotifPending(){const b=$('notif-b');if(!b)return;const old=b.querySelector('.abpend');if(old)old.remove();const h=abPendHTML();if(h){b.insertAdjacentHTML('afterbegin',`<div class="abpend">${h}</div>`)}}
+/* «اعتماد الكل»: the owner approves every waiting antibiotic (and its interactions) after reviewing them; one at a time in the database */
+document.addEventListener('click',async e=>{
+  const all=e.target.closest('[data-aball]');if(!all||!OWN||!OWN.client||!ISOWNER())return;
+  e.preventDefault();const P=(window.ABPEND||[]).slice();if(!P.length)return;
+  const q=await dialog({title:T('abx_all_btn').replace('{n}',P.length),info:T('abx_all_q'),buttons:[{label:T('o_cancel'),action:'cancel'},{label:T('abx_ok_btn'),action:'ok',pri:1}]});
+  if(q.action!=='ok')return;
+  let done=0;all.disabled=true;
+  for(const a of P){const {error}=await OWN.client.rpc('antibiotic_approve',{p_id:a.id});if(error){toast(T('o_neterr'));break}done++;all.textContent=done+' / '+P.length}
+  toast(T('abx_all_done').replace('{n}',done));await renderAbAdmin();
+});
 document.addEventListener('click',async e=>{
   const ok=e.target.closest('[data-abok]');if(!ok||!OWN||!OWN.client)return;
   e.preventDefault();const {error}=await OWN.client.rpc('antibiotic_approve',{p_id:ok.dataset.abok});

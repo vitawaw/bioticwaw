@@ -238,6 +238,6 @@ nav_logout:['خروج','Sign out'],
 ab_addbtn:['إضافة مضاد حيوي','Add an antibiotic'],
 med_t:['الأدوية','Medicines'],
 abx_pend_t:['مضادات بانتظار الاعتماد','Antibiotics awaiting approval'],
-abx_ok_btn:['اعتماد','Approve'],
+abx_all_btn:['اعتماد الكل ({n})','Approve all ({n})'],abx_all_q:['سيُعتمد كل مضاد حيوي ينتظر مع تداخلاته، ثم يظهر للزوار بعد «نشر». اعتمد فقط ما راجعته طبياً.','Every waiting antibiotic is approved with its interactions, and reaches visitors after «Publish». Approve only what you have reviewed medically.'],abx_all_done:['اعتُمد {n}','{n} approved'],abx_ok_btn:['اعتماد','Approve'],
 abx_pend_h:['تُعرض هنا المضادات التي حُفظت ولم تُعتمد بعد. الاعتماد يجعلها جاهزة للنشر.','Antibiotics saved but not yet approved are listed here. Approval makes them ready to publish.'],
 });
