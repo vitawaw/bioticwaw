@@ -102,8 +102,8 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   `egfr` MDRD rules, `adj25` weight, `{scrx:N}`, `{mgkg:…}`; tests 1999 checks). Label-silent kidney limits are yes/no inputs, never a guessed number.
   Vitamin code removed (calculators/data/validation files, result card, report, share, medicine list, tools page, 125 texts, ~29 KB CSS;
   screenshots identical before/after). «اعتماد الكل» in 🔔. Global search = antibiotics + sources + pages.
-- TEST DB: 100 drugs + 294 interactions waiting (reviewed = false), 126 sources, cleanup migration applied. Nothing published on TEST yet:
-  he approves («اعتماد الكل») and presses «نشر» there.
+- TEST DB: 100 drugs + 294 interactions + 126 sources, cleanup migration applied. He approved and published on TEST (checked
+  2026-11-10: visitors see all 100; every calculator gives a result on the real preview, 0 page errors, 3 sizes ar+en).
 - Still inert (kept for compatibility with LIVE 1.17.3 until release): the owner draft parts `inter`/`nut` in `owner.js` (save/publish
   summary). Remove after LIVE has the cleanup migration.
 - Open clinical points for him: methenamine and polymyxin B and ethambutol and streptomycin labels give no kidney number (calculator asks
