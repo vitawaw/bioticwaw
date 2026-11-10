@@ -52,9 +52,12 @@ and where the project stands. Details: `README.md` (architecture, file map, test
   turn; tell him, and either retry when he is watching or give him the raw GitHub link + the SQL editor link.
 - The free projects pause after 7 idle days; the worker's daily cron (`src/worker.js`) keeps both awake.
 - Advisor warnings about owner functions callable by signed-in users are expected: each checks the owner role inside.
-- **Pending for LIVE at release** (in order): the six `20261109*` antibiotic migrations, `antibiotics_cleanup_hardening.sql`
-  (rename to its version once applied on TEST), then content: `supabase/manual/sources_antibiotics_1_26.sql`,
-  `supabase/manual/batch1_load_test.sql`; then he approves in 🔔 and publishes.
+- **Pending for LIVE at release** (in order): the six `20261109*` antibiotic migrations, `20261110040142_antibiotics_cleanup_hardening.sql`
+  (applied on TEST 2026-11-10 via pg_net + md5 check), then content: `supabase/manual/batches_1_10_load_test.sql` (all 100 drugs, sources 27–126,
+  294 interactions, drafts; supersedes `sources_antibiotics_1_26.sql` + `batch1_load_test.sql`, but run `sources_antibiotics_1_26.sql` first
+  for sources 1–26); then he approves in 🔔 («اعتماد الكل») and publishes.
+- Big SQL without pasting: push the file, `select net.http_get(raw GitHub URL at the commit)`, check `md5(content)` against the local file,
+  then `execute` it (apply_migration for schema changes, execute_sql for content). Worked on TEST on 2026-11-10 without an approval prompt.
 
 ## Where things are (no build step; plain scripts loaded in order by `index.html`)
 - Sections: الحاسبة `#calc`, التداخلات `#interactions`, الأدوية `#abx`, المصادر `#sources`, القادم `#roadmap`, + menu `#menu`
@@ -85,20 +88,22 @@ node tests/e2e_flow.cjs          # visitors 3 sizes ar+en + owner (login, approv
 Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is installed globally here; Python Playwright is not).
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
-## Where we are (2026-11-09)
-- The site is now an antibiotic reference (he decided: remove all vitamin content; build from FDA/DailyMed; 100 drugs in
-  batches of 10, pharmacist review before load and publish; test site first, main only after his approval).
-- Preview = 1.5.0 on the branch. LIVE = 1.17.3 (old vitamin site) until he says «انشر».
-- Test DB: 10 antibiotics (batch 1) + 39 interactions, all approved, 26 sources; **nothing published yet** on test
-  (he must press «نشر» there). The cleanup migration `antibiotics_cleanup_hardening.sql` is written but NOT applied (the
-  approval timed out on 2026-11-09); the code works with the database before and after it.
-- 1.5.0 (his «نفذ كل المقترحات»): antibiotic schema exported to migrations (bodies md5-checked against TEST), owner bug fixed
-  (owner saw no antibiotics after login), print/copy result, dead code removed with a JS parser (45 functions, ~290 text keys,
-  stats code/CSS, worker `/api/hit`), vitamin Python tests replaced by `tests/e2e_flow.cjs` + node checks, CI on Node 22.
-- Open for him: clinical points (nitrofurantoin kidney threshold, SMX-TMP renal table from the tablet label, amox-clav
-  duration, AWaRe for amox-clav / ceftriaxone / SMX-TMP), owner MFA, leaked-password protection (paid), batch 2.
-- Removed with the old menu (unreachable since 1.3.x): backup download, version restore, the all-texts editor. Offer to
-  bring them back into the owner menu if he wants them.
+## Where we are (2026-11-10)
+- The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
+  review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».
+- **1.6.0 (preview)**: 100 antibiotics in `docs/antibiotics/batch1..10.json` from the saved labels (`labels/`, US first, then eMC / EMA /
+  ANSM translated), AWaRe 2023, sources 27–126 (27 + place in `tools/abx.py` ORDER), calculators for all 100 in `js/abrules.js` (engine:
+  `egfr` MDRD rules, `adj25` weight, `{scrx:N}`, `{mgkg:…}`; tests 1999 checks). Label-silent kidney limits are yes/no inputs, never a guessed number.
+  Vitamin code removed (calculators/data/validation files, result card, report, share, medicine list, tools page, 125 texts, ~29 KB CSS;
+  screenshots identical before/after). «اعتماد الكل» in 🔔. Global search = antibiotics + sources + pages.
+- TEST DB: 100 drugs + 294 interactions waiting (reviewed = false), 126 sources, cleanup migration applied. Nothing published on TEST yet:
+  he approves («اعتماد الكل») and presses «نشر» there.
+- Still inert (kept for compatibility with LIVE 1.17.3 until release): the owner draft parts `inter`/`nut` in `owner.js` (save/publish
+  summary). Remove after LIVE has the cleanup migration.
+- Open clinical points for him: methenamine and polymyxin B and ethambutol and streptomycin labels give no kidney number (calculator asks
+  yes/no); delamanid «severe renal impairment» undefined in the SmPC; telithromycin and gemifloxacin are no longer marketed in the US (last
+  labels 2012 / 2016) — keep or replace?; amox-clav duration; owner MFA; leaked-password protection (paid).
+- Removed with the old menu (unreachable since 1.3.x): backup download, version restore, the all-texts editor. Offer to bring them back.
 
 ## History (vitamin era, before the move to antibiotics)
 - 2026-11-03 final review: CLAUDE.md was served publicly (not in .assetsignore) → added (Live: 1.14.3, he said «جاهز» 2026-11-03). Live crawl 8 runs (3 sizes × pro/pt, ar+en on phone): 0 errors, 32 calculators all give results; links 60 ok + 12 blocked (403 publishers), 0 broken.

@@ -46,13 +46,13 @@ Browser ──► Cloudflare (static files: index.html, css/, js/, fonts/)      
 | `js/i18n.js` | Arabic / English dictionary `I18N` and the `T()` / `L()` helpers. |
 | `js/abrules.js` | **Dose rules of every antibiotic** (data, with the label each number comes from). |
 | `js/abcalc.js` | The one calculation engine: Cockcroft-Gault, rule matching, result, copy and print. |
-| `js/lists.js` | Interactions page (choose a drug → its interactions), medicines page, owner antibiotic editor, sources, roadmap. |
+| `js/lists.js` | Interactions page (choose a drug → its interactions), antibiotics page, owner antibiotic editor and «اعتماد الكل», sources, roadmap. |
 | `js/ui.js` | Pages, language, event wiring. |
 | `js/nav.js` | Menus (bottom bar / side menu), floating windows. |
 | `js/owner.js` | Owner and pharmacist interface: login, dialogs, save, publish, activity log. |
 | `js/team.js` | Pharmacist accounts (owner only). |
 | `js/published.js` | Loads the published content for visitors. |
-| `js/content.js`, `js/render.js`, `js/calculators.js`, `js/data.js`, `js/validation.js` | Shared helpers (sources list, result box, input checks). Some vitamin-era plumbing is still inside and inert. |
+| `js/content.js`, `js/render.js` | Shared helpers: the sources list (`buildData`), the owner's edit buttons, the review stamp. |
 | `js/pre.js`, `js/boot.js` | Before first paint / start-up. |
 | `src/worker.js` | Cloudflare Worker: `/api/content` with edge caching, `/api/links`, daily keep-alive. |
 | `_headers` | Security headers (CSP etc.) and cache rules. |
@@ -61,6 +61,9 @@ Browser ──► Cloudflare (static files: index.html, css/, js/, fonts/)      
 | `supabase/manual/` | Content files (sources, antibiotic batches) run by hand, test first. |
 | `tests/` | Automated tests (see below). |
 | `tools/set_version.py` | Sets the version and content hashes in every file at once. |
+| `docs/antibiotics/` | The 100 drugs: `batchN.json` (content written from the labels), `labels/` (saved official labels), `aware_2023.json`, `PLAN.md`. |
+| `tools/fetch_labels.py`, `tools/fetch_eu_labels.py` | Download the official labels (DailyMed / openFDA, then eMC, EMA, ANSM). |
+| `tools/abx.py` | `check N` checks a batch; `sql N` writes `supabase/manual/batchN_load_test.sql` (drafts, reviewed = false). |
 
 ## Common tasks
 
