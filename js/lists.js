@@ -133,6 +133,7 @@ async function renderAbAdmin(){
   window.ABLIST=data;
   window.ABPEND=data.filter(a=>!a.reviewed&&!a.deleted);
   if(typeof renderNotifPending==='function')renderNotifPending();
+  if(typeof renderNav==='function')renderNav(); // 🔔 count
   el.innerHTML=`<button class="oadd otop" type="button" data-abadd="1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>${esc(T('ab_addbtn'))}</span></button>`+
     (data.length&&EDITING()?'<div class="olist abolist">'+data.map(a=>`<div class="orow abrow${a.hidden?' off':''}"><span class="nvn">${esc((a.n&&(a.n[LANG]||a.n.en))||a.id)}${a.reviewed?'':` · <small class="pend">${esc(T('o_pending'))}</small>`}${a.hidden?` · <small>${esc(T('o_hiddenb'))}</small>`:''}</span>`+
       `<button type="button" class="btn" data-abedit="${esc(a.id)}">${esc(T('ab_edit'))}</button> `+

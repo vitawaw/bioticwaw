@@ -92,6 +92,8 @@ Locally: `NODE_PATH=$(npm root -g) node tests/e2e_flow.cjs` (Playwright is insta
 Gotcha: CSS class names are global; `details.more` already exists (that's why the ⋯ panel is `.mpanel`). Search before naming.
 
 ## Where we are (2026-11-10)
+- **1.6.6 (preview)**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
+  (DB fingerprints LIVE = TEST, advisors expected only, index antibiotic_interactions_drug_idx on BOTH = migration 20261110103536).
 - **LIVE = 1.6.5** (he said «انشر» on 2026-11-10). Logo files for his presentation: `docs/logo/` (PNG + SVG).
 - The site is an independent antibiotic reference (vitamin site removed from the code). He gave full authority to finish the 100 drugs,
   review everything and clean the old site («اعمل بدون توقف»); main/LIVE still only after his «انشر».

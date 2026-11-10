@@ -8,6 +8,6 @@ const REV0=v=>{const n=(v&&v.n)||{ar:'',en:''};return n.ar==='الصيدلي س�
 const REV=()=>{const v=CFG.review||{},n=tx2(REV0(v));return {name:n?esc(n):'',date:v.date||''}};
 /** a pharmacist's own stamp on an item he added or edited, once the owner approved it: «Reviewed by: name · date» */
 const stampHTML=(by,at)=>by?`<div class="stamp">${CHECK}${esc(T('st_by'))} ${esc(by)}${at?` · <bdi>${esc(at)}</bdi>`:''}</div>`:'';
-function reviewHTML0(){const v=REV();return v.name?`<div class="reviewed">${CHECK}${T('rev')} ${v.name}${v.date?' · <span dir="ltr">'+v.date+'</span>':''}</div>`:''}
+function reviewHTML0(){const v=REV();return v.name?`<div class="reviewed">${CHECK}${T('rev')} ${v.name}${v.date?' · <span dir="ltr">'+esc(v.date)+'</span>':''}</div>`:''}
 function fallback(text,done){const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}t.remove()}
 

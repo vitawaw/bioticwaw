@@ -131,6 +131,10 @@ async function owner(b, name, w, h) {
   await page.locator(`${box} button, ${box} a`, { hasText: 'دخول المالك' }).first().click(); await page.waitForTimeout(1200);
   check(await page.evaluate(() => OWN.on && ISOWNER()), `${tag} signed in as owner`);
   check(await page.isVisible('#obar'), `${tag} owner bar visible`);
+  // 🔔 counts the waiting antibiotic right after login (before the antibiotics page is opened)
+  await page.waitForTimeout(600);
+  const bell = await page.evaluate(() => ({ n: notifCount(), shown: !document.getElementById('hnt-count').hidden || !document.getElementById('nt-count').hidden }));
+  check(bell.n >= 1 && bell.shown, `${tag} 🔔 shows the waiting antibiotic at login (${bell.n})`);
   await page.evaluate(MISSWATCH);
 
   // the owner's tools in the menu: arrange the menus and the bottom bar, every text, logos

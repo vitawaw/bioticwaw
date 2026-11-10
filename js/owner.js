@@ -289,7 +289,8 @@ function notifList(){
   if(tm){const m=TEAM.list&&TEAM.list.members.find(x=>x.id===tm.by);out.push({t:'x',id:'texts',idx:null,kind:'edit',label:T('nt_texts'),was:textChanges(tm).join(' · '),by:m?(m.name||m.email):''})}
   return out;
 }
-const pendingCount=()=>notifList().length;
+/** the owner's 🔔 count: waiting sources and texts + antibiotics waiting for approval (each with its interactions) */
+const pendingCount=()=>notifList().length+((typeof window!=='undefined'&&window.ABPEND)||[]).length;
 const NOTE={mine:[],loaded:false}; // pharmacist: the owner's decisions
 async function loadNotes(){
   if(OWN.local||ISOWNER()||!OWN.client)return;
@@ -565,7 +566,8 @@ async function afterLogin(){
   const {data:dr}=await c.from('site_config').select('data').eq('id','draft').maybeSingle();
   const {data:ct,error}=await c.rpc('get_content');if(error||!ct){toast(T('o_neterr'));return}
   startOwner({local:false,role:m.role,draft:draftFor(dr&&dr.data,m.role),content:ct});
-  if(m.role==='owner')teamLoad().then(()=>renderNav());else loadNotes();
+  if(m.role==='owner'){teamLoad().then(()=>renderNav());if(typeof renderAbAdmin==='function')renderAbAdmin()} // the waiting antibiotics reach 🔔 at once
+  else loadNotes();
   if(WANT){const [p,v]=WANT;WANT=null;if(location.hash==='#'+p)show(p,v)} // 1.17.1 the team page the reload asked for
   wantPage(); // an info page that only the team's content has
 }
