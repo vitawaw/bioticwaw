@@ -91,6 +91,12 @@ const known = [
   ['gemifloxacin, clearance 41', strong('gemiflox', { ind: 'cap', hd: false }, 41), '320 mg once a day'],
   ['eravacycline with an inducer, 70 kg', strong('eravacycline', { hep: false, ind3a: true }, null), '105 mg every 12 h (1.5 mg/kg)'],
   ['tigecycline Child-Pugh C', strong('tigecycline', { hep: true }, null), '100 mg first, then 25 mg every 12 h'],
+  ['delafloxacin IV, eGFR 20', strong('delaflox', { route: 'iv', ind: 'skin', hd: false }, 90, { egfr: 20 }), '200 mg IV every 12 h'],
+  ['delafloxacin tablets, eGFR 20', strong('delaflox', { route: 'po', ind: 'skin', hd: false }, 90, { egfr: 20 }), '450 mg by mouth every 12 h'],
+  ['aztreonam-avibactam maintenance, clearance 40', rowEn('azt_avi', { hd: false }, 40, 'Maintenance'), '1 g (0.75 + 0.25) every 6 h'],
+  ['trimethoprim, clearance 20', strong('tmp', {}, 20), '50 mg every 12 h'],
+  ['teicoplanin maintenance, clearance 50, 70 kg', rowEn('teico', { ind: 'std' }, 50, 'Maintenance (from day 4, by kidney function)'), 'Half: 420 mg every other day, or 210 mg daily'],
+  ['daptomycin bacteraemia, clearance 20, 70 kg', strong('dapto', { ind: 'bact', hd: false }, 20), '420 mg every 48 h (6 mg/kg)'],
 ];
 const eg = vm.runInContext('abEgfr', ctx)(60, 'm', 1.0); // 175 x 60^-0.203 = 76.7
 check(Math.abs(eg - 175 * Math.pow(60, -0.203)) < 1e-9 && Math.round(eg) === 76, 'MDRD eGFR (60-year-old man, creatinine 1.0 = 76)');

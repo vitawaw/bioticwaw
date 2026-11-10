@@ -1740,5 +1740,187 @@ const ABC_RULES = {
       ]}
     ],
     notes:{ar:'لا تُتجاوز الجرعة ولا المدة. لا مضادات حموضة أو حديد خلال 3 ساعات قبله أو ساعتين بعده. يطيل QT.',en:'Do not exceed the dose or duration. No antacids or iron within 3 hours before or 2 hours after. Prolongs QT.'}
+  },
+
+  delaflox: {
+    name:{ar:'ديلافلوكساسين',en:'Delafloxacin'},
+    label:'DailyMed, Baxdela (2025-08-01), sections 2.2 and 2.3, Table 2', srcIds:[97], pedsRef:'8.4', egfr:true,
+    inputs:[
+      {id:'route',type:'select',label:{ar:'الطريق',en:'Route'},options:[['iv',{ar:'وريدي',en:'IV'}],['po',{ar:'فموي',en:'By mouth'}]]},
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['skin',{ar:'عدوى الجلد الحادة',en:'Acute skin infection'}],['cabp',{ar:'التهاب الرئة المكتسب',en:'Community-acquired pneumonia'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي أو فشل نهائي',en:'Dialysis or end-stage kidney disease'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة حسب معدل الترشيح',en:'Dose by eGFR'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'لا يُنصح به (معلومات غير كافية)',en:'Not recommended (insufficient information)'},warn:true},
+        {when:{egfr:{lt:15}},text:{ar:'لا يُنصح به (معدل الترشيح أقل من 15)',en:'Not recommended (eGFR under 15)'},warn:true},
+        {when:{egfr:{lt:30},route:'iv'},text:{ar:'200 ملغ وريدياً كل 12 ساعة',en:'200 mg IV every 12 h'}},
+        {when:{route:'po'},text:{ar:'450 ملغ فموياً كل 12 ساعة',en:'450 mg by mouth every 12 h'}},
+        {when:{},text:{ar:'300 ملغ وريدياً خلال 60 دقيقة كل 12 ساعة',en:'300 mg IV over 60 minutes every 12 h'}}
+      ]},
+      {k:{ar:'المدة',en:'Duration'},rules:[
+        {when:{ind:'cabp'},text:{ar:'5 إلى 10 أيام',en:'5 to 10 days'}},
+        {when:{},text:{ar:'5 إلى 14 يوماً',en:'5 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'الملصق يستعمل معدل الترشيح (MDRD). الأقراص قبل مضادات الحموضة والحديد بساعتين أو بعدها بـ 6. تحذيرات الكينولونات.',en:'The label uses eGFR (MDRD). Tablets 2 hours before or 6 hours after antacids or iron. Quinolone warnings.'}
+  },
+
+  azt_avi: {
+    name:{ar:'أزتريونام–أفيباكتام',en:'Aztreonam–avibactam'},
+    label:'DailyMed, Emblaveo (2026-06-24), sections 2.1 and 2.2', srcIds:[98], pedsRef:'8.4',
+    inputs:[{id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}],
+    rows:[
+      {k:{ar:'الجرعة الأولى',en:'Loading dose'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'1.33 غرام (أزتريونام 1 + أفيباكتام 0.33) خلال 3 ساعات',en:'1.33 g (aztreonam 1 + avibactam 0.33) over 3 hours'}},
+        {when:{crcl:{lte:15}},text:{ar:'1.33 غرام (أزتريونام 1 + أفيباكتام 0.33) خلال 3 ساعات',en:'1.33 g (aztreonam 1 + avibactam 0.33) over 3 hours'}},
+        {when:{crcl:{lte:30}},text:{ar:'1.8 غرام (أزتريونام 1.35 + أفيباكتام 0.45) خلال 3 ساعات',en:'1.8 g (aztreonam 1.35 + avibactam 0.45) over 3 hours'}},
+        {when:{},text:{ar:'2.67 غرام (أزتريونام 2 + أفيباكتام 0.67) خلال 3 ساعات',en:'2.67 g (aztreonam 2 + avibactam 0.67) over 3 hours'}}
+      ]},
+      {k:{ar:'الصيانة',en:'Maintenance'},strong:true,rules:[
+        {when:{hd:true},text:{ar:'0.9 غرام كل 12 ساعة، بعد الغسيل في أيامه',en:'0.9 g every 12 h, after dialysis on dialysis days'}},
+        {when:{crcl:{lte:15}},text:{ar:'0.9 غرام (0.675 + 0.225) كل 12 ساعة',en:'0.9 g (0.675 + 0.225) every 12 h'}},
+        {when:{crcl:{lte:30}},text:{ar:'0.9 غرام (0.675 + 0.225) كل 8 ساعات',en:'0.9 g (0.675 + 0.225) every 8 h'}},
+        {when:{crcl:{lte:50}},text:{ar:'1 غرام (0.75 + 0.25) كل 6 ساعات',en:'1 g (0.75 + 0.25) every 6 h'}},
+        {when:{},text:{ar:'2 غرام (1.5 + 0.5) كل 6 ساعات',en:'2 g (1.5 + 0.5) every 6 h'}}
+      ]}
+    ],
+    notes:{ar:'كل جرعة خلال 3 ساعات، تبدأ الصيانة في الفاصل التالي. مع الميترونيدازول لعدوى البطن، 5 إلى 14 يوماً.',en:'Each dose over 3 hours; maintenance starts at the next interval. With metronidazole for intra-abdominal infection, 5 to 14 days.'}
+  },
+
+  methenamine: {
+    name:{ar:'ميثينامين هيبورات',en:'Methenamine hippurate'},
+    label:'DailyMed, methenamine hippurate tablets (2026-08-07), Dosage and Administration and Contraindications', srcIds:[99], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[{id:'ckd',type:'check',label:{ar:'قصور كلوي',en:'Kidney insufficiency'}},{id:'hep',type:'check',label:{ar:'ضعف كبدي شديد أو جفاف شديد',en:'Severe liver impairment or severe dehydration'}}],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{hep:true},text:{ar:'ممنوع (ضعف الكبد الشديد أو الجفاف الشديد)',en:'Contraindicated (severe liver impairment or severe dehydration)'},warn:true},
+        {when:{ckd:true},text:{ar:'ممنوع في القصور الكلوي',en:'Contraindicated in kidney insufficiency'},warn:true},
+        {when:{age:{lt:12}},text:{ar:'6 إلى 12 سنة: 0.5 إلى 1 غرام مرتين يومياً',en:'6 to 12 years: 0.5 to 1 g twice a day'}},
+        {when:{},text:{ar:'1 غرام مرتين يومياً (صباحاً ومساءً)',en:'1 g twice a day (morning and night)'}}
+      ]}
+    ],
+    notes:{ar:'للوقاية من العدوى البولية المتكررة. يعمل في البول الحمضي. ممنوع مع السلفوناميدات. الملصق يمنعه في القصور الكلوي دون أن يحدد رقماً للتصفية.',en:'For prevention of recurrent urinary infection. Works in acid urine. Contraindicated with sulfonamides. The label forbids it in kidney insufficiency without giving a clearance number.'}
+  },
+
+  tmp: {
+    name:{ar:'تريميثوبريم',en:'Trimethoprim'},
+    label:'DailyMed, trimethoprim tablets (2024-06-04), Dosage and Administration', srcIds:[100], pedsRef:'Pediatric Use',
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة حسب الكلى',en:'Dose by kidney function'},strong:true,rules:[
+        {when:{crcl:{lt:15}},text:{ar:'لا يُنصح به (تصفية أقل من 15)',en:'Not recommended (clearance under 15)'},warn:true},
+        {when:{crcl:{lte:30}},text:{ar:'50 ملغ كل 12 ساعة',en:'50 mg every 12 h'}},
+        {when:{},text:{ar:'100 ملغ كل 12 ساعة أو 200 ملغ مرة يومياً',en:'100 mg every 12 h or 200 mg once a day'}}
+      ]}
+    ],
+    notes:{ar:'المدة 10 أيام. مراقبة البوتاسيوم عند كبار السن. ممنوع مع فقر الدم الضخم الأرومات بنقص الفولات.',en:'10 days. Monitor potassium in the elderly. Contraindicated in megaloblastic anaemia from folate deficiency.'}
+  },
+
+  sulfadiazine: {
+    name:{ar:'سلفاديازين',en:'Sulfadiazine'},
+    label:'DailyMed, sulfadiazine tablets (2024-09-24), Dosage and Administration', srcIds:[101], pedsRef:'Dosage and Administration', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{},text:{ar:'2 إلى 4 غرامات أولاً، ثم 2 إلى 4 غرامات يومياً مقسمة 3 إلى 6 جرعات',en:'2 to 4 g first, then 2 to 4 g a day in 3 to 6 doses'}}
+      ]},
+      {k:{ar:'تنبيه',en:'Warning'},warn:true,rules:[
+        {when:{},text:{ar:'سوائل كافية لمنع البلورات. بحذر في ضعف الكلى أو الكبد. ممنوع في نهاية الحمل والرضاعة.',en:'Plenty of fluids to prevent crystals. Caution in kidney or liver impairment. Contraindicated at term pregnancy and in breastfeeding.'}}
+      ]}
+    ],
+    notes:{ar:'الأطفال فوق شهرين: 150 ملغ/كغ يومياً مقسمة (حد أقصى 6 غرامات). في المقوسات مع البيريميثامين.',en:'Children over 2 months: 150 mg/kg a day divided (maximum 6 g). For toxoplasmosis with pyrimethamine.'}
+  },
+
+  fosfo: {
+    name:{ar:'فوسفومايسين (فموي)',en:'Fosfomycin (oral)'},
+    label:'DailyMed, fosfomycin tromethamine granules (2026-04-09), Dosage and Administration', srcIds:[102], pedsRef:'Pediatric Use', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{},text:{ar:'كيس 3 غرامات مرة واحدة (التهاب المثانة غير المعقد عند النساء)',en:'One 3 g sachet once (uncomplicated cystitis in women)'}}
+      ]}
+    ],
+    notes:{ar:'يُذاب في الماء ولا يُؤخذ جافاً. مع الطعام أو بدونه.',en:'Dissolve in water; never take it dry. With or without food.'}
+  },
+
+  tinidazole: {
+    name:{ar:'تينيدازول',en:'Tinidazole'},
+    label:'DailyMed, tinidazole tablets (2025-12-17), sections 2.3 to 2.6 and 8.6', srcIds:[103], pedsRef:'2.4', noRenal:true,
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'الاستعمال',en:'Use'},options:[['trich',{ar:'داء المشعرات',en:'Trichomoniasis'}],['giard',{ar:'الجيارديا',en:'Giardiasis'}],['ameb',{ar:'الأميبا المعوية',en:'Intestinal amoebiasis'}],['abs',{ar:'خراج الكبد الأميبي',en:'Amoebic liver abscess'}],['bv',{ar:'التهاب المهبل الجرثومي',en:'Bacterial vaginosis'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي دموي',en:'On haemodialysis'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة للبالغين',en:'Adult dose'},strong:true,rules:[
+        {when:{ind:'ameb'},text:{ar:'2 غرام يومياً لمدة 3 أيام',en:'2 g a day for 3 days'}},
+        {when:{ind:'abs'},text:{ar:'2 غرام يومياً لمدة 3 إلى 5 أيام',en:'2 g a day for 3 to 5 days'}},
+        {when:{ind:'bv'},text:{ar:'2 غرام يومياً ليومين، أو 1 غرام يومياً 5 أيام',en:'2 g a day for 2 days, or 1 g a day for 5 days'}},
+        {when:{},text:{ar:'2 غرام مرة واحدة',en:'2 g once'}}
+      ]},
+      {k:{ar:'الغسيل',en:'Dialysis'},opt:true,rules:[
+        {when:{hd:true},text:{ar:'إذا أُعطي في يوم الغسيل وقبله: نصف جرعة إضافية بعد الغسيل.',en:'If given on the dialysis day before the session: an extra half dose after it.'}}
+      ]}
+    ],
+    notes:{ar:'مع الطعام. لا كحول أثناءه و3 أيام بعده. الأطفال فوق 3 سنوات: 50 ملغ/كغ (حتى 2 غرام). المشعرات: علاج الشريك.',en:'With food. No alcohol during it and for 3 days after. Children over 3: 50 mg/kg (up to 2 g). Trichomoniasis: treat the partner.'}
+  },
+
+  secnidazole: {
+    name:{ar:'سيكنيدازول',en:'Secnidazole'},
+    label:'DailyMed, Solosec (2026-10-30), sections 2.1 to 2.3', srcIds:[104], pedsRef:'8.4', noRenal:true,
+    inputs:[],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{age:{lt:12}},text:{ar:'الملصق لمن هم 12 سنة فأكثر',en:'The label is for 12 years and over'},warn:true},
+        {when:{},text:{ar:'كيس 2 غرام مرة واحدة',en:'One 2 g packet once'}}
+      ]}
+    ],
+    notes:{ar:'يُرش على صلصة التفاح أو اللبن ويؤكل خلال 30 دقيقة دون مضغ. لا كحول أثناءه ويومين بعده. المشعرات: علاج الشريك.',en:'Sprinkle on applesauce or yogurt and eat within 30 minutes without chewing. No alcohol during it and for 2 days after. Trichomoniasis: treat the partner.'}
+  },
+
+  teico: {
+    name:{ar:'تيكوبلانين',en:'Teicoplanin'},
+    label:'UK SmPC (eMC), Targocid 400 mg (2025-12-11), section 4.2', srcIds:[105], pedsRef:'4.2',
+    inputs:[{id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['std',{ar:'الجلد أو الرئة أو المسالك المعقدة',en:'Skin, pneumonia or complicated urinary'}],['bone',{ar:'العظام والمفاصل',en:'Bone and joint'}],['endo',{ar:'التهاب الشغاف',en:'Endocarditis'}]]}],
+    rows:[
+      {k:{ar:'جرعة البداية',en:'Loading'},strong:true,rules:[
+        {when:{ind:['bone','endo']},text:{ar:'{mgkg:12} ملغ كل 12 ساعة لـ 3 إلى 5 جرعات (12 ملغ/كغ)',en:'{mgkg:12} mg every 12 h for 3 to 5 doses (12 mg/kg)'}},
+        {when:{},text:{ar:'{mgkg:6} ملغ كل 12 ساعة لـ 3 جرعات (6 ملغ/كغ)',en:'{mgkg:6} mg every 12 h for 3 doses (6 mg/kg)'}}
+      ]},
+      {k:{ar:'الصيانة (من اليوم الرابع حسب الكلى)',en:'Maintenance (from day 4, by kidney function)'},strong:true,rules:[
+        {when:{crcl:{lt:30},ind:['bone','endo']},text:{ar:'ثلث الجرعة: {mgkg:12} ملغ كل 3 أيام، أو {mgkg:4} ملغ يومياً',en:'A third: {mgkg:12} mg every third day, or {mgkg:4} mg daily'}},
+        {when:{crcl:{lt:30}},text:{ar:'ثلث الجرعة: {mgkg:6} ملغ كل 3 أيام، أو {mgkg:2} ملغ يومياً',en:'A third: {mgkg:6} mg every third day, or {mgkg:2} mg daily'}},
+        {when:{crcl:{lte:80},ind:['bone','endo']},text:{ar:'النصف: {mgkg:12} ملغ كل يومين، أو {mgkg:6} ملغ يومياً',en:'Half: {mgkg:12} mg every other day, or {mgkg:6} mg daily'}},
+        {when:{crcl:{lte:80}},text:{ar:'النصف: {mgkg:6} ملغ كل يومين، أو {mgkg:3} ملغ يومياً',en:'Half: {mgkg:6} mg every other day, or {mgkg:3} mg daily'}},
+        {when:{ind:['bone','endo']},text:{ar:'{mgkg:12} ملغ مرة يومياً (12 ملغ/كغ)',en:'{mgkg:12} mg once a day (12 mg/kg)'}},
+        {when:{},text:{ar:'{mgkg:6} ملغ مرة يومياً (6 ملغ/كغ)',en:'{mgkg:6} mg once a day (6 mg/kg)'}}
+      ]},
+      {k:{ar:'القاع المستهدف (FPIA)',en:'Target trough (FPIA)'},rules:[
+        {when:{ind:'endo'},text:{ar:'30 إلى 40 ملغ/لتر بعد البداية، وأكثر من 30 أثناء الصيانة. 21 يوماً على الأقل.',en:'30 to 40 mg/L after loading, over 30 during maintenance. At least 21 days.'}},
+        {when:{ind:'bone'},text:{ar:'أكثر من 20 ملغ/لتر.',en:'Over 20 mg/L.'}},
+        {when:{},text:{ar:'أكثر من 15 ملغ/لتر.',en:'Over 15 mg/L.'}}
+      ]}
+    ],
+    notes:{ar:'بالوزن الفعلي أياً كان الوزن. لا تعديل كلوي حتى اليوم الرابع. لا يزيله الغسيل. لا يتجاوز العلاج 4 أشهر.',en:'Actual weight, whatever it is. No kidney change until day 4. Not removed by dialysis. Treatment not over 4 months.'}
+  },
+
+  dapto: {
+    name:{ar:'دابتومايسين',en:'Daptomycin'},
+    label:'DailyMed, daptomycin for injection (2026-08-26), sections 2.2, 2.4 and 2.6', srcIds:[106], pedsRef:'2.3',
+    inputs:[
+      {id:'ind',type:'select',label:{ar:'العدوى',en:'Infection'},options:[['skin',{ar:'الجلد المعقد',en:'Complicated skin'}],['bact',{ar:'تجرثم الدم بالعنقوديات الذهبية',en:'S. aureus bacteraemia'}]]},
+      {id:'hd',type:'check',label:{ar:'غسيل كلوي (دموي أو بريتوني)',en:'On dialysis (haemo or peritoneal)'}}
+    ],
+    rows:[
+      {k:{ar:'الجرعة',en:'Dose'},strong:true,rules:[
+        {when:{ind:'bact',hd:true},text:{ar:'{mgkg:6} ملغ كل 48 ساعة (6 ملغ/كغ)، بعد الغسيل',en:'{mgkg:6} mg every 48 h (6 mg/kg), after dialysis'}},
+        {when:{hd:true},text:{ar:'{mgkg:4} ملغ كل 48 ساعة (4 ملغ/كغ)، بعد الغسيل',en:'{mgkg:4} mg every 48 h (4 mg/kg), after dialysis'}},
+        {when:{ind:'bact',crcl:{lt:30}},text:{ar:'{mgkg:6} ملغ كل 48 ساعة (6 ملغ/كغ)',en:'{mgkg:6} mg every 48 h (6 mg/kg)'}},
+        {when:{crcl:{lt:30}},text:{ar:'{mgkg:4} ملغ كل 48 ساعة (4 ملغ/كغ)',en:'{mgkg:4} mg every 48 h (4 mg/kg)'}},
+        {when:{ind:'bact'},text:{ar:'{mgkg:6} ملغ مرة يومياً (6 ملغ/كغ)، 2 إلى 6 أسابيع',en:'{mgkg:6} mg once a day (6 mg/kg), for 2 to 6 weeks'}},
+        {when:{},text:{ar:'{mgkg:4} ملغ مرة يومياً (4 ملغ/كغ)، 7 إلى 14 يوماً',en:'{mgkg:4} mg once a day (4 mg/kg), for 7 to 14 days'}}
+      ]}
+    ],
+    notes:{ar:'حقن خلال دقيقتين أو تسريب 30 دقيقة. قياس CPK أسبوعياً. لا يُستعمل لالتهاب الرئة. بالوزن الفعلي.',en:'Injection over 2 minutes or 30-minute infusion. Check CPK weekly. Not for pneumonia. Actual weight.'}
   }
 };
