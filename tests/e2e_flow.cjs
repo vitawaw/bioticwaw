@@ -130,6 +130,8 @@ async function visitor(b, name, w, h) {
   await page.evaluate(() => setTheme('dark'));
   const th = await page.evaluate(() => { const r = document.documentElement, a = r.dataset.theme; dispatchEvent(new Event('beforeprint')); const p = r.dataset.theme; dispatchEvent(new Event('afterprint')); const b = r.dataset.theme; setTheme('auto'); return [a, p, b, r.dataset.theme || 'auto'].join(','); });
   check(th === 'dark,light,dark,auto', `${tag} dark mode, light when printing, back to automatic (${th})`);
+  const hb = await page.evaluate(() => { const r = document.documentElement, b = document.getElementById('htheme'); const v = getComputedStyle(b).display !== 'none'; b.click(); const a = r.dataset.theme; b.click(); const c = r.dataset.theme; setTheme('auto'); return [v, a, c].join(','); });
+  check(/^true,(dark,light|light,dark)$/.test(hb), `${tag} header day/night button visible and switches (${hb})`);
   // AWaRe badge in Arabic
   await page.evaluate(() => go('abx')); await page.waitForTimeout(200);
   check(await page.evaluate(() => /مراقبة|وصول/.test((document.querySelector('#abxlist .aw') || {}).textContent || '')), `${tag} AWaRe group as a coloured badge in Arabic`);

@@ -95,6 +95,7 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   He approved («اعتماد الكل») and published on LIVE 2026-11-10 10:43 UTC: checked in the DB (100 drugs, 294 interactions, 126 sources
   published, 0 waiting) and online (3 sizes ar+en, 0 errors, all 100 calculators give a result, source links work). LIVE brand logo and
   menu order are still the defaults (he set them on TEST only).
+- **1.6.8 (preview)**: his «اين زر المود»: header `#htheme` ☾/☀ (themeBtn/THEMEDARK in ui.js; next to 🔔 on phone/iPad, after EN on PC), toggles to the opposite of what shows.
 - **1.6.7 (preview)**: his «نفذ الكل» UI items: header `#hlang` (ع/EN, setLang redraws calc keeping values), menu «الإعدادات» (lang + theme auto/light/dark, `setTheme`, localStorage vw-theme), `?lang=en` (boot.js), print forced light, search `#abcq` / `#intq` (abcFill / intFill), option labels without dose (`abOptLabels`), Arabic ranges «إلى» (bidiFix), AWaRe badge `AWB()`.
 - **1.6.6**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
   (DB fingerprints LIVE = TEST, advisors expected only, index antibiotic_interactions_drug_idx on BOTH = migration 20261110103536).

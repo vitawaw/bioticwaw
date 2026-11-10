@@ -542,6 +542,9 @@ body.owner:not(.textedit) .edp[data-edbrand],body.not-owner .edp[data-edbrand]{d
 .hnotif{grid-column:3;justify-self:end}
 /* the language button sits next to the search button */
 .hlang{grid-row:1;grid-column:1;justify-self:start;margin-inline-start:52px;width:44px;height:44px;border:0;border-radius:50%;background:var(--hpill);color:var(--hfg);font:800 calc(14px*var(--fsb,1)) var(--f-body);cursor:pointer;padding:0}
+.htheme{grid-row:1;grid-column:3;justify-self:end;margin-inline-end:52px;width:44px;height:44px;border:0;border-radius:50%;background:var(--hpill);color:var(--hfg);display:grid;place-items:center;cursor:pointer;padding:0}
+.htheme svg{width:20px;height:20px}
+.htheme:hover{background:color-mix(in srgb,var(--royal) 15%,transparent);color:var(--royal)}
 .hlang:hover{background:color-mix(in srgb,var(--royal) 15%,transparent);color:var(--royal)}
 .hnotif.on{background:color-mix(in srgb,var(--royal) 15%,transparent);color:var(--royal)}
 .hnotif .tcount{top:-3px;inset-inline-end:-4px}
@@ -557,6 +560,7 @@ body.owner:not(.textedit) .edp[data-edbrand],body.not-owner .edp[data-edbrand]{d
  .hsearch{display:inline-flex;align-items:center;gap:8px;width:auto;height:42px;padding:0 16px;border:0;border-radius:99px;background:var(--hpill);color:var(--hfg);font:600 calc(14px*var(--fsb,1)) var(--f-body);cursor:pointer}
  .hsearch svg{width:18px;height:18px}
  .hlang{display:inline-grid;place-items:center;vertical-align:top;margin-inline-start:8px;height:42px;width:42px}
+ .htheme{display:inline-grid;vertical-align:top;margin-inline-start:8px;margin-inline-end:0;height:42px;width:42px}
  .tabs{display:flex;justify-content:center;align-items:stretch;gap:6px;max-width:none;margin:0;padding:6px 0 0;overflow:visible;min-height:62px}
  .tab,.tab:first-child,.tab:last-child{flex:0 0 96px;max-width:none;height:56px;margin:0;padding:0;border-radius:10px 10px 0 0;background:transparent;color:var(--hfg)}
  .tab[aria-selected="true"]{background:transparent;color:var(--ti,var(--royal));box-shadow:inset 0 -3px 0 var(--ti,var(--royal))}
