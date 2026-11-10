@@ -71,7 +71,7 @@ Browser ──► Cloudflare (static files: index.html, css/, js/, fonts/)      
 |---|---|
 | Change a text | Find its key in `js/i18n.js`, edit both languages. |
 | Add a text | Add `key:['عربي','English']` to `I18N`, then `data-t="key"` in HTML or `T('key')` in JS. |
-| Add a dose calculator | Add the drug's rules to `ABC_RULES` in `js/abrules.js` (rows, ordered rules, the last rule of each row empty = fallback), cite the label, run `node tests/abrules_test.mjs`. The drug shows only after it is approved and published. |
+| Add a dose calculator | Add the drug's rules to `ABC_RULES` in `js/abrules.js` (rows, ordered rules, the last rule of each row empty = fallback), cite the saved label (source 27 + place, its date), run `node tests/abrules_test.mjs` and `node tests/data_check.cjs`. The drug shows only after it is approved and published. |
 | Add an antibiotic / interaction / source | Owner interface (الأدوية → إضافة) → approve in 🔔 → publish. Batches of 10 go through `supabase/manual/`. |
 | Change the database | New file in `supabase/migrations/`, apply on TEST first, rename it to the version Supabase assigns, apply on LIVE at release. |
 
@@ -82,6 +82,7 @@ python3 tests/check_assets.py        # asset links match their content (forgot s
 node tests/worker_test.mjs           # edge worker: caching, stale copy, routing
 node tests/worker_links_test.mjs     # link check endpoint
 node tests/abrules_test.mjs          # every drug rule: fallbacks, both languages, known values
+node tests/data_check.cjs            # the 100 drugs: data, calculator, own label (source id, date, name) agree
 node tests/i18n_check.mjs            # every text exists in Arabic and English
 node tests/e2e_flow.cjs              # visitors on phone / iPad / computer (ar + en) and the owner's flow
 ```
