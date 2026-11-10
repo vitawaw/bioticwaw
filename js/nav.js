@@ -201,8 +201,12 @@ function menuHTML(r){
     item(T('lg_t'),()=>openLog(),ICO.history)].join('')+'</div>':(own?`<div class="mlist">${item(T('lg_t'),()=>openLog(),ICO.history)}</div>`:'');
   const pages=visiblePages().filter(p=>p.id!=='suggest');
   const info=pages.length?`<h3 class="nsec">${esc(T('nv_info'))}</h3><div class="mlist">`+pages.map(p=>item(tx2(p.t)+(p.hidden?' · '+T('pg_hidden'):''),()=>openPage(p.id),ICO.page)).join('')+'</div>':'';
+  const th=THEMEK(),thName={auto:T('th_auto'),light:T('th_light'),dark:T('th_dark')};
+  const set=`<h3 class="nsec">${esc(T('mr_settings'))}</h3><div class="mlist">`+
+    item(T('mr_lang')+': '+(LANG==='ar'?'العربية':'English'),()=>setLang(LANG==='ar'?'en':'ar'),ICO.site)+
+    item(T('mr_theme')+': '+thName[th],()=>setTheme(th==='auto'?'light':th==='light'?'dark':'auto'),ICO.info)+'</div>';
   const acc=`<div class="mlist">${own?item(T('nav_logout'),()=>logout()):item(T('nav_login'),()=>openOwner())}</div>`;
-  return `<div class="mlist">${secs}</div>`+admin+info+acc;
+  return `<div class="mlist">${secs}</div>`+admin+info+set+acc;
 }
 /* folding lists stay open or closed when the menu is redrawn */
 /* one folding list open at a time: opening one closes the one that was open (its items show under it) */

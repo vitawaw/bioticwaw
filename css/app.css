@@ -158,6 +158,15 @@ label.l{display:block;font-size:calc(12px*var(--fsb,1));font-weight:700;color:va
 label.l .req{color:var(--bad)}
 input[type=number],select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:700 calc(17px*var(--fsb,1)) var(--f-body);font-variant-numeric:tabular-nums}
 input[type=number]{text-align:center}
+/* drug search above the list, and long select fields on their own row */
+.abq{width:100%;padding:10px 12px;margin:0 0 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:500 calc(15px*var(--fsb,1)) var(--f-body);min-height:44px}
+.abq::placeholder{color:var(--mute)}
+.grid>.f.wide{grid-column:1/-1}
+/* WHO AWaRe groups: Access green, Watch amber, Reserve red */
+.aw{display:inline-block;padding:1px 9px;border-radius:99px;font:700 calc(12px*var(--fsb,1)) var(--f-body);vertical-align:1px}
+.aw-access{background:#e3f4e8;color:#17663a}.aw-watch{background:#fdf0dc;color:#8a4b00}.aw-reserve{background:#fde4e2;color:#a3221a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .aw-access{background:#123a22;color:#8fe0a8}:root:not([data-theme="light"]) .aw-watch{background:#3d2a0c;color:#ffc66d}:root:not([data-theme="light"]) .aw-reserve{background:#43181a;color:#ff9b93}}
+:root[data-theme="dark"] .aw-access{background:#123a22;color:#8fe0a8}:root[data-theme="dark"] .aw-watch{background:#3d2a0c;color:#ffc66d}:root[data-theme="dark"] .aw-reserve{background:#43181a;color:#ff9b93}
 input[type=number]::placeholder{color:var(--mute);font-weight:500;opacity:.7}
 input.bad{border-color:var(--bad);background:var(--bad-bg)}
 .err{margin:4px 0 0;font-size:calc(12px*var(--fsb,1));color:var(--bad);font-weight:700}
@@ -531,6 +540,9 @@ body.owner:not(.textedit) .edp[data-edbrand],body.not-owner .edp[data-edbrand]{d
 .hsearch{grid-column:1;justify-self:start}
 .hsearch span{display:none}
 .hnotif{grid-column:3;justify-self:end}
+/* the language button sits next to the search button */
+.hlang{grid-row:1;grid-column:1;justify-self:start;margin-inline-start:52px;width:44px;height:44px;border:0;border-radius:50%;background:var(--hpill);color:var(--hfg);font:800 calc(14px*var(--fsb,1)) var(--f-body);cursor:pointer;padding:0}
+.hlang:hover{background:color-mix(in srgb,var(--royal) 15%,transparent);color:var(--royal)}
 .hnotif.on{background:color-mix(in srgb,var(--royal) 15%,transparent);color:var(--royal)}
 .hnotif .tcount{top:-3px;inset-inline-end:-4px}
 /* computers: a bar at the top like Facebook — search on the start side, the four sections in the middle (icons), 🔔 and ☰ on the end side;
@@ -544,6 +556,7 @@ body.owner:not(.textedit) .edp[data-edbrand],body.not-owner .edp[data-edbrand]{d
  .hsearch span{display:inline}
  .hsearch{display:inline-flex;align-items:center;gap:8px;width:auto;height:42px;padding:0 16px;border:0;border-radius:99px;background:var(--hpill);color:var(--hfg);font:600 calc(14px*var(--fsb,1)) var(--f-body);cursor:pointer}
  .hsearch svg{width:18px;height:18px}
+ .hlang{display:inline-grid;place-items:center;vertical-align:top;margin-inline-start:8px;height:42px;width:42px}
  .tabs{display:flex;justify-content:center;align-items:stretch;gap:6px;max-width:none;margin:0;padding:6px 0 0;overflow:visible;min-height:62px}
  .tab,.tab:first-child,.tab:last-child{flex:0 0 96px;max-width:none;height:56px;margin:0;padding:0;border-radius:10px 10px 0 0;background:transparent;color:var(--hfg)}
  .tab[aria-selected="true"]{background:transparent;color:var(--ti,var(--royal));box-shadow:inset 0 -3px 0 var(--ti,var(--royal))}

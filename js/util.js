@@ -3,7 +3,8 @@
    Files are plain scripts loaded in order by index.html (shared global scope, no build step). */
 /** Escape text before putting it inside HTML (always use this for data from the database). */
 /** 1.14.0: «وLatin» (Arabic «and» glued to a Latin word) is shown reversed in right-to-left text; a space keeps it readable */
-const bidiFix=s=>String(s??'').replace(/([A-Za-z0-9)])\s+و(?=[A-Za-z0-9])/g,'$1، ').replace(/([\u0600-\u06FF])?و(?=[A-Za-z0-9])/g,(m,a)=>a?m:'و ');
+const bidiFix=s=>String(s??'').replace(/(\d)\s*–\s*(?=\d)/g,(m,d,o,str)=>/[\u0600-\u06FF]/.test(str)?d+' إلى ':m) // 500–750 in Arabic text reads «500 إلى 750» (the dash flips in right-to-left text)
+  .replace(/([A-Za-z0-9)])\s+و(?=[A-Za-z0-9])/g,'$1، ').replace(/([\u0600-\u06FF])?و(?=[A-Za-z0-9])/g,(m,a)=>a?m:'و ');
 /* between two English names the Arabic «و» becomes «،» (in these fonts a lone «و» beside Latin letters looks like «g») */
 const esc=x=>bidiFix(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const normAr=x=>String(x||'').toLowerCase().replace(/[أإآا]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[\u064B-\u0652]/g,'').replace(/\s+/g,' ').trim();
@@ -45,4 +46,6 @@ const R=a=>(a||[]).filter(n=>REFS[n]).map(n=>`<a class="ref" href="#" data-ref="
 /** a source's short name for inline citations: FDA / DailyMed, EMA, eMC (UK), ANSM (France), or the start of its organisation */
 const srcShort=o=>/DailyMed|FDA/i.test(o)?'FDA / DailyMed':/European Medicines|\bEMA\b/.test(o)?'EMA':/eMC|UK summary/i.test(o)?L('eMC (بريطانيا)','eMC (UK)'):/ANSM/.test(o)?L('ANSM (فرنسا)','ANSM (France)'):/WHO|World Health/i.test(o)?L('منظمة الصحة العالمية','WHO'):String(o||'').split(/[,(]/)[0].trim().slice(0,40);
 /** «حسب المصدر: FDA / DailyMed [31]» under any piece of information; each one opens that source in the sources list */
+/** the WHO AWaRe group as a coloured badge (Access / Watch / Reserve) */
+const AWB=g=>g&&['access','watch','reserve'].includes(g)?`<span class="aw aw-${g}">${esc(T('aw_'+g))}</span>`:'';
 const SRCS=ids=>{const v=[...new Set(ids||[])].filter(n=>REFS[n]);return v.length?`<span class="srcs">${esc(T('src_by'))} ${v.map(n=>`<a class="ref srcl" href="#" data-ref="${n}" title="${esc(REFS[n][1]||REFS[n][0])}">${esc(srcShort(REFS[n][0]))} <bdi>[${n}]</bdi></a>`).join(L('، ',', '))}</span>`:''};

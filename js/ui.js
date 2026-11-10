@@ -99,13 +99,25 @@ function setLang(l){
   document.querySelectorAll('.x,[aria-label="close"],[aria-label="إغلاق"]').forEach(el=>{if(el.getAttribute('aria-label'))el.setAttribute('aria-label',l==='ar'?'إغلاق':'Close')});
   {const md=document.querySelector('meta[name=description]');if(md)md.content=l==='ar'?'معلومات المضادات الحيوية: الجرعات والتداخلات والمصادر الطبية':'Antibiotic information: doses, interactions and medical sources'}
   try{localStorage.setItem('vw-lang',l)}catch(e){}
+  {const b=$('hlang');if(b){b.textContent=l==='ar'?'EN':'ع';b.lang=l==='ar'?'en':'ar';b.setAttribute('aria-label',l==='ar'?'English':'العربية');b.title=b.getAttribute('aria-label')}}
   themeIcon();
+  if(typeof abcInit==='function'&&$('abcsel'))abcInit(); // the drug list and its fields in the new language (values kept)
+  if(cur==='abx'&&typeof renderAbx==='function')renderAbx();
   renderInter();renderRefs();renderContact();renderNav();
   if(typeof OWN!=='undefined'&&OWN.on){decorate();ownerBar()}if(typeof installBar==='function')installBar();
 }
 
 
 $('isearch').addEventListener('input',renderInter);
+/* language button in the header (also «الإعدادات» in the menu) */
+$('hlang').addEventListener('click',()=>{setLang(LANG==='ar'?'en':'ar');window.scrollTo(0,0)});
+/* appearance: auto (follows the device) · light · dark; remembered on this device */
+const THEMEK=()=>{try{return localStorage.getItem('vw-theme')||'auto'}catch(e){return 'auto'}};
+function setTheme(m){const r=document.documentElement;if(m==='light'||m==='dark')r.dataset.theme=m;else delete r.dataset.theme;try{if(m==='auto')localStorage.removeItem('vw-theme');else localStorage.setItem('vw-theme',m)}catch(e){}renderNav()}
+/* printing is always light, whatever the screen shows */
+let PRINTTH=null;
+addEventListener('beforeprint',()=>{const r=document.documentElement;PRINTTH=r.dataset.theme||'';r.dataset.theme='light'});
+addEventListener('afterprint',()=>{const r=document.documentElement;if(PRINTTH)r.dataset.theme=PRINTTH;else delete r.dataset.theme;PRINTTH=null});
 $('ssearch').addEventListener('input',renderRefs);
 
 /* ===================== colors ===================== */

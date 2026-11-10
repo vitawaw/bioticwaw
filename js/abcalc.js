@@ -66,26 +66,49 @@ function abcInit(){
   const pub=new Set((CFG.ab||[]).map(x=>x.id)), own=typeof OWN!=='undefined'&&OWN.on;
   const keys=Object.keys(ABC_RULES).filter(k=>pub.has(k)||own);
   if(!keys.length){pk.innerHTML=`<p class="inone">${esc(L('لا توجد حاسبات منشورة بعد.','No calculators published yet.'))}</p>`;ABC_SEL=null;abcOpen();return}
-  const cur=ABC_SEL&&keys.includes(ABC_SEL)?ABC_SEL:'';
-  pk.innerHTML=`<div class="f"><label class="l" for="abcsel">${esc(L('اختر المضاد الحيوي','Choose the antibiotic'))}</label><select id="abcsel">`+
-    `<option value="">${esc(L('— اختر دواءً —','— Choose a drug —'))}</option>`+
-    keys.map(k=>`<option value="${k}"${k===cur?' selected':''}>${esc(L(ABC_RULES[k].name.ar,ABC_RULES[k].name.en))}${pub.has(k)?'':' ('+esc(L('غير منشور','not published'))+')'}</option>`).join('')+
-    `</select></div>`;
+  pk.innerHTML=`<div class="f"><label class="l" for="abcsel">${esc(L('اختر المضاد الحيوي','Choose the antibiotic'))}</label>`+
+    `<input type="search" id="abcq" class="abq" dir="auto" autocomplete="off" placeholder="${esc(T('ab_find'))}" aria-label="${esc(T('ab_find'))}" value="${esc(ABC_Q)}">`+
+    `<select id="abcsel"></select></div>`;
+  abcFill(keys,pub);
+  document.getElementById('abcq').oninput=e=>{ABC_Q=e.target.value;abcFill(keys,pub)};
   document.getElementById('abcsel').onchange=e=>{ABC_SEL=e.target.value||null;abcOpen();};
   abcOpen();
 }
-let ABC_SEL=null;
+/** the drug list, narrowed by the search box (Arabic or English name, or class); the chosen drug always stays in it */
+function abcFill(keys,pub){
+  const sel=document.getElementById('abcsel');if(!sel)return;
+  const cls=Object.fromEntries((CFG.ab||[]).map(a=>[a.id,a.cls?[a.cls.ar||'',a.cls.en||''].join(' '):'']));
+  const q=normAr(ABC_Q||'').trim(),hit=k=>!q||normAr([ABC_RULES[k].name.ar,ABC_RULES[k].name.en,cls[k]||''].join(' ')).includes(q);
+  const list=keys.filter(k=>hit(k)||k===ABC_SEL);
+  sel.innerHTML=`<option value="">${esc(q?T('ab_found').replace('{n}',list.filter(k=>hit(k)).length):L('— اختر دواءً —','— Choose a drug —'))}</option>`+
+    list.map(k=>`<option value="${k}"${k===ABC_SEL?' selected':''}>${esc(L(ABC_RULES[k].name.ar,ABC_RULES[k].name.en))}${pub.has(k)?'':' ('+esc(L('غير منشور','not published'))+')'}</option>`).join('');
+}
+let ABC_SEL=null,ABC_Q='';
+/** an option's label without the dose (the dose shows in the result), unless two options would then read the same */
+function abOptLabels(fl){
+  const full=fl.options.map(o=>L(o[1].ar,o[1].en)),short=full.map(t=>/:\s*.*\d/.test(t)?t.split(':')[0].trim():t);
+  return new Set(short).size===short.length?short:full;
+}
 function abcOpen(){
   const f=document.getElementById('abcfields'), c=ABC_RULES[ABC_SEL];
-  const res=document.getElementById('res'); if(res)res.innerHTML='';
+  const res=document.getElementById('res');
+  // same drug drawn again (language change): keep what was typed and the result
+  const same=!!f&&!!c&&f.dataset.drug===ABC_SEL,had=same&&res&&!!res.querySelector('.abcres');
+  const keep=same?[...f.querySelectorAll('input,select')].map(e=>[e.id,e.type==='checkbox'?e.checked:e.value]):[];
+  if(res&&!same)res.innerHTML='';
   // the patient data and the result appear only after a drug is chosen
   const sd=document.getElementById('s-data'),rb=document.getElementById('resbox');if(sd)sd.hidden=!c;if(rb)rb.hidden=!c;
   if(!f)return;
-  if(!c){f.hidden=true;f.innerHTML='';return}
+  if(!c){f.hidden=true;f.innerHTML='';f.dataset.drug='';return}
   const common=c.noRenal?'':`<div class="f"><label class="l" for="abscr">${esc(L('الكرياتينين في الدم (مل/دل)','Serum creatinine (mg/dL)'))}</label><input type="number" id="abscr" min="0.2" max="15" step="0.1" inputmode="decimal" placeholder="${esc(L('مثال: 1.1','e.g. 1.1'))}"></div>`;
-  const extra=c.inputs.map(fl=>fl.type==='select'?`<div class="f"><label class="l" for="ab_${fl.id}">${esc(L(fl.label.ar,fl.label.en))}</label><select id="ab_${fl.id}">${fl.options.map(o=>`<option value="${o[0]}">${esc(L(o[1].ar,o[1].en))}</option>`).join('')}</select></div>`:`<label class="chk"><input type="checkbox" id="ab_${fl.id}"><span>${esc(L(fl.label.ar,fl.label.en))}</span></label>`).join('');
+  const extra=c.inputs.map(fl=>{if(fl.type!=='select')return `<label class="chk"><input type="checkbox" id="ab_${fl.id}"><span>${esc(L(fl.label.ar,fl.label.en))}</span></label>`;
+    const labs=abOptLabels(fl),wide=labs.some(t=>t.length>22);
+    return `<div class="f${wide?' wide':''}"><label class="l" for="ab_${fl.id}">${esc(L(fl.label.ar,fl.label.en))}</label><select id="ab_${fl.id}">${fl.options.map((o,i)=>`<option value="${o[0]}">${esc(labs[i])}</option>`).join('')}</select></div>`}).join('');
   f.innerHTML=`<div class="grid">${common}${extra}</div><button type="button" class="btn pri" id="abcgo">${esc(L('احسب الجرعة','Calculate the dose'))}</button>`;
+  f.dataset.drug=ABC_SEL;
+  keep.forEach(([id,v])=>{const e=id&&document.getElementById(id);if(!e)return;if(e.type==='checkbox')e.checked=v;else e.value=v});
   f.hidden=false; document.getElementById('abcgo').onclick=abcRun;
+  if(had)abcRun();
 }
 function abcRun(){
   const c=ABC_RULES[ABC_SEL]; const g=id=>document.getElementById(id);

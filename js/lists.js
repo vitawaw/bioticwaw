@@ -17,13 +17,25 @@ function abPicker(){
   // the global search (openSearch) sets the hidden box: open the first drug that matches it
   const q=normAr($('isearch')&&$('isearch').value?$('isearch').value:'');
   if(!ISEL&&q){const m=A.find(a=>normAr([a.n.ar||'',a.n.en||''].join(' ')).includes(q));if(m)ISEL=m.id}
-  pk.innerHTML=`<div class="f"><label class="l" for="intsel">${esc(T('s1'))}</label><select id="intsel"><option value="">${esc(T('ab_choose'))}</option>`+
-    A.map(a=>`<option value="${esc(a.id)}"${a.id===ISEL?' selected':''}>${esc(tx(a.n))}</option>`).join('')+'</select></div>';
+  pk.innerHTML=`<div class="f"><label class="l" for="intsel">${esc(T('s1'))}</label>`+
+    `<input type="search" id="intq" class="abq" dir="auto" autocomplete="off" placeholder="${esc(T('ab_find'))}" aria-label="${esc(T('ab_find'))}" value="${esc(IQ)}">`+
+    `<select id="intsel"></select></div>`;
+  intFill(A,tx);
+  $('intq').oninput=e=>{IQ=e.target.value;intFill(A,tx)};
   $('intsel').onchange=e=>{ISEL=e.target.value||null;renderInter()};
   const cur=A.find(a=>a.id===ISEL);
   $('ilist').innerHTML=!cur?`<p class="inone">${esc(T('ab_pick_hint'))}</p>`
-    :`<article class="abx-card"><h3>${esc(tx(cur.n))}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:cur.r)}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
+    :`<article class="abx-card"><h3>${esc(tx(cur.n))} ${AWB(cur.aware)}</h3>`+((cur.inter||[]).length?cur.inter.map(x=>`<p class="abi"><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:cur.r)}</p>`).join(''):`<p class="hint">${esc(T('ab_no_inter'))}</p>`)+'</article>';
 }
+/** the interactions drug list, narrowed by the search box (Arabic or English name, or class); the chosen drug stays */
+function intFill(A,tx){
+  const sel=$('intsel');if(!sel)return;
+  const q=normAr(IQ||'').trim(),hit=a=>!q||normAr([a.n.ar||'',a.n.en||'',a.cls?(a.cls.ar||'')+' '+(a.cls.en||''):''].join(' ')).includes(q);
+  const list=A.filter(a=>hit(a)||a.id===ISEL);
+  sel.innerHTML=`<option value="">${esc(q?T('ab_found').replace('{n}',A.filter(hit).length):T('ab_choose'))}</option>`+
+    list.map(a=>`<option value="${esc(a.id)}"${a.id===ISEL?' selected':''}>${esc(tx(a.n))}</option>`).join('');
+}
+let IQ='';
 function renderInter(){abPicker()}
 const IC={
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
@@ -115,7 +127,7 @@ function renderAbx(){
     const row=(k,v)=>v?`<p><b>${esc(T(k))}:</b> ${esc(v)} ${SRCS(a.r)}</p>`:'';
     const inter=(a.inter||[]).map(x=>`<li><b>${esc(tx(x.b))}</b>: ${esc(tx(x.d))} ${SRCS(x.r&&x.r.length?x.r:a.r)}</li>`).join('');
     return `<article class="abxcard"><h3>${esc(tx(a.n))}</h3>`+
-      (a.aware?`<p class="hint">${esc(T('abx_aware'))}: ${esc(a.aware)}</p>`:'')+
+      (a.aware?`<p class="hint">${esc(T('abx_aware'))}: ${AWB(a.aware)}</p>`:'')+
       row('abx_uses',tx(a.uses))+row('abx_dose',tx(a.dose))+row('abx_renal',tx(a.renal))+row('abx_timing',tx(a.timing))+
       (inter?`<p><b>${esc(T('abx_inter'))}:</b></p><ul>${inter}</ul>`:'')+
       '</article>';

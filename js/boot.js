@@ -13,6 +13,7 @@ try{
   const th=localStorage.getItem('vw-theme');if(th)document.documentElement.dataset.theme=th;
 }catch(e){}
 if(PAGES.includes(location.hash.slice(1)))startPage=location.hash.slice(1);
+{const q=new URLSearchParams(location.search).get('lang');if(q==='en'||q==='ar')startLang=q} // a link such as …/?lang=en opens in English (for the presentation)
 $('welcome').hidden=welcomeSeen;
 applyColors();
 setLang(startLang);

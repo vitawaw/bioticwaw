@@ -107,6 +107,32 @@ async function visitor(b, name, w, h) {
   const btns = await page.evaluate(async () => { const pr = dialog({ title: 't', fields: [] }); const b = [...document.querySelectorAll('#dlg-a button')].map(x => x.textContent); document.querySelector('#dlg-a button').click(); await pr; return b; });
   check(btns.length === 1 && btns[0] === 'إلغاء', `${tag} dialog without buttons gets «إلغاء»`);
 
+  // language button: the calculator list follows the language, and the typed values stay
+  await page.evaluate(() => go('calc')); await page.waitForTimeout(150);
+  await page.selectOption('#abcsel', 'cipro'); await page.fill('#age', '50'); await page.waitForTimeout(100);
+  await page.click('#hlang'); await page.waitForTimeout(250);
+  const en = await page.evaluate(() => ({ lang: LANG, first: document.querySelector('#abcsel option').textContent, drug: document.getElementById('abcsel').selectedOptions[0].textContent, age: document.getElementById('age').value }));
+  check(en.lang === 'en' && /Choose/.test(en.first) && /Ciprofloxacin/.test(en.drug) && en.age === '50', `${tag} EN button: calculator list in English, values kept (${en.drug})`);
+  await page.click('#hlang'); await page.waitForTimeout(250);
+  check(await page.evaluate(() => LANG === 'ar' && /سيبرو/.test(document.getElementById('abcsel').selectedOptions[0].textContent)), `${tag} ع button: back to Arabic`);
+  // search in the drug list
+  await page.fill('#abcq', 'سيفا'); await page.waitForTimeout(150);
+  const found = await page.evaluate(() => [...document.querySelectorAll('#abcsel option')].map(o => o.value).filter(Boolean));
+  check(found.includes('cefalex') && found.includes('cipro'), `${tag} drug search narrows the list (${found.join(',')})`);
+  await page.fill('#abcq', ''); await page.waitForTimeout(100);
+  await page.evaluate(() => go('interactions')); await page.waitForTimeout(150);
+  await page.fill('#intq', 'cipro'); await page.waitForTimeout(150);
+  const ifound = await page.evaluate(() => [...document.querySelectorAll('#intsel option')].map(o => o.value).filter(Boolean));
+  check(ifound.includes('cipro') && ifound.length < 10, `${tag} interactions search narrows the list (${ifound.join(',')})`);
+  await page.fill('#intq', ''); await page.waitForTimeout(100);
+  await page.evaluate(() => go('calc')); await page.waitForTimeout(100);
+  // appearance: dark, and printing is always light
+  await page.evaluate(() => setTheme('dark'));
+  const th = await page.evaluate(() => { const r = document.documentElement, a = r.dataset.theme; dispatchEvent(new Event('beforeprint')); const p = r.dataset.theme; dispatchEvent(new Event('afterprint')); const b = r.dataset.theme; setTheme('auto'); return [a, p, b, r.dataset.theme || 'auto'].join(','); });
+  check(th === 'dark,light,dark,auto', `${tag} dark mode, light when printing, back to automatic (${th})`);
+  // AWaRe badge in Arabic
+  await page.evaluate(() => go('abx')); await page.waitForTimeout(200);
+  check(await page.evaluate(() => /مراقبة|وصول/.test((document.querySelector('#abxlist .aw') || {}).textContent || '')), `${tag} AWaRe group as a coloured badge in Arabic`);
   // English: the same pages in English, nothing left in Arabic in the calculator choice
   await page.evaluate(() => { setLang('en'); go('interactions'); }); await page.waitForTimeout(200);
   const first = await page.evaluate(() => (document.querySelector('#intsel option') || {}).textContent || '');
