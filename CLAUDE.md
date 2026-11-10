@@ -55,7 +55,6 @@ and where the project stands. Details: `README.md` (architecture, file map, test
 - **LIVE released 2026-11-10 (1.6.5)**: on LIVE via pg_net + md5 (versions 20261110102821…102841): the six antibiotic migrations + the cleanup
   migration; content: sources_antibiotics_1_26.sql + batches_1_10_load_test.sql (100 drugs waiting, 294 interactions, 126 sources).
   LIVE had already been emptied (0 sources, no info pages, 8 hidden vitamin rows dropped with the nutrients table). main = branch (fast-forward).
-  Left for him on LIVE: log in → 🔔 «اعتماد الكل» → «نشر» (until then visitors see «لا توجد حاسبات منشورة بعد»).
 - Big SQL without pasting: push the file, `select net.http_get(raw GitHub URL at the commit)`, check `md5(content)` against the local file,
   then `execute` it (apply_migration for schema changes, execute_sql for content). Worked on TEST on 2026-11-10 without an approval prompt.
 
@@ -93,7 +92,9 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
 
 ## Where we are (2026-11-10)
 - **LIVE = 1.6.6** (he said «انشر» again on 2026-11-10; main fast-forwarded; checked online: 3 sizes ar+en, 0 errors, demo button hidden).
-  LIVE visitors still see «لا توجد حاسبات منشورة بعد» until he approves («اعتماد الكل») and publishes on the main site.
+  He approved («اعتماد الكل») and published on LIVE 2026-11-10 10:43 UTC: checked in the DB (100 drugs, 294 interactions, 126 sources
+  published, 0 waiting) and online (3 sizes ar+en, 0 errors, all 100 calculators give a result, source links work). LIVE brand logo and
+  menu order are still the defaults (he set them on TEST only).
 - **1.6.6**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review
   (DB fingerprints LIVE = TEST, advisors expected only, index antibiotic_interactions_drug_idx on BOTH = migration 20261110103536).
 - LIVE was 1.6.5 earlier the same day. Logo files for his presentation: `docs/logo/` (PNG + SVG).
