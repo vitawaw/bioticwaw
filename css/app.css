@@ -333,6 +333,7 @@ body.owner:not(.preview) .pending{outline:2px dashed var(--warn);outline-offset:
 .sb>section>h2{display:none}
 .prose p{margin:0 0 10px;font-size:calc(15px*var(--fsb,1));line-height:1.8}
 .prose p:last-child{margin:0}
+.prose .fx{display:inline-block;max-width:100%;direction:ltr;unicode-bidi:isolate;font-weight:600}
 .sact{margin:0}
 .tms{margin:6px 0 0;font:800 calc(15px*var(--fsh,1)) var(--f-display);display:flex;align-items:center;gap:8px}
 .tms .cnt{font:700 calc(12px*var(--fsb,1)) var(--f-body);background:var(--chip);color:var(--royal);border-radius:99px;padding:0 8px}

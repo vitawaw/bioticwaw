@@ -96,7 +96,8 @@ Gotcha: CSS class names are global; `details.more` already exists (that's why th
   He approved («اعتماد الكل») and published on LIVE 2026-11-10 10:43 UTC: checked in the DB (100 drugs, 294 interactions, 126 sources
   published, 0 waiting) and online (3 sizes ar+en, 0 errors, all 100 calculators give a result, source links work). LIVE brand logo and
   menu order are still the defaults (he set them on TEST only).
-- **1.6.9 (preview)**: his «صفحة التداخلات نفس ترتيب صفحة الأدوية»: cards + search, no dropdown.
+- **1.6.11 (preview)**: his academic review («نفذ الباقي», skip «من نحن»): `supabase/manual/site_texts_1_6_11.sql` (draft only: new roadmap, page `method` «طريقة العمل», review date) applied on TEST draft; he must publish on TEST; on LIVE run the same file at release, then he publishes. Pages markdown: `…` = LTR formula (`mdB`, `.prose .fx`). 1.6.10: sources hero text `hs_l`.
+- **1.6.9**: his «صفحة التداخلات نفس ترتيب صفحة الأدوية»: cards + search, no dropdown.
 - **1.6.8**: his «اين زر المود»: header `#htheme` ☾/☀ (themeBtn/THEMEDARK in ui.js; next to 🔔 on phone/iPad, after EN on PC), toggles to the opposite of what shows.
 - **1.6.7 (preview)**: his «نفذ الكل» UI items: header `#hlang` (ع/EN, setLang redraws calc keeping values), menu «الإعدادات» (lang + theme auto/light/dark, `setTheme`, localStorage vw-theme), `?lang=en` (boot.js), print forced light, search `#abcq` / `#intq` (abcFill / intFill), option labels without dose (`abOptLabels`), Arabic ranges «إلى» (bidiFix), AWaRe badge `AWB()`.
 - **1.6.6**: 🔔 count = notifList + window.ABPEND (loaded at owner login via renderAbAdmin, renderNav after load); full review

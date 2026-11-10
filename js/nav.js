@@ -25,8 +25,8 @@ const CAN=k=>typeof OWN!=='undefined'&&OWN.on&&(OWN.local||OWN.role==='owner'||(
 const ISOWNER=()=>typeof OWN!=='undefined'&&OWN.on&&(OWN.local||OWN.role==='owner');
 const colorVars=p=>CFG.colors[p]?`--pc:${CFG.colors[p][0]};--pc2:${CFG.colors[p][1]}`:'';
 /** page text → HTML. 1.16.0 simple formatting from the page editor's buttons: a line «## …» = heading, «- …» = list item,
-   **…** = bold. Everything is escaped first, so a page can never carry HTML. */
-const mdB=s=>s.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>');
+   **…** = bold, `…` = a formula (left to right, also in Arabic). Everything is escaped first, so a page can never carry HTML. */
+const mdB=s=>s.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/`([^`\n]+)`/g,'<bdi dir="ltr" class="fx">$1</bdi>'); // `…` = a formula, always left to right
 const paras=t=>String(t||'').split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).map(blk=>{
   let h='',ul=[],p=[];const flushP=()=>{if(p.length){h+=`<p>${p.join('<br>')}</p>`;p=[]}},flushU=()=>{if(ul.length){h+=`<ul>${ul.map(x=>`<li>${x}</li>`).join('')}</ul>`;ul=[]}};
   blk.split('\n').forEach(line=>{const e=mdB(esc(line.trim()));
